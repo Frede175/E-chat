@@ -26,7 +26,10 @@ namespace Server.Controllers {
 
         private readonly IOptions<IdentityOptions> _identityOptions;
 
-        public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userMananger, ILogger<AuthController> logger, IOptions<IdentityOptions> options) {
+        public AuthController(SignInManager<ApplicationUser> signInManager, 
+            UserManager<ApplicationUser> userMananger, 
+            ILogger<AuthController> logger, 
+            IOptions<IdentityOptions> options) {
             _signInManager = signInManager;
             _userManager = userMananger;
             _logger = logger;

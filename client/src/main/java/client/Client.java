@@ -31,7 +31,6 @@ public class Client {
 
         chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
                 .withAccessTokenProvider(Single.just(token))
-                .configureLogging(LogLevel.Trace)
                 .build();
 
         //Add message receive method callback
