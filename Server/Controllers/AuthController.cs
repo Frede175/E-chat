@@ -13,10 +13,12 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 
-namespace Server.Controllers {
+namespace Server.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase {
+    public class AuthController : ControllerBase
+    {
 
         private readonly SignInManager<ApplicationUser> _signInManager;
 
@@ -26,10 +28,11 @@ namespace Server.Controllers {
 
         private readonly IOptions<IdentityOptions> _identityOptions;
 
-        public AuthController(SignInManager<ApplicationUser> signInManager, 
-            UserManager<ApplicationUser> userMananger, 
-            ILogger<AuthController> logger, 
-            IOptions<IdentityOptions> options) {
+        public AuthController(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userMananger,
+            ILogger<AuthController> logger,
+            IOptions<IdentityOptions> options)
+        {
             _signInManager = signInManager;
             _userManager = userMananger;
             _logger = logger;
@@ -37,12 +40,16 @@ namespace Server.Controllers {
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest) {
+        public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
+        {
 
-            if (oidcRequest.IsPasswordGrantType()) {
+            if (oidcRequest.IsPasswordGrantType())
+            {
                 var user = await _userManager.FindByNameAsync(oidcRequest.Username);
-                if (user == null) {
-                    return BadRequest(new OpenIdConnectResponse {
+                if (user == null)
+                {
+                    return BadRequest(new OpenIdConnectResponse
+                    {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
                         ErrorDescription = "The username/password couple is invalid."
                     });
@@ -50,8 +57,10 @@ namespace Server.Controllers {
 
                 // Validate the username/password parameters and ensure the account is not locked out.
                 var result = await _signInManager.CheckPasswordSignInAsync(user, oidcRequest.Password, lockoutOnFailure: true);
-                if (!result.Succeeded) {
-                    return BadRequest(new OpenIdConnectResponse {
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new OpenIdConnectResponse
+                    {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
                         ErrorDescription = "The username/password couple is invalid."
                     });
@@ -63,7 +72,8 @@ namespace Server.Controllers {
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            return BadRequest(new OpenIdConnectResponse {
+            return BadRequest(new OpenIdConnectResponse
+            {
                 Error = OpenIdConnectConstants.Errors.UnsupportedGrantType,
                 ErrorDescription = "The specified grant type is not supported."
             });
@@ -71,7 +81,8 @@ namespace Server.Controllers {
 
         private async Task<AuthenticationTicket> CreateTicketAsync(
             OpenIdConnectRequest oidcRequest, ApplicationUser user,
-            AuthenticationProperties properties = null) {
+            AuthenticationProperties properties = null)
+        {
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
@@ -80,7 +91,8 @@ namespace Server.Controllers {
             var ticket = new AuthenticationTicket(principal, properties,
                 OpenIddictServerDefaults.AuthenticationScheme);
 
-            if (!oidcRequest.IsAuthorizationCodeGrantType()) {
+            if (!oidcRequest.IsAuthorizationCodeGrantType())
+            {
                 // Set the list of scopes granted to the client application.
                 // Note: the offline_access scope must be granted
                 // to allow OpenIddict to return a refresh token.
@@ -100,9 +112,11 @@ namespace Server.Controllers {
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
             // whether they should be included in access tokens, in identity tokens or in both.
 
-            foreach (var claim in ticket.Principal.Claims) {
+            foreach (var claim in ticket.Principal.Claims)
+            {
                 // Never include the security stamp in the access and identity tokens, as it's a secret value.
-                if (claim.Type == _identityOptions.Value.ClaimsIdentity.SecurityStampClaimType) {
+                if (claim.Type == _identityOptions.Value.ClaimsIdentity.SecurityStampClaimType)
+                {
                     continue;
                 }
 
@@ -115,7 +129,8 @@ namespace Server.Controllers {
                 // The other claims will only be added to the access_token, which is encrypted when using the default format.
                 if ((claim.Type == OpenIdConnectConstants.Claims.Name && ticket.HasScope(OpenIdConnectConstants.Scopes.Profile)) ||
                     (claim.Type == OpenIdConnectConstants.Claims.Email && ticket.HasScope(OpenIdConnectConstants.Scopes.Email)) ||
-                    (claim.Type == OpenIdConnectConstants.Claims.Role && ticket.HasScope(OpenIddictConstants.Claims.Roles))) {
+                    (claim.Type == OpenIdConnectConstants.Claims.Role && ticket.HasScope(OpenIddictConstants.Claims.Roles)))
+                {
                     destinations.Add(OpenIdConnectConstants.Destinations.IdentityToken);
                 }
 
@@ -127,18 +142,22 @@ namespace Server.Controllers {
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult<string>> CreateUser(CreateUserModel model) {
+        public async Task<ActionResult<string>> CreateUser(CreateUserModel model)
+        {
             _logger.LogDebug($"Creating user {model.UserName}.");
             var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null) {
+            if (user == null)
+            {
 
-                var newUser = new ApplicationUser() {
+                var newUser = new ApplicationUser()
+                {
                     UserName = model.UserName
                 };
 
                 var result = await _userManager.CreateAsync(newUser, model.Password);
 
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     return "Success!";
                 }
                 return "Failed!";
@@ -151,7 +170,8 @@ namespace Server.Controllers {
 
     }
 
-    public class CreateUserModel {
+    public class CreateUserModel
+    {
         public string UserName { get; set; }
         public string Password { get; set; }
     }

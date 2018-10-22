@@ -12,27 +12,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Server.Context;
 
-namespace Server {
-    public class Program {
-        public static void Main(string[] args) {
+namespace Server
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
             var host = CreateWebHostBuilder(args).Build();
 
 
             host.Run();
 
-            
+
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                /* .UseKestrel(options =>
-                {
-                    options.Listen(IPAddress.Loopback, 5000);
-                    options.Listen(IPAddress.Loopback, 5001, listenOptions =>
-                    {
-                        listenOptions.UseHttps("certificate.pfx", "devfred");
-                    });
-                })*/
                 .UseStartup<Startup>();
     }
 

@@ -61,7 +61,7 @@ public class Client {
     private String login() {
 
         String result = sendPost("/connect/token", "grant_type=password&username=admin&password=AdminAdmin123*", formType);
-
+        System.out.printf(result);
         JsonObject json = new JsonParser().parse(result).getAsJsonObject();
 
         if (json != null) {

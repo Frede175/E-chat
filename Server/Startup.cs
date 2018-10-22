@@ -24,17 +24,22 @@ using AspNet.Security.OpenIdConnect.Primitives;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation;
 
-namespace Server {
-    public class Startup {
-        public Startup(IConfiguration configuration) {
+namespace Server
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services)
+        {
 
-            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options => {
+            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseNpgsql(Configuration["DB:Connectionstring"]);
                 options.UseOpenIddict();
 
@@ -43,7 +48,8 @@ namespace Server {
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options => {
+            services.Configure<IdentityOptions>(options =>
+            {
                 options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
                 options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
                 options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
@@ -52,14 +58,16 @@ namespace Server {
             services.AddOpenIddict()
 
                 // Register the OpenIddict core services.
-                .AddCore(options => {
+                .AddCore(options =>
+                {
                     // Register the Entity Framework stores and models.
                     options.UseEntityFrameworkCore()
                            .UseDbContext<ApplicationDbContext>();
                 })
 
                 // Register the OpenIddict server handler.
-                .AddServer(options => {
+                .AddServer(options =>
+                {
                     // Register the ASP.NET Core MVC binder used by OpenIddict.
                     options.UseMvc();
 
@@ -79,8 +87,10 @@ namespace Server {
                 // Register the OpenIddict validation handler.
                 .AddValidation();
 
-            services.AddAuthentication(options => {
+            services.AddAuthentication(options =>
+            {
                 options.DefaultScheme = OpenIddictValidationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIddictValidationDefaults.AuthenticationScheme;
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -88,15 +98,20 @@ namespace Server {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager)
+        {
 
-            if (env.IsDevelopment()) {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
-            } else {
+            }
+            else
+            {
                 app.UseHsts();
             }
             //app.UseCors("AllowAll");
-            app.UseSignalR(route => {
+            app.UseSignalR(route =>
+            {
                 route.MapHub<ChatHub>("/hubs/chat");
             });
             app.UseHttpsRedirection();
