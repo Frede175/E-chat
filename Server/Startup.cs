@@ -23,6 +23,8 @@ using System.IdentityModel.Tokens.Jwt;
 using AspNet.Security.OpenIdConnect.Primitives;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation;
+using Server.Service.Interfaces;
+using Server.Service;
 
 namespace Server
 {
@@ -93,8 +95,14 @@ namespace Server
                 options.DefaultChallengeScheme = OpenIddictValidationDefaults.AuthenticationScheme;
             });
 
+
+            services.AddScoped<IDepartmentService, DepartmentService>();
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR().AddJsonProtocol();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

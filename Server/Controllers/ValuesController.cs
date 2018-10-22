@@ -4,18 +4,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Server.Service.Interfaces;
 
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize] 
+    //[Authorize] 
     [ApiController]
     public class ValuesController : ControllerBase
     {
+
+        private readonly IDepartmentService _departmentService;
+
+        public ValuesController(IDepartmentService departmentService) {
+            _departmentService = departmentService;
+        }
+
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            var x = _departmentService.GetDepartments();
             return new string[] { "value1", "value2" };
         }
 
