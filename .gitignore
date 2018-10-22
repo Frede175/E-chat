@@ -555,6 +555,7 @@ client/.idea/sonarlint
 
 # Package Files #
 *.jar
+!/client/lib/*.jar
 *.war
 *.nar
 *.ear
