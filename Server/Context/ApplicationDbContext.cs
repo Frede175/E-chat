@@ -22,5 +22,7 @@ namespace Server.Context
         public DbSet<Chat> Chat { get; set; }
         public DbSet<Message> Message { get; set; }
 
+        public DbSet<Department> Department { get; set; }
+
     }
 }
