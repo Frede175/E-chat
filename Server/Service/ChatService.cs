@@ -1,0 +1,130 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Server.Context;
+using Server.Models;
+using Server.Service.Interfaces;
+
+namespace Server.Service
+{
+    public class ChatService : IChatService
+    {
+        private readonly DbSet<Message> _messages;
+        private readonly DbSet<Chat> _chats;
+        private readonly ApplicationDbContext _context;
+
+
+        public ChatService(ApplicationDbContext context)
+        {
+            _messages = context.Set<Message>();
+            _chats = context.Set<Chat>();
+            _context = context;
+        }
+
+        public async Task<bool> AddUsersToChatAsync(int chatId, params ApplicationUser[] users)
+        {
+            var chat = await _chats.FindAsync(chatId);
+            if (chat != null)
+            {
+                foreach(var user in users){
+                    chat.ApplicationUsers.Add(user);
+                }
+                _chats.Update(chat);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public async Task<bool> ChatIsActiveAsync(int chatId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> CreateChatAsync(Chat chat)
+        {
+            _chats.Add(chat);
+            var result = await _context.SaveChangesAsync();
+
+            if(result == 1){
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> InviteToChatAsync(int chatId, ApplicationUser user)
+        {
+            var chat = await _chats.FindAsync(chatId);
+            if (!chat.ApplicationUsers.Contains(user)){
+                chat.ApplicationUsers.Add(user);
+                var result = await _context.SaveChangesAsync();
+                if(result == 1){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public async Task<bool> RemoveChatAsync(int chatId)
+        {
+            var chat = _chats.FindAsync(chatId);
+            if(chat != null){
+
+            }
+            return false;
+        }
+
+        public async Task<bool> RemoveUsersFromChatAsync(int chatId, params ApplicationUser[] users)
+        {
+            var chat = await _chats.FindAsync(chatId);
+
+            if (chat != null){
+                foreach (var user in users)
+                {
+                    if (chat.ApplicationUsers.Contains(user))
+                    {
+                        chat.ApplicationUsers.Remove(user);
+                    }
+                }
+                var result = await _context.SaveChangesAsync();
+                if (result == 1){
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        public async Task<ICollection<Chat>> RetrieveChatsAsync(ApplicationUser user)
+        {
+            return await _chats.Cast<Chat>().Where(c => c.ApplicationUsers.Contains(user)).ToListAsync();
+        }
+
+        public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId)
+        {
+            var chat = await _chats.FindAsync(chatId);
+            return chat.Messages.ToList();
+        }
+
+        public async Task<bool> SendMessageAsync(int chatId, Message message)
+        {
+            var chat = await _chats.FindAsync(chatId);
+            if(message != null){
+                chat.Messages.Add(message);
+                _chats.Update(chat);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}

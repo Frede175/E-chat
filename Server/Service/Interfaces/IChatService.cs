@@ -8,23 +8,23 @@ namespace Server.Service.Interfaces
 {
     public interface IChatService
     {
-        Task<bool> ChatIsActive(int chatId);
+        Task<bool> ChatIsActiveAsync(int chatId);
 
-        Task<bool> SendMessage(Message message);
+        Task<bool> SendMessageAsync(int chatId, Message message);
 
-        Task<bool> CreateChat(Chat chat);
+        Task<bool> CreateChatAsync(Chat chat);
 
-        Task<bool> RemoveChat(int chatId);
+        Task<bool> RemoveChatAsync(int chatId);
 
-        Task<bool> AddUsersToChat(int id, params string[] userId);
+        Task<bool> AddUsersToChatAsync(int chatId, params ApplicationUser[] users);
 
-        Task<bool> RemoveUsersFromChat(int id, params string[] userId);
+        Task<bool> RemoveUsersFromChatAsync(int chatId, params ApplicationUser[] users);
 
-        Task<bool> InviteToChat(int chatId, string userId);
+        Task<bool> InviteToChatAsync(int chatId, ApplicationUser user);
 
-        Task<ICollection<Message>> RetrieveMessages(int chatId);
+        Task<ICollection<Message>> RetrieveMessagesAsync(int chatId);
 
-        Task<ICollection<Chat>> RetrieveChats(string userId);
+        Task<ICollection<Chat>> RetrieveChatsAsync(ApplicationUser user);
 
     }
 }
