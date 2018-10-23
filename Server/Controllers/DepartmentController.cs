@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Server.Context;
 using Server.Models;
 using Server.Service.Interfaces;
 
@@ -15,10 +17,13 @@ namespace Server.Controllers
     {
 
         private readonly IDepartmentService _departmentService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public DepartmentController(IDepartmentService departmentService)
+        public DepartmentController(IDepartmentService departmentService, UserManager<ApplicationUser> userManager)
         {
             _departmentService = departmentService;
+            _userManager = userManager;
+            
         }
 
         // GET: https://localhost:5001/api/Department
@@ -48,6 +53,16 @@ namespace Server.Controllers
                 return new StatusCodeResult(201);
             }
             return new BadRequestResult();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUserToDepartment(int depId, string userId){
+            var result = await _departmentService.AddUsersToDepartmentAsync(depId,await _userManager.FindByIdAsync(userId));
+            if (result) {
+                return new OkResult();
+            }
+            return new BadRequestResult();
+
         }
     }
 }
