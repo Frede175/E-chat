@@ -78,7 +78,7 @@ namespace Server.Service
                     department.ApplicationUsers.Remove(user);
                 }
 
-                _context.Update(department);
+                _department.Update(department);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1) return true;
             }
