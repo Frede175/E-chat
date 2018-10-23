@@ -6,5 +6,5 @@ public interface IMessage {
     int getID();
     String getContent();
     Date getTimeStamp();
-    String getSenderID();
+    IUser getUser();
 }

@@ -9,18 +9,17 @@ public class Message implements IMessage {
     private int ID;
     private String content;
     private Date timeStamp;
-    private String senderID;
+    private User user;
 
 
-    public Message(int ID, String content, Date timeStamp, String senderID) {
+    public Message(int ID, String content, Date timeStamp, User user) {
         this.ID = ID;
         this.content = content;
         this.timeStamp = timeStamp;
-        this.senderID = senderID;
+        this.user = user;
     }
 
     @Override
-
     public int getID() {
         return ID;
     }
@@ -36,7 +35,7 @@ public class Message implements IMessage {
     }
 
     @Override
-    public String getSenderID() {
-        return senderID;
+    public User getUser() {
+        return user;
     }
 }
