@@ -27,7 +27,7 @@ namespace Server.Service
             _department.Add(department);
             var result = await _context.SaveChangesAsync();
             if (result == 1) return true;
-            return true;
+            return false;
         }
 
         public async Task<List<Department>> GetDepartmentsAsync()
@@ -62,8 +62,8 @@ namespace Server.Service
             if (department != null)
             {
                 _department.Remove(department);
-                await _context.SaveChangesAsync();
-                return true;
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
             }
             return false;
         }
@@ -78,6 +78,7 @@ namespace Server.Service
                     department.ApplicationUsers.Remove(user);
                 }
 
+                _context.Update(department);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1) return true;
             }
