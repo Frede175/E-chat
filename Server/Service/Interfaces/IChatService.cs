@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Server.Context;
-using Server.Models;
+using Server.DbModels;
 
 namespace Server.Service.Interfaces
 {

@@ -1,5 +1,5 @@
 using Server.Context;
-using Server.Models;
+using Server.DbModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

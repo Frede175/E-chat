@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Context;
-using Server.Models;
+using Server.DbModels;
 using Server.Service.Interfaces;
 
 namespace Server.Service
