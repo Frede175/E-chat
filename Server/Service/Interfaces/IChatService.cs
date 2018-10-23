@@ -14,7 +14,7 @@ namespace Server.Service.Interfaces
 
         Task<bool> CreateChatAsync(Chat chat);
 
-        Task<bool> RemoveChatAsync(int chatId);
+        Task<bool> RemoveChatAsync(int chatId, ApplicationUser user);
 
         Task<bool> AddUsersToChatAsync(int chatId, params ApplicationUser[] users);
 
