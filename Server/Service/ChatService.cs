@@ -41,6 +41,8 @@ namespace Server.Service
             return false;
         }
 
+        //
+
         public async Task<bool> ChatIsActiveAsync(int chatId)
         {
             var chat = await _chats.FindAsync(chatId);
@@ -49,6 +51,7 @@ namespace Server.Service
             }
             return false;
         }
+
 
         public async Task<bool> CreateChatAsync(Chat chat)
         {
@@ -61,11 +64,14 @@ namespace Server.Service
             return false;
         }
 
+        //
+
         public async Task<bool> InviteToChatAsync(int chatId, ApplicationUser user)
         {
             var chat = await _chats.FindAsync(chatId);
             if (!chat.ApplicationUsers.Contains(user)){
                 chat.ApplicationUsers.Add(user);
+                _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if(result == 1){
                     return true;
@@ -75,15 +81,25 @@ namespace Server.Service
             return false;
         }
 
-        public async Task<bool> RemoveChatAsync(int chatId)
-        {
-            var chat = _chats.FindAsync(chatId);
-            if(chat != null){
 
+        //Method for deleting/removing a chat for a specific user
+        public async Task<bool> RemoveChatAsync(int chatId, ApplicationUser user)
+        {
+            var chat = await _chats.FindAsync(chatId);
+            if(chat != null){
+                chat.ApplicationUsers.Remove(user);
+
+                var result = await _context.SaveChangesAsync();
+                if (result == 1)
+                {
+                    return true;
+                }
             }
             return false;
         }
 
+
+        //Method for removing a user from a specific chat
         public async Task<bool> RemoveUsersFromChatAsync(int chatId, params ApplicationUser[] users)
         {
             var chat = await _chats.FindAsync(chatId);
@@ -96,6 +112,7 @@ namespace Server.Service
                         chat.ApplicationUsers.Remove(user);
                     }
                 }
+                _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1){
                     return true;
@@ -105,6 +122,8 @@ namespace Server.Service
 
         }
 
+
+        //Method for retrieving list of chats that a specific user is part of
         public async Task<ICollection<Chat>> RetrieveChatsAsync(ApplicationUser user)
         {
             return await _chats.Cast<Chat>().Where(c => c.ApplicationUsers.Contains(user)).ToListAsync();
@@ -116,6 +135,8 @@ namespace Server.Service
             return chat.Messages.ToList();
         }
 
+
+        //Method for sending a message in a chat
         public async Task<bool> SendMessageAsync(int chatId, Message message)
         {
             var chat = await _chats.FindAsync(chatId);
