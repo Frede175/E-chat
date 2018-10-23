@@ -15,7 +15,8 @@ namespace Server.Service
 
         private readonly ApplicationDbContext _context;
 
-        public DepartmentService(ApplicationDbContext context) {
+        public DepartmentService(ApplicationDbContext context)
+        {
             _department = context.Set<Department>();
             _context = context;
         }
@@ -24,28 +25,42 @@ namespace Server.Service
         public async Task<bool> CreateDepartmentAsync(Department department)
         {
             _department.Add(department);
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
+            if (result == 1) return true;
             return true;
         }
 
-        public List<Department> GetDepartments() {
-            return _department.Cast<Department>().ToList();
+        public async Task<List<Department>> GetDepartmentsAsync()
+        {
+            return await _department.Cast<Department>().ToListAsync();
         }
 
-        public void AddUsersToDepartment(int departmentId, params ApplicationUser[] users)
+        public async Task<List<Department>> GetDepartmentsAsync(ApplicationUser user)
         {
-            throw new System.NotImplementedException();
+            return await _department.Cast<Department>().Where(d => d.ApplicationUsers.Contains(user)).ToListAsync();
         }
 
-        public void AddUserToDepartment(int departmentId, ApplicationUser user)
+        public async Task<bool> AddUsersToDepartmentAsync(int departmentId, params ApplicationUser[] users)
         {
-            throw new System.NotImplementedException();
+            var department = await _department.FindAsync(departmentId);
+            if (department != null)
+            {
+                foreach (var user in users)
+                {
+                    department.ApplicationUsers.Add(user);
+                }
+                _department.Update(department);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
+            }
+            return false;
         }
 
-        public async Task<bool> RemoveDepartmentSync(int Id)
+        public async Task<bool> RemoveDepartmentASync(int id)
         {
-            var department = await _department.FindAsync(Id);
-            if (department != null) {
+            var department = await _department.FindAsync(id);
+            if (department != null)
+            {
                 _department.Remove(department);
                 await _context.SaveChangesAsync();
                 return true;
@@ -53,19 +68,34 @@ namespace Server.Service
             return false;
         }
 
-        public void RemoveUserFromDepartment(int departmentId, ApplicationUser user)
+        public async Task<bool> RemoveUsersFromDepartmentAsync(int departmentId, params ApplicationUser[] users)
         {
-            throw new System.NotImplementedException();
+            var department = await _department.FindAsync(departmentId);
+            if (department != null)
+            {
+                foreach (var user in users)
+                {
+                    department.ApplicationUsers.Remove(user);
+                }
+
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
+            }
+            return false;
         }
 
-        public void RemoveUsersFromDepartment(int departmentId, params ApplicationUser[] user)
+        public async Task<bool> UpdateDepartmentAsync(Department department)
         {
-            throw new System.NotImplementedException();
-        }
+            var d = await _department.FindAsync(department.Id);
+            if (d != null)
+            {
+                d.Name = department.Name;
+                _department.Update(d);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
+            }
 
-        public void UpdateDepartment(Department department)
-        {
-            throw new System.NotImplementedException();
+            return false;
         }
 
     }
