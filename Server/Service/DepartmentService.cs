@@ -35,9 +35,9 @@ namespace Server.Service
             return await _department.Cast<Department>().ToListAsync();
         }
 
-        public async Task<List<Department>> GetDepartmentsAsync(ApplicationUser user)
+        public async Task<List<Department>> GetDepartmentsAsync(string userId)
         {
-            return await _department.Cast<Department>().Where(d => d.ApplicationUsers.Contains(user)).ToListAsync();
+            return await _department.Cast<Department>().Where(d => d.ApplicationUsers.Any(u => u.Id == userId)).ToListAsync();
         }
 
         public async Task<bool> AddUsersToDepartmentAsync(int departmentId, params ApplicationUser[] users)

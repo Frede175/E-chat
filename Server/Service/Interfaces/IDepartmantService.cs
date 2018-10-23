@@ -19,7 +19,7 @@ namespace Server.Service.Interfaces
         
         Task<List<Department>> GetDepartmentsAsync();
 
-        Task<List<Department>> GetDepartmentsAsync(ApplicationUser user);
+        Task<List<Department>> GetDepartmentsAsync(string userId);
 
 
     }
