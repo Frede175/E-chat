@@ -43,7 +43,11 @@ namespace Server.Service
 
         public async Task<bool> ChatIsActiveAsync(int chatId)
         {
-            throw new NotImplementedException();
+            var chat = await _chats.FindAsync(chatId);
+            if (chat != null){
+                return chat.ApplicationUsers.Any();
+            }
+            return false;
         }
 
         public async Task<bool> CreateChatAsync(Chat chat)
