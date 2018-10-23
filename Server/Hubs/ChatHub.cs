@@ -12,6 +12,19 @@ namespace Server.Hubs
     [Authorize(AuthenticationSchemes = OpenIddictValidationDefaults.AuthenticationScheme)]
     public class ChatHub : Hub
     {
+
+        private readonly UserManager<ApplicationUser> _userManager;
+        
+        public ChatHub(UserManager<ApplicationUser> userManager) {
+            _userManager = userManager;
+        }
+
+        public async Task GetUser() {
+            var user = _userManager.GetUserAsync(Context.User);
+            await Clients.Caller.SendAsync("Users", user);
+        }
+
+
         public async Task SendMessage(MessageObject message)
         {
 

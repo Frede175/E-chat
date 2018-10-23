@@ -9,7 +9,7 @@ using Server.Service.Interfaces;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize] 
+    [Authorize] 
     [ApiController]
     public class ValuesController : ControllerBase
     {
