@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Server.Context;
 
-namespace Server.Models
+namespace Server.DbModels
 {
     public class Department
     {
