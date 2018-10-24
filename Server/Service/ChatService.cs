@@ -181,6 +181,10 @@ namespace Server.Service
                                       c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
+        public async Task<ICollection<Chat>> RetrieveChatsAsync(string userId) {
+            return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
+        }
+
         public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId)
         {
             var chat = await _chats.FindAsync(chatId);

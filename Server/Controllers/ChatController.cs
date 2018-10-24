@@ -20,7 +20,7 @@ namespace Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public ChatController(IChatService chatService, , UserManager<ApplicationUser> userManager)
+        public ChatController(IChatService chatService, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _chatService = chatService;
