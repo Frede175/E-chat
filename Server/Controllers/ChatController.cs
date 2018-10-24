@@ -36,6 +36,21 @@ namespace Server.Controllers
         }
 
 
+        // POST: https://localhost:5001/api/chat/
+        [HttpPost("{departmentId}")]
+        public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat){
+            var result = await _chatService.CreateChatAsync(new DbModels.Chat()
+            {
+                DepartmentId = departmentId,
+                Name = chat.Name
+            });
+            if (result)
+            {
+                return new OkResult();
+            }
+
+            return new BadRequestResult();
+        }
 
 
     }
