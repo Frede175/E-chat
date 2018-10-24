@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Server.Context;
 using Server.DbModels;
@@ -14,16 +15,18 @@ namespace Server.Service
         private readonly DbSet<Message> _messages;
         private readonly DbSet<Chat> _chats;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly DbSet<UserChat> _userChat;
 
 
-        public ChatService(ApplicationDbContext context)
+        public ChatService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _messages = context.Set<Message>();
             _chats = context.Set<Chat>();
             _context = context;
             _userChat = context.Set<UserChat>();
+            _userManager = userManager;
 
         }
 
@@ -171,9 +174,9 @@ namespace Server.Service
         /// </summary>
         /// <returns>The chats async.</returns>
         /// <param name="user">User.</param>
-        public async Task<ICollection<Chat>> RetrieveChatsAsync(ApplicationUser user)
+        public async Task<ICollection<Chat>> RetrieveChatsAsync(string userId)
         {
-            return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == user.Id)).ToListAsync();
+            return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
         public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId)
@@ -189,21 +192,28 @@ namespace Server.Service
         /// <returns>The message async.</returns>
         /// <param name="chatId">Chat identifier.</param>
         /// <param name="message">Message.</param>
-        public async Task<bool> SendMessageAsync(int chatId, Message message)
+        public async Task<Message> SendMessageAsync(int chatId, string userId, string content)
         {
             var chat = await _chats.FindAsync(chatId);
-            if (message != null)
+            if (!string.IsNullOrEmpty(content))
             {
+                var message = new Message()
+                {
+                    Content = content,
+                    TimeStamp = DateTime.Now,
+                    SenderId = userId
+                };
+
                 chat.Messages.Add(message);
                 _messages.Add(message);
                 _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
                 {
-                    return true;
+                    return message;
                 }
             }
-            return false;
+            return null;
         }
     }
 }

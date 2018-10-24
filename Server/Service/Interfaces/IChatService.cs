@@ -10,7 +10,7 @@ namespace Server.Service.Interfaces
     {
         Task<bool> ChatIsActiveAsync(int chatId);
 
-        Task<bool> SendMessageAsync(int chatId, Message message);
+        Task<Message> SendMessageAsync(int chatId, string userId, string content);
 
         Task<bool> CreateChatAsync(Chat chat);
 
@@ -24,7 +24,7 @@ namespace Server.Service.Interfaces
 
         Task<ICollection<Message>> RetrieveMessagesAsync(int chatId);
 
-        Task<ICollection<Chat>> RetrieveChatsAsync(ApplicationUser user);
+        Task<ICollection<Chat>> RetrieveChatsAsync(string userId);
 
     }
 }

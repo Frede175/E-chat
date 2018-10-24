@@ -4,7 +4,7 @@ using Server.Context;
 
 namespace Server.Models
 {
-    public class Messages
+    public class Message
     {
         public int Id { get; set; }
 
@@ -13,5 +13,17 @@ namespace Server.Models
         public string Content { get; set; }
 
         public User user { get; set; }
+
+        public Message(){
+
+        }
+
+
+        public Message(DbModels.Message message){
+            Id = message.Id;
+            TimeStamp = message.TimeStamp;
+            Content = message.Content;
+            user = new User(message.ApplicationUser);
+        }
     }
 }
