@@ -8,6 +8,8 @@ namespace Server.Models
     {
         public int Id { get; set; }
 
+        public int ChatId { get; set; }
+
         public DateTime TimeStamp { get; set; }
 
         public string Content { get; set; }
@@ -19,11 +21,12 @@ namespace Server.Models
         }
 
 
-        public Message(DbModels.Message message){
+        public Message(DbModels.Message message, int chatId){
             Id = message.Id;
             TimeStamp = message.TimeStamp;
             Content = message.Content;
             user = new User(message.ApplicationUser);
+            ChatId = chatId;
         }
     }
 }
