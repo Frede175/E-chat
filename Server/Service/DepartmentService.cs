@@ -12,6 +12,7 @@ namespace Server.Service
     {
 
         private readonly DbSet<Department> _department;
+        private readonly DbSet<UserDepartment> _userDepartment;
 
         private readonly ApplicationDbContext _context;
 
@@ -37,7 +38,7 @@ namespace Server.Service
 
         public async Task<List<Department>> GetDepartmentsAsync(string userId)
         {
-            return await _department.Cast<Department>().Where(d => d.ApplicationUsers.Any(u => u.Id == userId)).ToListAsync();
+            return await _department.Cast<Department>().Where(d => d.UserDepartments.Any(u => u.UserId == userId)).ToListAsync();
         }
 
         public async Task<bool> AddUsersToDepartmentAsync(int departmentId, params ApplicationUser[] users)
@@ -47,7 +48,7 @@ namespace Server.Service
             {
                 foreach (var user in users)
                 {
-                    department.ApplicationUsers.Add(user);
+                    _userDepartment.Add(new UserDepartment() { UserId = user.Id, DepartmentId = department.Id });
                 }
                 _department.Update(department);
                 var result = await _context.SaveChangesAsync();
@@ -75,7 +76,7 @@ namespace Server.Service
             {
                 foreach (var user in users)
                 {
-                    department.ApplicationUsers.Remove(user);
+                    _userDepartment.Remove(new UserDepartment(){UserId = user.Id, DepartmentId = department.Id});
                 }
 
                 _department.Update(department);
