@@ -53,13 +53,29 @@ namespace Server.Controllers
         }
 
 
-        // POST: https://localhost:5001/api/chat/Leave/{chatId}
+        // POST: https://localhost:5001/api/chat/leave/{chatId}
         [Route("[action]")]
-        [HttpPost("{chatId}")]
+        [HttpPost("{chatId}", Name = "leave")]
         public async Task<ActionResult> Leave(int chatId, string userId)
         {
             
             var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
+
+            if (result)
+            {
+                return new OkResult();
+            }
+
+            return new BadRequestResult();
+        }
+
+
+        // POST: https://localhost:5001/api/chat/add/{chatId}
+        [Route("[action]")]
+        [HttpPost("{chatId}", Name = "add")]
+        public async Task<ActionResult> AddUserToChat(int chatId, string userId)
+        {
+            var result = (await _chatService.AddUsersToChatAsync(chatId, userId));
 
             if (result)
             {
