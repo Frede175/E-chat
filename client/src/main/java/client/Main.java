@@ -1,5 +1,8 @@
 package client;
 
+import Business.Connection.RestConnect;
+import Business.Models.Department;
+
 import java.util.Scanner;
 
 public class Main {
@@ -8,6 +11,7 @@ public class Main {
         Client client = new Client(new MessageReceiver());
 
         Scanner scanner = new Scanner(System.in);
+
 
         String input;
         while (true) {
