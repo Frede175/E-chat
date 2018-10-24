@@ -4,7 +4,7 @@ namespace Server.Models
 {
     public class Department
     {
-
+        public Department() { }
         public Department(DbModels.Department department)
         {
             Id = department.Id;
