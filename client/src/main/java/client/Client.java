@@ -1,17 +1,16 @@
 package client;
 
+import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
+import Business.Models.Chat;
+import Business.Models.CreateUser;
 import Business.Models.Department;
+import Business.Models.User;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
-import com.microsoft.signalr.LogLevel;
 import io.reactivex.Single;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -20,13 +19,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-
-import static org.apache.http.protocol.HTTP.USER_AGENT;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
 
     private final String jsonType = "application/json";
     private final String formType = "application/x-www-form-urlencoded";
+    private final String username = "admin";
+    private final String password = "AdminAdmin123*";
 
     private HubConnection chatConnection;
 
@@ -34,10 +35,22 @@ public class Client {
 
     public Client(IMessageReceiver messageReceiver) {
         this.messageReceiver = messageReceiver;
-        CreateUser();
-        String token = login();
+
         RestConnect rest = new RestConnect();
-        rest.put("/api/values/", new Department(1, "Name"), token);
+        String result = rest.post(PathEnum.CreateUser, null, new CreateUser(username, password), null);
+        System.out.println(result);
+
+        String token = rest.login(username, password);
+        System.out.println("Token: " + token);
+
+
+        //rest.post(PathEnum.CreateDepartment, null, new Department(0, "Fred"), token);
+        List<Department> d = rest.get(PathEnum.GetDepartments, token);
+
+        for (Department department : d) {
+            System.out.println(department.getName());
+        }
+
 
         chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
                 .withAccessTokenProvider(Single.just(token))
@@ -63,82 +76,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-    private void CreateUser() {
-        String result = sendPost("/api/Auth", "{ \"username\":\"admin\",\"password\": \"AdminAdmin123*\" }", jsonType);
-        System.out.println(result);
-    }
-
-
-    private String login() {
-
-
-
-
-        //request.addHeader("User-Agent", USER_AGENT);
-
-        String result = sendPost("/connect/token", "grant_type=password&username=admin&password=AdminAdmin123*", formType);
-        System.out.printf(result);
-        JsonObject json = new JsonParser().parse(result).getAsJsonObject();
-
-        if (json != null) {
-            return json.get("access_token").getAsString();
-        }
-        return null;
-    }
-
-    private String sendPost(String path, String parameters, String contentType) {
-        String url = "https://localhost:5001" + path;
-        byte[] postData = parameters.getBytes(StandardCharsets.UTF_8);
-        HttpURLConnection con = null;
-
-        String out = null;
-
-
-        try {
-            URL myUrl = new URL(url);
-
-            con = (HttpURLConnection) myUrl.openConnection();
-
-            con.setDoOutput(true);
-            con.setRequestMethod("POST");
-            con.setRequestProperty("User-Agent", "Java client");
-            con.setRequestProperty("Content-Type", contentType);
-
-            try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
-                wr.write(postData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            StringBuilder content;
-
-            try (BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()))) {
-
-                String line;
-                content = new StringBuilder();
-
-                while ((line = in.readLine()) != null) {
-                    content.append(line);
-                    content.append(System.lineSeparator());
-                }
-                out = content.toString();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            assert con != null;
-            con.disconnect();
-        }
-
-        return out;
-    }
-
-
 }
+
+
+
