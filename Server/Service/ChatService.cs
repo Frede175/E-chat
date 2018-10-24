@@ -174,9 +174,11 @@ namespace Server.Service
         /// </summary>
         /// <returns>The chats async.</returns>
         /// <param name="user">User.</param>
-        public async Task<ICollection<Chat>> RetrieveChatsAsync(string userId)
+        public async Task<ICollection<Chat>> RetrieveChatsAsync(string userId, int departmentId)
         {
-            return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
+            return await _chats.Cast<Chat>()
+                               .Where(c => c.Department.Id == departmentId &&
+                                      c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
         public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId)

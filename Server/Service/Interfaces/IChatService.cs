@@ -24,7 +24,7 @@ namespace Server.Service.Interfaces
 
         Task<ICollection<Message>> RetrieveMessagesAsync(int chatId);
 
-        Task<ICollection<Chat>> RetrieveChatsAsync(string userId);
+        Task<ICollection<Chat>> RetrieveChatsAsync(string userId, int departmentId);
 
     }
 }

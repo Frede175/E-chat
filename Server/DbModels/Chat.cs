@@ -14,5 +14,8 @@ namespace Server.DbModels
         public virtual ICollection<UserChat> UserChats { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
+
+        public virtual Department Department { get; set; }
+
     }
 }
