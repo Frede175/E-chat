@@ -53,5 +53,21 @@ namespace Server.Controllers
         }
 
 
+        // POST: https://localhost:5001/api/chat/Leave/{chatId}
+        [Route("[action]")]
+        [HttpPost("{chatId}")]
+        public async Task<ActionResult> Leave(int chatId, string userId)
+        {
+            
+            var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
+
+            if (result)
+            {
+                return new OkResult();
+            }
+
+            return new BadRequestResult();
+        }
+
     }
 }

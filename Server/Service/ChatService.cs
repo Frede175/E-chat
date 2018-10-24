@@ -37,14 +37,14 @@ namespace Server.Service
         /// <returns>The users to chat async.</returns>
         /// <param name="chatId">Chat identifier.</param>
         /// <param name="users">Users.</param>
-        public async Task<bool> AddUsersToChatAsync(int chatId, params ApplicationUser[] users)
+        public async Task<bool> AddUsersToChatAsync(int chatId, params string[] userIds)
         {
             var chat = await _chats.FindAsync(chatId);
             if (chat != null)
             {
-                foreach (var user in users)
+                foreach (string userId in userIds)
                 {
-                    _userChat.Add(new UserChat() { UserId = user.Id, ChatId = chat.Id});
+                    _userChat.Add(new UserChat() { UserId = userId, ChatId = chat.Id});
                 }
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
@@ -144,17 +144,17 @@ namespace Server.Service
         /// <returns>The users from chat async.</returns>
         /// <param name="chatId">Chat identifier.</param>
         /// <param name="users">Users.</param>
-        public async Task<bool> RemoveUsersFromChatAsync(int chatId, params ApplicationUser[] users)
+        public async Task<bool> RemoveUsersFromChatAsync(int chatId, params string[] userIds)
         {
             var chat = await _chats.FindAsync(chatId);
 
             if (chat != null)
             {
-                foreach (var user in users)
+                foreach (string userId in userIds)
                 {
-                    if (chat.UserChats.Any(u => u.UserId == user.Id))
+                    if (chat.UserChats.Any(u => u.UserId == userId))
                     {
-                        _userChat.Remove(new UserChat() { UserId = user.Id, ChatId = chat.Id});
+                        _userChat.Remove(new UserChat() { UserId = userId, ChatId = chat.Id});
                     }
                 }
                 _chats.Update(chat);
