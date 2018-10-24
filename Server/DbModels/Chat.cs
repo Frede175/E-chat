@@ -11,7 +11,7 @@ namespace Server.DbModels
 
         public string Name { get; set; }
 
-        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
+        public virtual ICollection<UserChat> UserChats { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
     }

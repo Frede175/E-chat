@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using Server.Models;
+using Server.DbModels;
 
 namespace Server.Context {
     public class ApplicationUser : IdentityUser{
-        public virtual ICollection<Department> Departments {get;set;}
+        public virtual ICollection<UserDepartment> UserDepartments {get;set;}
 
-        public virtual ICollection<Chat> Chats {get;set;}
+        public virtual ICollection<UserChat> UserChats {get;set;}
     }
 }

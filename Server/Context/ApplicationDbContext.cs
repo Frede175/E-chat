@@ -14,9 +14,15 @@ namespace Server.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Core Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Core Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+            builder.Entity<UserChat>().HasKey(u => new { u.ChatId, u.UserId });
+            builder.Entity<UserDepartment>().HasKey(u => new { u.Department, u.DepartmentId });
+
+            builder.Entity<UserChat>().HasOne(u => u.ApplicationUser).WithMany(u => u.UserChats).HasForeignKey(u => u.UserId);
+            builder.Entity<UserChat>().HasOne(u => u.Chat).WithMany(u => u.UserChats).HasForeignKey(u => u.ChatId);
+
+            builder.Entity<UserDepartment>().HasOne(u => u.ApplicationUser).WithMany(u => u.UserDepartments).HasForeignKey(u => u.UserId);
+            builder.Entity<UserDepartment>().HasOne(u => u.Department).WithMany(u => u.UserDepartments).HasForeignKey(u => u.DepartmentId);
+            
         }
 
         public DbSet<Chat> Chat { get; set; }
