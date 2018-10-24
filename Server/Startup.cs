@@ -97,6 +97,7 @@ namespace Server
 
 
             services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IChatService, ChatService>();
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
