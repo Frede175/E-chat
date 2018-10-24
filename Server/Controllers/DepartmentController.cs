@@ -55,9 +55,10 @@ namespace Server.Controllers
             return new BadRequestResult();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddUserToDepartment(int depId, string userId){
-            var result = await _departmentService.AddUsersToDepartmentAsync(depId,await _userManager.FindByIdAsync(userId));
+        // POST: https://localhost:5001/api/Department/{departmentId}
+        [HttpPost("{departmentId}")]
+        public async Task<IActionResult> AddUserToDepartment(int departmentId, string userId){
+            var result = await _departmentService.AddUsersToDepartmentAsync(departmentId,await _userManager.FindByIdAsync(userId));
             if (result) {
                 return new OkResult();
             }
