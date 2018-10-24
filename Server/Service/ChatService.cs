@@ -15,12 +15,16 @@ namespace Server.Service
         private readonly DbSet<Chat> _chats;
         private readonly ApplicationDbContext _context;
 
+        private readonly DbSet<UserChat> _userChat;
+
 
         public ChatService(ApplicationDbContext context)
         {
             _messages = context.Set<Message>();
             _chats = context.Set<Chat>();
             _context = context;
+            _userChat = context.Set<UserChat>();
+
         }
 
 
@@ -37,9 +41,8 @@ namespace Server.Service
             {
                 foreach (var user in users)
                 {
-                    chat.ApplicationUsers.Add(user);
+                    _userChat.Add(new UserChat() { UserId = user.Id, ChatId = chat.Id});
                 }
-                _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
                 {
@@ -61,7 +64,7 @@ namespace Server.Service
             var chat = await _chats.FindAsync(chatId);
             if (chat != null)
             {
-                return chat.ApplicationUsers.Any();
+                return _userChat.Any(c => c.ChatId == chat.Id);
             }
             return false;
         }
@@ -94,9 +97,9 @@ namespace Server.Service
         public async Task<bool> InviteToChatAsync(int chatId, ApplicationUser user)
         {
             var chat = await _chats.FindAsync(chatId);
-            if (!chat.ApplicationUsers.Contains(user))
-            {
-                chat.ApplicationUsers.Add(user);
+            if (!chat.UserChats.Any(u => u.UserId == user.Id))
+            {   
+                _userChat.Add(new UserChat() { UserId = user.Id, ChatId = chat.Id});
                 _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
@@ -120,7 +123,7 @@ namespace Server.Service
             var chat = await _chats.FindAsync(chatId);
             if (chat != null)
             {
-                chat.ApplicationUsers.Remove(user);
+                _userChat.Remove(new UserChat() { UserId = user.Id, ChatId = chat.Id});
 
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
@@ -146,9 +149,9 @@ namespace Server.Service
             {
                 foreach (var user in users)
                 {
-                    if (chat.ApplicationUsers.Contains(user))
+                    if (chat.UserChats.Any(u => u.UserId == user.Id))
                     {
-                        chat.ApplicationUsers.Remove(user);
+                        _userChat.Remove(new UserChat() { UserId = user.Id, ChatId = chat.Id});
                     }
                 }
                 _chats.Update(chat);
@@ -170,7 +173,7 @@ namespace Server.Service
         /// <param name="user">User.</param>
         public async Task<ICollection<Chat>> RetrieveChatsAsync(ApplicationUser user)
         {
-            return await _chats.Cast<Chat>().Where(c => c.ApplicationUsers.Contains(user)).ToListAsync();
+            return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == user.Id)).ToListAsync();
         }
 
         public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId)
