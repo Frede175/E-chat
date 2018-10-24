@@ -140,7 +140,7 @@ namespace Server.Controllers
             return ticket;
         }
 
-        [HttpPost]
+        [HttpPost] 
         [AllowAnonymous]
         public async Task<ActionResult<string>> CreateUser(CreateUserModel model)
         {

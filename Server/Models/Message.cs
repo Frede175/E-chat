@@ -1,24 +1,32 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 using Server.Context;
 
 namespace Server.Models
 {
     public class Message
     {
-        [Key]
         public int Id { get; set; }
+
+        public int ChatId { get; set; }
 
         public DateTime TimeStamp { get; set; }
 
         public string Content { get; set; }
 
+        public User user { get; set; }
+
+        public Message(){
+
+        }
 
 
-        [ForeignKey("ApplicationUser")]
-        public string SenderId { get; set; }
-
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public Message(DbModels.Message message, int chatId){
+            Id = message.Id;
+            TimeStamp = message.TimeStamp;
+            Content = message.Content;
+            user = new User(message.ApplicationUser);
+            ChatId = chatId;
+        }
     }
 }

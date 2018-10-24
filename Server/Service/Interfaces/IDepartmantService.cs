@@ -1,5 +1,5 @@
 using Server.Context;
-using Server.Models;
+using Server.DbModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,21 +7,19 @@ namespace Server.Service.Interfaces
 {
     public interface IDepartmentService
     {
-        Task<bool> AddDepartmentAsync(Department department);
+        Task<bool> CreateDepartmentAsync(Department department);
 
-        Task<bool> RemoveDepartmentSync(int Id);
+        Task<bool> RemoveDepartmentASync(int id);
 
-        void UpdateDepartment(Department department);
+        Task<bool> UpdateDepartmentAsync(Department department);
 
-        void AddUserToDepartment(int departmentId, ApplicationUser user);
+        Task<bool> AddUsersToDepartmentAsync(int departmentId, params ApplicationUser[] users);
 
-        void AddUsersToDepartment(int departmentId, params ApplicationUser[] users);
-
-        void RemoveUserFromDepartment(int departmentId, ApplicationUser user);
-
-        void RemoveUsersFromDepartment(int departmentId, params ApplicationUser[] user);
+        Task<bool> RemoveUsersFromDepartmentAsync(int departmentId, params ApplicationUser[] users);
         
-        List<Department> GetDepartments();
+        Task<List<Department>> GetDepartmentsAsync();
+
+        Task<List<Department>> GetDepartmentsAsync(string userId);
 
 
     }
