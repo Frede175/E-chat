@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation;
 using Microsoft.AspNetCore.Http;
 using Server.Context;
+using Server.Service.Interfaces;
+using System.Linq;
+using Server.Models;
 
 namespace Server.Hubs
 {
@@ -13,30 +16,41 @@ namespace Server.Hubs
     public class ChatHub : Hub
     {
 
+        private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
-        
-        public ChatHub(UserManager<ApplicationUser> userManager) {
-            _userManager = userManager;
-        }
 
-        public async Task GetUser() {
-            var user = _userManager.GetUserAsync(Context.User);
-            await Clients.Caller.SendAsync("Users", user);
-        }
-
-
-        public async Task SendMessage(MessageObject message)
+        public ChatHub(IChatService chat, UserManager<ApplicationUser> userManager)
         {
+            _chatService = chat;
+            _userManager = userManager;
 
-            message.User = Context.User.Identity.Name;
-            await Clients.All.SendAsync("ReceiveMessage", message);
         }
-    }
 
 
-    public class MessageObject
-    {
-        public string User { get; set; }
-        public string Message { get; set; }
+        public async Task SendMessage(MessageIn message)
+        {
+            var userId = _userManager.GetUserId(Context.User);
+
+            var returnMessage = await _chatService.SendMessageAsync(message.ChatId, userId, message.Content);
+            if(returnMessage != null){
+                await Clients.Group(message.ChatId.ToString()).SendAsync("RecieveMessage", new Message(returnMessage, message.ChatId));
+            }
+
+        }
+
+
+        public async override Task OnConnectedAsync()
+        {
+            var userId = _userManager.GetUserId(Context.User);
+            var chats = await _chatService.RetrieveChatsAsync(userId);
+            var chatIds = chats.Select(c => c.Id);
+
+            foreach (int chatId in chatIds)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, chatId.ToString());
+            }
+        }
+
+
     }
 }

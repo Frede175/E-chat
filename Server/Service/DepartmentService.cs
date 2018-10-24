@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Context;
-using Server.Models;
+using Server.DbModels;
 using Server.Service.Interfaces;
 
 namespace Server.Service
@@ -12,60 +12,92 @@ namespace Server.Service
     {
 
         private readonly DbSet<Department> _department;
+        private readonly DbSet<UserDepartment> _userDepartment;
 
         private readonly ApplicationDbContext _context;
 
-        public DepartmentService(ApplicationDbContext context) {
+        public DepartmentService(ApplicationDbContext context)
+        {
             _department = context.Set<Department>();
             _context = context;
         }
 
 
-        public async Task<bool> AddDepartmentAsync(Department department)
+        public async Task<bool> CreateDepartmentAsync(Department department)
         {
             _department.Add(department);
-            await _context.SaveChangesAsync();
-            return true;
+            var result = await _context.SaveChangesAsync();
+            if (result == 1) return true;
+            return false;
         }
 
-        public List<Department> GetDepartments() {
-            return _department.Cast<Department>().ToList();
-        }
-
-        public void AddUsersToDepartment(int departmentId, params ApplicationUser[] users)
+        public async Task<List<Department>> GetDepartmentsAsync()
         {
-            throw new System.NotImplementedException();
+            return await _department.Cast<Department>().ToListAsync();
         }
 
-        public void AddUserToDepartment(int departmentId, ApplicationUser user)
+        public async Task<List<Department>> GetDepartmentsAsync(string userId)
         {
-            throw new System.NotImplementedException();
+            return await _department.Cast<Department>().Where(d => d.UserDepartments.Any(u => u.UserId == userId)).ToListAsync();
         }
 
-        public async Task<bool> RemoveDepartmentSync(int Id)
+        public async Task<bool> AddUsersToDepartmentAsync(int departmentId, params ApplicationUser[] users)
         {
-            var department = await _department.FindAsync(Id);
-            if (department != null) {
-                _department.Remove(department);
-                await _context.SaveChangesAsync();
-                return true;
+            var department = await _department.FindAsync(departmentId);
+            if (department != null)
+            {
+                foreach (var user in users)
+                {
+                    _userDepartment.Add(new UserDepartment() { UserId = user.Id, DepartmentId = department.Id });
+                }
+                _department.Update(department);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
             }
             return false;
         }
 
-        public void RemoveUserFromDepartment(int departmentId, ApplicationUser user)
+        public async Task<bool> RemoveDepartmentASync(int id)
         {
-            throw new System.NotImplementedException();
+            var department = await _department.FindAsync(id);
+            if (department != null)
+            {
+                _department.Remove(department);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
+            }
+            return false;
         }
 
-        public void RemoveUsersFromDepartment(int departmentId, params ApplicationUser[] user)
+        public async Task<bool> RemoveUsersFromDepartmentAsync(int departmentId, params ApplicationUser[] users)
         {
-            throw new System.NotImplementedException();
+            var department = await _department.FindAsync(departmentId);
+            if (department != null)
+            {
+                foreach (var user in users)
+                {
+                    _userDepartment.Remove(new UserDepartment(){UserId = user.Id, DepartmentId = department.Id});
+                }
+
+                _department.Update(department);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
+            }
+            return false;
         }
 
-        public void UpdateDepartment(Department department)
+        public async Task<bool> UpdateDepartmentAsync(Department department)
         {
-            throw new System.NotImplementedException();
+            var d = await _department.FindAsync(department.Id);
+            if (d != null)
+            {
+                d.Name = department.Name;
+                _department.Update(d);
+                var result = await _context.SaveChangesAsync();
+                if (result == 1) return true;
+            }
+
+            return false;
         }
 
     }
