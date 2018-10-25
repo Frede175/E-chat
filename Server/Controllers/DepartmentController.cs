@@ -13,7 +13,7 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class DepartmentController
+    public class DepartmentController : Controller
     {
 
         private readonly IDepartmentService _departmentService;
@@ -70,8 +70,8 @@ namespace Server.Controllers
         }
 
 
-        // POST: https://localhost:5001/api/Department/removeDep{departmentId}
-        [HttpPost("{departmentId}", Name = "removeDep")]
+        // DELETE: https://localhost:5001/api/Department/remove/{departmentId}
+        [HttpDelete("remove/{departmentId}")]
         public async Task<ActionResult> RemoveDepartment(int departmentId)
         {
             var result = await _departmentService.RemoveDepartmentASync(departmentId);
