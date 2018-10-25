@@ -1,5 +1,6 @@
 package Business.Connection;
 
+import Business.Models.Chat;
 import Business.Models.Department;
 import Business.Models.Message;
 import com.google.gson.reflect.TypeToken;
@@ -17,6 +18,7 @@ public enum PathEnum {
     GetMessages("/api/messages/", ConnectionType.GET, new TypeToken<List<Message>>() {}.getType()),
     DeleteUser("/api/departments/", ConnectionType.DELETE, null),
     CreateChatroom("(/api/chat/", ConnectionType.POST, null),
+    GetChats("/api/chat/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
     DeleteChatroom("/api/chat/", ConnectionType.DELETE, null),
     RemoveUserFromChat("/api/chat/remove/", ConnectionType.POST, null),
     AddUserToChat("/api/chat/add/", ConnectionType.POST, null),

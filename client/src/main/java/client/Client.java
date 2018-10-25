@@ -2,6 +2,7 @@ package client;
 
 import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
+import Business.Models.Chat;
 import Business.Models.CreateUser;
 import Business.Models.Department;
 import com.microsoft.signalr.HubConnection;
@@ -25,14 +26,24 @@ public class Client {
         this.messageReceiver = messageReceiver;
 
         RestConnect rest = new RestConnect();
-        String result = rest.post(PathEnum.CreateUser, null, new CreateUser(username, password), null);
-        System.out.println(result);
+        //String result = rest.post(PathEnum.CreateUser, null, new CreateUser(username, password), null);
+        //System.out.println(result);
 
         String token = rest.login(username, password);
-        System.out.println("Token: " + token);
+        //System.out.println("Token: " + token);
+
+        rest.post(PathEnum.CreateChatroom, 1, new Chat(1, "Chat1"), token);
+
+        rest.delete(PathEnum.DeleteDepartment, 1, token);
+
+        List<Chat> c = rest.get(PathEnum.GetChats, 1, token);
+
+        for (Chat chat : c) {
+            System.out.println(chat.getName());
+        }
 
 
-        rest.post(PathEnum.CreateDepartment, null, new Department(0, "Jeff1"), token);
+        //rest.post(PathEnum.CreateDepartment, null, new Department(0, "Jeff1"), token);
         List<Department> d = rest.get(PathEnum.GetDepartments, null, token);
 
         for (Department department : d) {

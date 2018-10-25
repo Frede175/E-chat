@@ -224,13 +224,24 @@ public class RestConnect {
             case PUT: {
                 break;
             }
+            */
 
             //TODO implement
             case DELETE: {
+                request = new HttpDelete(url);
+                StringEntity postingString = null;
+                try {
+                    postingString = new StringEntity(gson.toJson(param));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                // add request header
+                request.addHeader("Content-type", "application/json");
+                //((HttpDelete) request).setEntity(postingString);
                 break;
             }
 
-            */
+
 
 
 
