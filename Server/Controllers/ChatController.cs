@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Context;
@@ -14,7 +15,7 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class ChatController
+    public class ChatController : Controller
     {
         private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -56,10 +57,10 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/chat/leave/{chatId}
         [Route("[action]")]
         [HttpPost("{chatId}", Name = "leave")]
-        public async Task<ActionResult> Leave(int chatId, string userId)
+        public async Task<ActionResult> Leave(int chatId)
         {
-            
-            var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
+            var user = await _userManager.GetUserAsync(User);
+            var result = (await _chatService.RemoveUsersFromChatAsync(chatId, user.Id));
 
             if (result)
             {
@@ -85,5 +86,22 @@ namespace Server.Controllers
             return new BadRequestResult();
         }
 
+
+
+        // POST: https://localhost:5001/api/chat/remove/{chatId}
+        [Route("{action}")]
+        [HttpPost("{chatId}", Name = "remove")]
+        public async Task<ActionResult> RemoveUserFromChat(int chatId, string userId)
+        {
+            var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
+
+            if (result)
+            {
+                return new OkResult();
+            }
+
+            return new BadRequestResult();
+
+        }
     }
 }
