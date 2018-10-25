@@ -1,9 +1,11 @@
 package Business.Connection;
 
 
+import Acquaintence.IToMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ibm.icu.impl.Trie2;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -19,7 +21,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
@@ -76,15 +80,17 @@ public class RestConnect {
 
     }
 
-    public <T, T1> T get(PathEnum path, T1 param, String token) {
+    public <T, T1> T get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
         {
             try {
 
                 HttpClient client = HttpClientBuilder.create().build();
 
-                HttpGet request = request(path, param, token);
+                HttpGet request = request(path, route, param, token);
 
                 HttpResponse response = null;
+
+
 
                 response = client.execute(request);
 
@@ -120,12 +126,13 @@ public class RestConnect {
 
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPost request = request(path, param, token);
+            HttpPost request = request(path, param, null, token);
             StringEntity postingString = new StringEntity(gson.toJson(content));
             request.setEntity(postingString);
 
             request.addHeader("Content-type", "application/json");
             HttpResponse response = null;
+            System.out.println(request.getEntity().toString());
 
             response = client.execute(request);
             System.out.println("Response Code Post: "
@@ -138,7 +145,7 @@ public class RestConnect {
     }
 
 
-    //TODO implement
+    /*//TODO implement
     public <T, T1, T2> T2 delete(PathEnum path, T param, String token) {
         try {
 
@@ -187,31 +194,41 @@ public class RestConnect {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    public <T, T1> T1 request(PathEnum path, T param, String token) {
+    /***
+     *
+     * @param path Which call from client
+     * @param route The route variable
+     * @param param Params for get method (After the ?)
+     * @param token The login token
+     * @param <T> Generic type of the route parameter
+     * @param <T1> The respective request type
+     * @return The respective request
+     */
+    public <T, T1> T1 request(PathEnum path, T route, HashMap<String, String> param, String token) {
         HttpRequestBase request = null;
         String url = this.url + path.getPath();
-        if (param != null) {
-            url = url.concat(param.toString());
-            System.out.println("URL: " + url);
-        } else {
-            System.out.println("param = null");
+        if (route != null) {
+            url = url.concat(route.toString());
         }
+        if(param != null) {
+            url = url.concat("?");
+            for (Map.Entry<String, String> entry : param.entrySet()) {
+                url = url.concat(entry.getKey() + "=" + entry.getValue());
+            }
+        }
+        //TODO delete this line
+        //url = url.concat("?departmenId=1");
+
+
         System.out.println(url);
         switch (path.getType()){
             case POST: {
 
                 request = new HttpPost(url);
-                StringEntity postingString = null;
-                try {
-                    postingString = new StringEntity(gson.toJson(param));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
                 // add request header
                 request.addHeader("Content-type", "application/json");
-                ((HttpPost) request).setEntity(postingString);
                 break;
             }
             case GET: {
@@ -231,7 +248,7 @@ public class RestConnect {
                 request = new HttpDelete(url);
                 StringEntity postingString = null;
                 try {
-                    postingString = new StringEntity(gson.toJson(param));
+                    postingString = new StringEntity(gson.toJson(route));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

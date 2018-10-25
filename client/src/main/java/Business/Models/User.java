@@ -1,8 +1,11 @@
 package Business.Models;
 
+import Acquaintence.IToMap;
 import Acquaintence.IUser;
 
-public class User implements IUser {
+import java.util.HashMap;
+
+public class User implements IUser, IToMap {
 
     private int ID;
     private String name;
@@ -25,5 +28,12 @@ public class User implements IUser {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public HashMap<String, String> toMap() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("userId", String.valueOf(ID));
+        return map;
     }
 }

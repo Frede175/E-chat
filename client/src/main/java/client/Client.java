@@ -9,6 +9,7 @@ import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Client {
@@ -17,6 +18,7 @@ public class Client {
     private final String formType = "application/x-www-form-urlencoded";
     private final String username = "admin";
     private final String password = "AdminAdmin123*";
+    private Department department = new Department(1, "jeff");
 
     private HubConnection chatConnection;
 
@@ -32,19 +34,22 @@ public class Client {
         String token = rest.login(username, password);
         //System.out.println("Token: " + token);
 
-        rest.post(PathEnum.CreateChatroom, 1, new Chat(1, "Chat1"), token);
+        //rest.post(PathEnum.CreateChatroom, 2, new Chat(1, "Chat1"), token);
 
-        rest.delete(PathEnum.DeleteDepartment, 1, token);
+       // rest.delete(PathEnum.DeleteDepartment, 1, token);
 
-        List<Chat> c = rest.get(PathEnum.GetChats, 1, token);
+        //rest.post(PathEnum.AddUserToChat, 2, "d8d65767-ca69-4abb-974e-a21883096b4e", token);
+
+        List<Chat> c = rest.get(PathEnum.GetChats, "d8d65767-ca69-4abb-974e-a21883096b4e", department.toMap(),  token);
 
         for (Chat chat : c) {
             System.out.println(chat.getName());
         }
 
 
-        //rest.post(PathEnum.CreateDepartment, null, new Department(0, "Jeff1"), token);
-        List<Department> d = rest.get(PathEnum.GetDepartments, null, token);
+        rest.post(PathEnum.CreateDepartment, null, new Department(0, "VICTORY"), token);
+
+        List<Department> d = rest.get(PathEnum.GetDepartments, null, department.toMap(), token);
 
         for (Department department : d) {
             System.out.println(department.getName());

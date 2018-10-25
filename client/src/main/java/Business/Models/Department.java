@@ -1,8 +1,12 @@
 package Business.Models;
 
 import Acquaintence.IDepartment;
+import Acquaintence.IToMap;
 
-public class Department implements IDepartment{
+import java.util.HashMap;
+import java.util.Map;
+
+public class Department implements IDepartment, IToMap {
 
     private int ID;
     private String name;
@@ -25,5 +29,12 @@ public class Department implements IDepartment{
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public HashMap<String, String> toMap() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("departmenId", String.valueOf(ID));
+        return map;
     }
 }
