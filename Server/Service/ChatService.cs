@@ -185,10 +185,16 @@ namespace Server.Service
             return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
-        public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId)
+        public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId, int page, int pageSize)
         {
             var chat = await _chats.FindAsync(chatId);
-            return chat.Messages.ToList();
+
+            if (chat != null) {
+                
+                return chat.Messages.OrderByDescending(m => m.TimeStamp).Skip(pageSize * page).Take(pageSize).ToList();
+            }
+
+            return null;
         }
 
 

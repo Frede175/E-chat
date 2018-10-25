@@ -22,7 +22,7 @@ namespace Server.Service.Interfaces
 
         Task<bool> InviteToChatAsync(int chatId, ApplicationUser user);
 
-        Task<ICollection<Message>> RetrieveMessagesAsync(int chatId);
+        Task<ICollection<Message>> RetrieveMessagesAsync(int chatId, int page, int pageSize);
 
         Task<ICollection<Chat>> RetrieveChatsAsync(string userId, int departmentId);
 
