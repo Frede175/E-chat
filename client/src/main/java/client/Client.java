@@ -2,24 +2,12 @@ package client;
 
 import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
-import Business.Models.Chat;
 import Business.Models.CreateUser;
 import Business.Models.Department;
-import Business.Models.User;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
@@ -44,8 +32,8 @@ public class Client {
         System.out.println("Token: " + token);
 
 
-        //rest.post(PathEnum.CreateDepartment, null, new Department(0, "Fred"), token);
-        List<Department> d = rest.get(PathEnum.GetDepartments, token);
+        rest.post(PathEnum.CreateDepartment, null, new Department(0, "Jeff1"), token);
+        List<Department> d = rest.get(PathEnum.GetDepartments, null, token);
 
         for (Department department : d) {
             System.out.println(department.getName());
@@ -77,6 +65,3 @@ public class Client {
         }
     }
 }
-
-
-

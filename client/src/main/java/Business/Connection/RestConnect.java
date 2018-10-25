@@ -8,15 +8,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import static org.apache.http.protocol.HTTP.USER_AGENT;
 
 public class RestConnect {
 
-    private final String url = "https://localhost:5001";
+    private String url = "https://localhost:5001";
     private final String formType = "application/x-www-form-urlencoded";
     //private final String url = "https://ptsv2.com";
     private final Gson gson = new Gson();
@@ -76,18 +76,13 @@ public class RestConnect {
 
     }
 
-    public <T> T get(PathEnum path, String token) {
+    public <T, T1> T get(PathEnum path, T1 param, String token) {
         {
             try {
 
-
                 HttpClient client = HttpClientBuilder.create().build();
 
-                HttpGet request = new HttpGet(url + path.getPath());
-
-                // add request header
-                request.addHeader("User-Agent", USER_AGENT);
-                request.addHeader("Authorization", "Bearer " + token);
+                HttpGet request = request(path, param, token);
 
                 HttpResponse response = null;
 
@@ -122,17 +117,35 @@ public class RestConnect {
     }
     public <T, T1, T2> T2 post(PathEnum path, T param, T1 content, String token) {
         try {
-            String url = this.url + path.getPath();
-            if (param != null) {
-                url = url.concat(param.toString());
-                System.out.println(path);
-            }
 
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPost request = new HttpPost(url);
+            HttpPost request = request(path, param, token);
             StringEntity postingString = new StringEntity(gson.toJson(content));
             request.setEntity(postingString);
+
+            request.addHeader("Content-type", "application/json");
+            HttpResponse response = null;
+
+            response = client.execute(request);
+            System.out.println("Response Code Post: "
+                    + response.getStatusLine().getStatusCode());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    //TODO implement
+    public <T, T1, T2> T2 delete(PathEnum path, T param, String token) {
+        try {
+
+            HttpClient client = HttpClientBuilder.create().build();
+
+            HttpDelete request = request(path, param, token);
+
 
             // add request header
             request.addHeader("User-Agent", USER_AGENT);
@@ -150,18 +163,22 @@ public class RestConnect {
         return null;
     }
 
-    public <T> void put(String path, T param, String token) {
+    //TODO implement
+    public <T> void put(PathEnum path, T param, String token) {
         try {
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPut request = new HttpPut(url + path);
+            HttpPut request = request(path, param, token);
             StringEntity postingString = new StringEntity(gson.toJson(param));
-            request.setEntity(postingString);
+
+
+
 
             // add request header
             request.addHeader("User-Agent", USER_AGENT);
             request.addHeader("Authorization", "Bearer " + token);
             request.addHeader("Content-type", "application/json");
+            request.setEntity(postingString);
             HttpResponse response = null;
 
             response = client.execute(request);
@@ -171,6 +188,60 @@ public class RestConnect {
             e.printStackTrace();
         }
     }
+
+    public <T, T1> T1 request(PathEnum path, T param, String token) {
+        HttpRequestBase request = null;
+        String url = this.url + path.getPath();
+        if (param != null) {
+            url = url.concat(param.toString());
+            System.out.println("URL: " + url);
+        } else {
+            System.out.println("param = null");
+        }
+        System.out.println(url);
+        switch (path.getType()){
+            case POST: {
+
+                request = new HttpPost(url);
+                StringEntity postingString = null;
+                try {
+                    postingString = new StringEntity(gson.toJson(param));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                // add request header
+                request.addHeader("Content-type", "application/json");
+                ((HttpPost) request).setEntity(postingString);
+                break;
+            }
+            case GET: {
+                request = new HttpGet(url);
+                break;
+            }
+
+            //TODO implement
+            /*
+            case PUT: {
+                break;
+            }
+
+            //TODO implement
+            case DELETE: {
+                break;
+            }
+
+            */
+
+
+
+        }
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Authorization", "Bearer " + token);
+
+
+        return (T1) request;
+    }
+
 
 
 }
