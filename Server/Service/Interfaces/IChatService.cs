@@ -16,13 +16,15 @@ namespace Server.Service.Interfaces
 
         Task<bool> RemoveChatAsync(int chatId, ApplicationUser user);
 
-        Task<bool> AddUsersToChatAsync(int chatId, params ApplicationUser[] users);
+        Task<bool> AddUsersToChatAsync(int chatId, params string[] usersIds);
 
-        Task<bool> RemoveUsersFromChatAsync(int chatId, params ApplicationUser[] users);
+        Task<bool> RemoveUsersFromChatAsync(int chatId, params string[] usersIds);
 
         Task<bool> InviteToChatAsync(int chatId, ApplicationUser user);
 
-        Task<ICollection<Message>> RetrieveMessagesAsync(int chatId);
+        Task<ICollection<Message>> RetrieveMessagesAsync(int chatId, int page, int pageSize);
+
+        Task<ICollection<Chat>> RetrieveChatsAsync(string userId, int departmentId);
 
         Task<ICollection<Chat>> RetrieveChatsAsync(string userId);
 

@@ -23,7 +23,7 @@ namespace Server.Controllers
         {
             _departmentService = departmentService;
             _userManager = userManager;
-            
+
         }
 
         // GET: https://localhost:5001/api/Department
@@ -49,7 +49,8 @@ namespace Server.Controllers
                 Name = department.Name
             };
             var result = await _departmentService.CreateDepartmentAsync(d);
-            if (result){
+            if (result)
+            {
                 return new StatusCodeResult(201);
             }
             return new BadRequestResult();
@@ -57,13 +58,29 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/Department/{departmentId}
         [HttpPost("{departmentId}")]
-        public async Task<IActionResult> AddUserToDepartment(int departmentId, string userId){
-            var result = await _departmentService.AddUsersToDepartmentAsync(departmentId,await _userManager.FindByIdAsync(userId));
-            if (result) {
+        public async Task<IActionResult> AddUserToDepartment(int departmentId, string userId)
+        {
+            var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
+            if (result)
+            {
                 return new OkResult();
             }
             return new BadRequestResult();
 
         }
+
+
+        // POST: https://localhost:5001/api/Department/removeDep{departmentId}
+        [HttpPost("{departmentId}", Name = "removeDep")]
+        public async Task<ActionResult> RemoveDepartment(int departmentId)
+        {
+            var result = await _departmentService.RemoveDepartmentASync(departmentId);
+            if (result)
+            {
+                return new OkResult();
+            }
+            return new BadRequestResult();
+        }
+
     }
 }
