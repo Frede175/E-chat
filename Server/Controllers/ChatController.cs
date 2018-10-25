@@ -29,7 +29,7 @@ namespace Server.Controllers
         }
 
 
-        // GET: https://localhost:5001/api/chat/ 
+        // GET: https://localhost:5001/api/chat/{userId} 
         [HttpGet("{userId}")]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmenId)
         {
@@ -37,7 +37,7 @@ namespace Server.Controllers
         }
 
 
-        // POST: https://localhost:5001/api/chat/
+        // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("{departmentId}")]
         public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat){
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
@@ -89,7 +89,7 @@ namespace Server.Controllers
 
 
         // POST: https://localhost:5001/api/chat/remove/{chatId}
-        [Route("{action}")]
+        [Route("[action]")]
         [HttpPost("{chatId}", Name = "remove")]
         public async Task<ActionResult> RemoveUserFromChat(int chatId, string userId)
         {
