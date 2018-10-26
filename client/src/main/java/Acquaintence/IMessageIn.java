@@ -2,7 +2,7 @@ package Acquaintence;
 
 import java.util.Date;
 
-public interface IMessage {
+public interface IMessageIn {
     int getID();
     String getContent();
     Date getTimeStamp();

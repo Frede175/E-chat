@@ -1,9 +1,9 @@
 package Acquaintence;
 
-import Business.Models.Message;
+import Business.Models.MessageIn;
 
 public interface IMessageReceiver {
-    public void recieve(Message message);
+    void recieve(MessageIn message);
 
 
 }

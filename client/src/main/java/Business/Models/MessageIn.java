@@ -1,10 +1,10 @@
 package Business.Models;
 
-import Acquaintence.IMessage;
+import Acquaintence.IMessageIn;
 
 import java.util.Date;
 
-public class Message implements IMessage {
+public class MessageIn implements IMessageIn {
 
     private int ID;
     private int chatID;
@@ -13,7 +13,7 @@ public class Message implements IMessage {
     private User user;
 
 
-    public Message(int ID, String content, Date timeStamp, User user, int chatID) {
+    public MessageIn(int ID, String content, Date timeStamp, User user, int chatID) {
         this.ID = ID;
         this.content = content;
         this.timeStamp = timeStamp;

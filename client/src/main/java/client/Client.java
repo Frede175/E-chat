@@ -5,7 +5,7 @@ import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
 import Business.Models.Chat;
 import Business.Models.Department;
-import Business.Models.Message;
+import Business.Models.MessageIn;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
@@ -56,15 +56,15 @@ public class Client {
         } */
 
 
-        chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
+        /*chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
                 .withAccessTokenProvider(Single.just(token))
                 .build();
 
         //Add message receive method callback
-        chatConnection.on("ReceiveMessage", this.messageReceiver::recieve, Message.class);
+        chatConnection.on("ReceiveMessage", this.messageReceiver::recieve, MessageIn.class);
 
         //Start the connection
-        chatConnection.start().blockingAwait();
+        chatConnection.start().blockingAwait();*/
 
     }
 
