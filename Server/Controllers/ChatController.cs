@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Server.Context;
 using Server.Models;
 using Server.Service.Interfaces;
@@ -20,24 +21,28 @@ namespace Server.Controllers
         private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        private readonly ILogger<ChatController> _logger;
 
-        public ChatController(IChatService chatService, UserManager<ApplicationUser> userManager)
+
+        public ChatController(IChatService chatService, UserManager<ApplicationUser> userManager, ILogger<ChatController> logger)
         {
             _userManager = userManager;
             _chatService = chatService;
+            _logger = logger;
 
         }
 
 
-        // GET: https://localhost:5001/api/chat/ 
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmenId)
+        // GET: https://localhost:5001/api/chat/{userId} 
+        [HttpGet("{userId}"), Produces("application/json")]
+        public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
-            return (await _chatService.RetrieveChatsAsync(userId, departmenId)).Select(d => new Chat(d)).ToList();
+            _logger.LogDebug("Department ID: " + departmentId);
+            return (await _chatService.RetrieveChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
         }
 
 
-        // POST: https://localhost:5001/api/chat/
+        // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("{departmentId}")]
         public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat){
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
@@ -55,8 +60,7 @@ namespace Server.Controllers
 
 
         // POST: https://localhost:5001/api/chat/leave/{chatId}
-        [Route("[action]")]
-        [HttpPost("{chatId}", Name = "leave")]
+        [HttpPost("leave/{chatId}")]
         public async Task<ActionResult> Leave(int chatId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -72,10 +76,10 @@ namespace Server.Controllers
 
 
         // POST: https://localhost:5001/api/chat/add/{chatId}
-        [Route("[action]")]
-        [HttpPost("{chatId}", Name = "add")]
-        public async Task<ActionResult> AddUserToChat(int chatId, string userId)
+        [HttpPost("add/{chatId}")]
+        public async Task<ActionResult> AddUserToChat(int chatId, [FromBody] string userId)
         {
+            _logger.LogDebug("User ID: " + userId);
             var result = (await _chatService.AddUsersToChatAsync(chatId, userId));
 
             if (result)
@@ -89,8 +93,7 @@ namespace Server.Controllers
 
 
         // POST: https://localhost:5001/api/chat/remove/{chatId}
-        [Route("{action}")]
-        [HttpPost("{chatId}", Name = "remove")]
+        [HttpPost("remove/{chatId}")]
         public async Task<ActionResult> RemoveUserFromChat(int chatId, string userId)
         {
             var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
