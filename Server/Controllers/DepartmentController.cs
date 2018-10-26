@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Context;
 using Server.Models;
+using Server.Security;
 using Server.Service.Interfaces;
 
 namespace Server.Controllers
@@ -42,6 +43,7 @@ namespace Server.Controllers
         }
 
         [HttpPost]
+        [RequiresPermissionAttribute(Permission.CreateDepartment)]
         public async Task<IActionResult> CreateDepartment(Department department)
         {
             var d = new DbModels.Department()
