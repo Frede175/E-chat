@@ -78,9 +78,11 @@ namespace Server.Service
         /// </summary>
         /// <returns>The chat async.</returns>
         /// <param name="chat">Chat.</param>
-        public async Task<bool> CreateChatAsync(Chat chat)
+        public async Task<bool> CreateChatAsync(Chat chat, string userId)
         {
+            chat.UserChats = new List<UserChat>() { new UserChat { UserId = userId } };
             _chats.Add(chat);
+
             var result = await _context.SaveChangesAsync();
 
             if (result == 1)

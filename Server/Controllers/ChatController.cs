@@ -47,12 +47,13 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("{departmentId}")]
         [RequiresPermissionAttribute(Permission.CreateChat)]
-        public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat){
+        public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat)
+        {
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
             {
                 DepartmentId = departmentId,
                 Name = chat.Name
-            });
+            }, _userManager.GetUserId(HttpContext.User));
             if (result)
             {
                 return new OkResult();
@@ -110,7 +111,6 @@ namespace Server.Controllers
             }
 
             return new BadRequestResult();
-
         }
     }
 }
