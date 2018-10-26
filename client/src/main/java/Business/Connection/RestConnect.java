@@ -145,18 +145,14 @@ public class RestConnect {
     }
 
 
-    /*//TODO implement
-    public <T, T1, T2> T2 delete(PathEnum path, T param, String token) {
+    public <T, T1, T2> T2 delete(PathEnum path, T route, String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpDelete request = request(path, param, token);
+            HttpDelete request = request(path, route, null, token);
 
 
-            // add request header
-            request.addHeader("User-Agent", USER_AGENT);
-            request.addHeader("Authorization", "Bearer " + token);
             request.addHeader("Content-type", "application/json");
             HttpResponse response = null;
 
@@ -171,30 +167,30 @@ public class RestConnect {
     }
 
     //TODO implement
-    public <T> void put(PathEnum path, T param, String token) {
+    public <T , T1, T2> T2 put(PathEnum path, T route, T1 content, String token) {
         try {
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPut request = request(path, param, token);
-            StringEntity postingString = new StringEntity(gson.toJson(param));
+            HttpPut request = request(path, route, null, token);
+            StringEntity postingString = new StringEntity(gson.toJson(content));
 
 
-
-
-            // add request header
-            request.addHeader("User-Agent", USER_AGENT);
-            request.addHeader("Authorization", "Bearer " + token);
-            request.addHeader("Content-type", "application/json");
             request.setEntity(postingString);
+
+            request.addHeader("Content-type", "application/json");
             HttpResponse response = null;
+            System.out.println(request.getEntity().toString());
 
             response = client.execute(request);
-            System.out.println(response.getStatusLine());
-
+            System.out.println("Response Code Post: "
+                    + response.getStatusLine().getStatusCode());
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+
+        return null;
+
+    }
 
     /***
      *
@@ -227,8 +223,6 @@ public class RestConnect {
             case POST: {
 
                 request = new HttpPost(url);
-                // add request header
-                request.addHeader("Content-type", "application/json");
                 break;
             }
             case GET: {
@@ -236,30 +230,15 @@ public class RestConnect {
                 break;
             }
 
-            //TODO implement
-            /*
-            case PUT: {
-                break;
-            }
-            */
-
-            //TODO implement
             case DELETE: {
                 request = new HttpDelete(url);
-                StringEntity postingString = null;
-                try {
-                    postingString = new StringEntity(gson.toJson(route));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                // add request header
-                request.addHeader("Content-type", "application/json");
-                //((HttpDelete) request).setEntity(postingString);
                 break;
             }
 
-
-
+            case PUT: {
+                request = new HttpPut(url);
+                break;
+            }
 
 
         }

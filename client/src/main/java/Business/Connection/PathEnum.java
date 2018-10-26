@@ -19,10 +19,11 @@ public enum PathEnum {
     DeleteUser("/api/departments/", ConnectionType.DELETE, null),
     CreateChatroom("/api/chat/", ConnectionType.POST, null),
     GetChats("/api/chat/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
-    DeleteChatroom("/api/chat/", ConnectionType.DELETE, null),
+    DeleteChatRoom("/api/chat/", ConnectionType.DELETE, null),
     RemoveUserFromChat("/api/chat/remove/", ConnectionType.POST, null),
     AddUserToChat("/api/chat/add/", ConnectionType.POST, null),
-    LeaveChat("/api/chat/leave/", ConnectionType.POST, null);
+    LeaveChat("/api/chat/leave/", ConnectionType.POST, null),
+    PutChatRoom("/api/chat/", ConnectionType.PUT, null);
 
     private PathEnum(String path, ConnectionType type, Type resultType) {
         this.path = path;
