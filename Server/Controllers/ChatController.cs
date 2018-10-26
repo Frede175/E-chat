@@ -103,21 +103,5 @@ namespace Server.Controllers
             return new BadRequestResult();
 
         }
-
-        [HttpDelete("{chatId}")]
-        public ActionResult RemoveChat(int chatId) {
-            if (chatId != 0) {
-                return Ok();
-            }
-            return new BadRequestResult();
-        }
-
-         [HttpPut("{chatId}")]
-        public ActionResult PutChat(int chatId, Chat chat) {
-            if (chatId != 0 && chat.Name == "Chat1")  {
-                return Ok();
-            }
-            return new BadRequestResult();
-        }
     }
 }
