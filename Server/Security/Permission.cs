@@ -4,10 +4,19 @@ namespace Server.Security
 
     public enum Permission
     {
-        CreateDepartment, 
-        DeleteDepartment,
-        CreateUser,
-        DeleteUser
+        GetDepartment,
+        GetDepartments,
+        CreateDepartment,
+        AddUserToDepartment,
+        RemoveUserFromDepartment,
+//        DeleteDepartment,
+//        CreateUser,
+//        DeleteUser
+        GetChats,
+        CreateChat,
+        LeaveChat,
+        AddUserToChat,
+        RemoveUserFromChat
 
     }
 }
