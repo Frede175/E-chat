@@ -1,16 +1,14 @@
 package client;
 
+import Acquaintence.IMessageReceiver;
 import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
 import Business.Models.Chat;
-import Business.Models.CreateUser;
 import Business.Models.Department;
+import Business.Models.Message;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class Client {
 
@@ -63,7 +61,7 @@ public class Client {
                 .build();
 
         //Add message receive method callback
-        chatConnection.on("ReceiveMessage", this.messageReceiver::receive, MessageObject.class);
+        chatConnection.on("ReceiveMessage", this.messageReceiver::recieve, Message.class);
 
         //Start the connection
         chatConnection.start().blockingAwait();

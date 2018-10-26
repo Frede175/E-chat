@@ -2,6 +2,7 @@ package GUI;
 
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IGUI;
+import Acquaintence.IMessageReceiver;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -45,6 +46,11 @@ public class GUI extends Application implements IGUI {
     public void startApplication(String[] args) {
         gui = this;
         launch(args);
+    }
+
+    @Override
+    public IMessageReceiver getMessageReceiver() {
+        return new MessageReceiver();
     }
 
     /**
