@@ -1,5 +1,5 @@
 package Acquaintence;
 
-public class IBusinessFacade {
+public interface IBusinessFacade {
 
 }
