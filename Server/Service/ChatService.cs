@@ -85,7 +85,7 @@ namespace Server.Service
 
             var result = await _context.SaveChangesAsync();
 
-            if (result == 1)
+            if (result == 2)
             {
                 return true;
             }
