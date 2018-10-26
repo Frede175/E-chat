@@ -4,7 +4,7 @@ namespace Server.Security
 
     public enum Permission
     {
-        GetDepartment,
+        GetUserDepartments,
         GetDepartments,
         CreateDepartment,
         AddUserToDepartment,
