@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Server.Context;
 using Server.Models;
+using Server.Security;
 using Server.Service.Interfaces;
 
 namespace Server.Controllers
@@ -35,6 +36,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/chat/{userId} 
         [HttpGet("{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.GetChats)]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
             _logger.LogDebug("Department ID: " + departmentId);
@@ -44,6 +46,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("{departmentId}")]
+        [RequiresPermissionAttribute(Permission.CreateChat)]
         public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat){
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
             {
@@ -61,6 +64,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/leave/{chatId}
         [HttpPost("leave/{chatId}")]
+        [RequiresPermissionAttribute(Permission.LeaveChat)]
         public async Task<ActionResult> Leave(int chatId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -77,6 +81,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/add/{chatId}
         [HttpPost("add/{chatId}")]
+        [RequiresPermissionAttribute(Permission.AddUserToChat)]
         public async Task<ActionResult> AddUserToChat(int chatId, [FromBody] string userId)
         {
             _logger.LogDebug("User ID: " + userId);
@@ -94,6 +99,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/remove/{chatId}
         [HttpPost("remove/{chatId}")]
+        [RequiresPermissionAttribute(Permission.RemoveUserFromChat)]
         public async Task<ActionResult> RemoveUserFromChat(int chatId, string userId)
         {
             var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));

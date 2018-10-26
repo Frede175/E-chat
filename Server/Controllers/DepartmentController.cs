@@ -29,6 +29,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department
         [HttpGet, Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.GetDepartments)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartments()
         {
             return (await _departmentService.GetDepartmentsAsync()).Select(d => new Department(d)).ToList();
@@ -37,6 +38,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department/{id} 
         [HttpGet("{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.GetDepartment)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartments(string userId)
         {
             return (await _departmentService.GetDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
@@ -60,6 +62,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/Department/{departmentId}
         [HttpPost("{departmentId}")]
+        [RequiresPermissionAttribute(Permission.AddUserToDepartment)]
         public async Task<IActionResult> AddUserToDepartment(int departmentId, string userId)
         {
             var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
@@ -74,6 +77,7 @@ namespace Server.Controllers
 
         // DELETE: https://localhost:5001/api/Department/remove/{departmentId}
         [HttpDelete("remove/{departmentId}")]
+        [RequiresPermissionAttribute(Permission.DeleteDepartment)]
         public async Task<ActionResult> RemoveDepartment(int departmentId)
         {
             var result = await _departmentService.RemoveDepartmentASync(departmentId);
