@@ -35,6 +35,8 @@ public class GUI extends Application implements IGUI {
         stage.setTitle("E-Chat");
         stage.getIcons().add(new Image("Images/icon.png"));
         stage.show();*/
+        business.addDummyData();
+        business.login("username", "password");
     }
 
     /**

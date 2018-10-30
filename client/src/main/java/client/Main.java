@@ -2,6 +2,7 @@ package client;
 
 
 import Business.Models.Chat;
+import GUI.MessageReceiver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

@@ -3,7 +3,9 @@ package Business;
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IMessageReceiver;
 import Business.Connection.HubConnect;
+import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
+import Business.Models.CreateUser;
 
 public class BusinessFacade implements IBusinessFacade {
 
@@ -13,6 +15,11 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public void injectMessageReceiver(IMessageReceiver messageReceiver) {
 
+    }
+
+    @Override
+    public void addDummyData() {
+        String result = restConnect.post(PathEnum.CreateUser, null, new CreateUser("username", "password"), null);
     }
 
     @Override

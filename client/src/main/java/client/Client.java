@@ -4,6 +4,7 @@ import Acquaintence.IMessageReceiver;
 import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
 import Business.Models.Chat;
+import Business.Models.CreateUser;
 import Business.Models.Department;
 import Business.Models.MessageIn;
 import com.microsoft.signalr.HubConnection;
@@ -26,7 +27,7 @@ public class Client {
         this.messageReceiver = messageReceiver;
 
         RestConnect rest = new RestConnect();
-        //String result = rest.post(PathEnum.CreateUser, null, new CreateUser(username, password), null);
+        String result = rest.post(PathEnum.CreateUser, null, new CreateUser(username, password), null);
         //System.out.println(result);
 
         String token = rest.login(username, password);
