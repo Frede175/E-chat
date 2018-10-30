@@ -88,5 +88,18 @@ namespace Server.Controllers
             return new BadRequestResult();
         }
 
+
+
+        /*
+        //PUT: https://localhost:5001/api/Department/update/{departmentId}
+        [HttpPut("update/{departmendId}")]
+        [RequiresPermissionAttribute(Permission.UpdateDepartment)]
+        public async Task<ActionResult> UpdateDepartment(int departmentId)
+        {
+
+        }
+        */
+
+
     }
 }

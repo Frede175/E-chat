@@ -10,6 +10,7 @@ namespace Server.Security
         AddUserToDepartment,
         RemoveUserFromDepartment,
         DeleteDepartment,
+        UpdateDepartment,
 //        CreateUser,
 //        DeleteUser
         GetChats,
