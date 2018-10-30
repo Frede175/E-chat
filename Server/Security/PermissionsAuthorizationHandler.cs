@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Server.Context;
 
 namespace Server.Security
 {
@@ -13,12 +14,13 @@ namespace Server.Security
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionsAuthorizationRequirement requirement)
         {
-            if (!requirement.RequiredPermissions.Select(r => r.ToString()).Except(context.User.Claims.Select(c => c.Type)).Any())
-            {
-                context.Succeed(requirement);
+            foreach(Permission p in requirement.RequiredPermissions) {
+                if (!context.User.HasClaim(UserClaimTypes.Permission, p.ToString())) return Task.CompletedTask;
             }
+
+            context.Succeed(requirement);
             return Task.CompletedTask;
-            
+
         }
     }
 }
