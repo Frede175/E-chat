@@ -42,7 +42,7 @@ public class GUI extends Application implements IGUI {
         stage.setMinWidth(1280.0);
         stage.setScene(scene);
         stage.setTitle("E-Chat");
-        stage.getIcons().add(new Image("Images/icon.png"));
+        //stage.getIcons().add(new Image("Images/icon.png"));
         stage.show();
 
 

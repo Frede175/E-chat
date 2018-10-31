@@ -23,9 +23,6 @@ public class ChatListController {
     public ListView<String> chatList;
 
     public void getData() {
-
-        GUI.GUI.getInstance().getBusiness().login("Admin1", "Password123*");
-
         ArrayList<String> stringList = new ArrayList<>();
         //chatList = new ListView<>();
         List<Chat> chats = GUI.GUI.getInstance().getBusiness().get(PathEnum.GetChats, "d8d65767-ca69-4abb-974e-a21883096b4e", department.toMap());
