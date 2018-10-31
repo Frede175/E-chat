@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface IBusinessFacade {
-    String login(String username, String password);
+
+    void addDummyData();
+    boolean login(String username, String password);
     void injectMessageReceiver(IMessageReceiver messageReceiver);
-    <T> T get(PathEnum path, String route, HashMap<String, String> param, String token);
-    void addDummyData(String token);
+    <T> T get(PathEnum path, String route, HashMap<String, String> param);
 }
