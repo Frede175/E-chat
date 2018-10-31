@@ -107,7 +107,16 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(Permission.AddAdditionalRole)]
         public async Task<ActionResult> AddAdditionalRole(string userId, string role) 
         {
-            return await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(userId), role);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var result = await _userManager.AddToRoleAsync(user, role);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
 
 
