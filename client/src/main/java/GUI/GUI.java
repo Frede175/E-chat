@@ -21,7 +21,6 @@ public class GUI extends Application implements IGUI {
      * An instance of the GUI class.
      */
     private static GUI gui;
-    private Department department = new Department(1, "jeff");
 
     private Stage stage;
 
