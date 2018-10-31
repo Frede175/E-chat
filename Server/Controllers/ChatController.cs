@@ -40,7 +40,7 @@ namespace Server.Controllers
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
             _logger.LogDebug("Department ID: " + departmentId);
-            return (await _chatService.RetrieveChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
+            return (await _chatService.GetChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
         }
 
 
