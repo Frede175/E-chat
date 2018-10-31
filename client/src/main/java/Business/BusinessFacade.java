@@ -19,7 +19,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void addDummyData() {
-        String result = restConnect.post(PathEnum.CreateUser, null, new CreateUser("username", "password"), null);
+        String result = restConnect.post(PathEnum.CreateUser, null, new CreateUser("admin", "Password123*"), null);
     }
 
     @Override
