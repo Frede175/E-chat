@@ -77,12 +77,11 @@ namespace Server.Controllers
                 }
                 return BadRequest();
             }
-
             return BadRequest();
         }
 
 
-        // DELETE https://localhost:5001/api/User/create
+        // DELETE: https://localhost:5001/api/User/create
         [HttpDelete]
         [RequiresPermissionAttribute(Permission.DeleteUser)]
         public async Task<ActionResult> CreateUser(string userId)
@@ -101,5 +100,17 @@ namespace Server.Controllers
             }
             return BadRequest();
         }
+
+
+        // PUT https://localhost:5001/api/User/{userId}
+        [HttpPut]
+        [RequiresPermissionAttribute(Permission.AddAdditionalRole)]
+        public async Task<ActionResult> AddAdditionalRole(string userId, string role) 
+        {
+            return await _userManager.AddToRoleAsync(_userManager.FindByIdAsync(userId), role);
+        }
+
+
+
     }
 }
