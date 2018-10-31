@@ -69,6 +69,9 @@ public class RestConnect {
             JsonObject json = new JsonParser().parse(result.toString()).getAsJsonObject();
 
             if (json != null) {
+                if(json.has("error")) {
+                    return "error";
+                }
                 return json.get("access_token").getAsString();
             }
             return null;

@@ -15,6 +15,8 @@ public class GUI extends Application implements IGUI {
      */
     private static GUI gui;
 
+    private Stage stage;
+
     /**
      * An instance of the IBusinessFacade.
      */
@@ -26,17 +28,17 @@ public class GUI extends Application implements IGUI {
 
     @Override
     public void start(Stage stage) throws Exception {
-        /*Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("fxml/Main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
         Scene scene = new Scene(root);
-
+        gui.stage = stage;
         stage.setMinHeight(720.0);
         stage.setMinWidth(1280.0);
         stage.setScene(scene);
         stage.setTitle("E-Chat");
-        stage.getIcons().add(new Image("Images/icon.png"));
-        stage.show();*/
-        business.addDummyData();
-        business.login("username", "password");
+        //stage.getIcons().add(new Image("Images/icon.png"));
+        stage.show();
+        //GUI.getInstance().getBusiness().addDummyData();
+
     }
 
     /**
@@ -69,5 +71,9 @@ public class GUI extends Application implements IGUI {
      */
     public static GUI getInstance() {
         return gui;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }
