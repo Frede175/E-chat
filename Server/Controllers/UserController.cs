@@ -36,7 +36,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/ 
         [HttpGet("{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetUserDepartments)]
+        [RequiresPermissionAttribute(Permission.GetUsers)]
         public async Task<ActionResult<ICollection<User>>> GetUsers()
         {
             return await _userManager.Users.Select(u => new User(u)).ToListAsync();
@@ -45,7 +45,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/{userId}
         [HttpGet("{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetUserDepartments)]
+        [RequiresPermissionAttribute(Permission.GetContacts)]
         public async Task<ActionResult<ICollection<User>>> GetContacts(string userId)
         {
             var deps = await _departmentService.GetDepartmentsAsync(userId);
@@ -53,6 +53,53 @@ namespace Server.Controllers
             var x = deps.SelectMany(d => d.UserDepartments.Select(u => new User(u.ApplicationUser)));
 
             return x.ToList();
+        }
+
+        // POST: https://localhost:5001/api/User/create
+        [HttpPost]
+        [RequiresPermissionAttribute(Permission.CreateUser)]
+        public async Task<ActionResult> CreateUser(CreateUserModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.UserName);
+            if (user == null)
+            {
+
+                var newUser = new ApplicationUser()
+                {
+                    UserName = model.UserName
+                };
+
+                var result = await _userManager.CreateAsync(newUser, model.Password);
+
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+
+            return BadRequest();
+        }
+
+
+        // DELETE https://localhost:5001/api/User/create
+        [HttpDelete]
+        [RequiresPermissionAttribute(Permission.DeleteUser)]
+        public async Task<ActionResult> CreateUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+            }
+            return BadRequest();
         }
     }
 }

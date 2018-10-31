@@ -4,6 +4,9 @@ namespace Server.Security
 
     public enum Permission
     {
+
+        //DepartmentController
+
         GetUserDepartments,
         GetDepartments,
         CreateDepartment,
@@ -11,13 +14,22 @@ namespace Server.Security
         RemoveUserFromDepartment,
         DeleteDepartment,
         UpdateDepartment,
-//        CreateUser,
-//        DeleteUser
+
+
+        //ChatController
+
         GetChats,
         CreateChat,
         LeaveChat,
         AddUserToChat,
-        RemoveUserFromChat
+        RemoveUserFromChat,
 
+
+        //UserController
+
+        GetUsers,
+        GetContacts,
+        CreateUser,
+        DeleteUser
     }
 }
