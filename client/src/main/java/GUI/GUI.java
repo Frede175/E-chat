@@ -3,17 +3,24 @@ package GUI;
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IGUI;
 import Acquaintence.IMessageReceiver;
+import Business.Connection.PathEnum;
+import Business.Models.Chat;
+import Business.Models.Department;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GUI extends Application implements IGUI {
     /**
      * An instance of the GUI class.
      */
     private static GUI gui;
+    private Department department = new Department(1, "jeff");
 
     /**
      * An instance of the IBusinessFacade.
@@ -35,8 +42,15 @@ public class GUI extends Application implements IGUI {
         stage.setTitle("E-Chat");
         stage.getIcons().add(new Image("Images/icon.png"));
         stage.show();*/
-        business.addDummyData();
-        business.login("username", "password");
+        //business.addDummyData();
+        String token = GUI.getInstance().getBusiness().login("Admin1", "Password123*");
+        //GUI.getInstance().getBusiness().addDummyData(token);
+        //GUI.getInstance().getBusiness().addDummyData();
+
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
+        stage.setTitle("E-Chat");
+        stage.setScene(new Scene(root, 400, 200));
+        stage.show();
     }
 
     /**

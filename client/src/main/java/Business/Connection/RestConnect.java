@@ -64,7 +64,6 @@ public class RestConnect {
                 result.append(line);
             }
 
-            System.out.println(result.toString());
 
             JsonObject json = new JsonParser().parse(result.toString()).getAsJsonObject();
 
@@ -107,13 +106,14 @@ public class RestConnect {
                     result.append(line);
                 }
 
-                System.out.println(result.toString());
 
                 Type type = path.getResultType();
 
-                T newObject = gson.fromJson(result.toString(), type);
+                System.out.println(result.toString());
 
-                return newObject;
+                T obj = gson.fromJson(result.toString(), type);
+
+                return obj;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -133,7 +133,6 @@ public class RestConnect {
 
             request.addHeader("Content-type", "application/json");
             HttpResponse response = null;
-            System.out.println(request.getEntity().toString());
 
             response = client.execute(request);
             System.out.println("Response Code Post: "
@@ -180,7 +179,6 @@ public class RestConnect {
 
             request.addHeader("Content-type", "application/json");
             HttpResponse response = null;
-            System.out.println(request.getEntity().toString());
 
             response = client.execute(request);
             System.out.println("Response Code Post: "
@@ -219,7 +217,6 @@ public class RestConnect {
         //url = url.concat("?departmenId=1");
 
 
-        System.out.println(url);
         switch (path.getType()){
             case POST: {
 
