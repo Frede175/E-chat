@@ -11,6 +11,8 @@ import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
 
+import java.util.List;
+
 public class Client {
 
     private final String jsonType = "application/json";
@@ -28,20 +30,22 @@ public class Client {
 
         RestConnect rest = new RestConnect();
         String result = rest.post(PathEnum.CreateUser, null, new CreateUser(username, password), null);
+        System.out.println("Jeff");
         //System.out.println(result);
 
         String token = rest.login(username, password);
+        System.out.println("We fucked");
         //System.out.println("Token: " + token);
 
         // rest.post(PathEnum.CreateChatroom, 2, new Chat(1, "Chat1"), token);
 
-        rest.delete(PathEnum.DeleteChatRoom, 1, token);
+        //rest.delete(PathEnum.DeleteChatRoom, 1, token);
 
-        rest.put(PathEnum.PutChatRoom, 2, new Chat (1, "Chat1"), token);
+        //rest.put(PathEnum.PutChatRoom, 2, new Chat (1, "Chat1"), token);
 
         //rest.post(PathEnum.AddUserToChat, 2, "d8d65767-ca69-4abb-974e-a21883096b4e", token);
 
-        // List<Chat> c = rest.get(PathEnum.GetChats, "d8d65767-ca69-4abb-974e-a21883096b4e", department.toMap(),  token);
+        List<Chat> c = rest.get(PathEnum.GetChats, "d8d65767-ca69-4abb-974e-a21883096b4e", department.toMap(),  token);
 
         /* for (Chat chat : c) {
             System.out.println(chat.getName());
