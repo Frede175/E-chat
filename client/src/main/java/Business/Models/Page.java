@@ -3,6 +3,8 @@ package Business.Models;
 import Acquaintence.IChat;
 import Acquaintence.IPage;
 
+import java.util.HashMap;
+
 public class Page implements IPage {
 
     private int page;

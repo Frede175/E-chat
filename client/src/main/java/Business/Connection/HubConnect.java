@@ -1,6 +1,8 @@
 package Business.Connection;
 
 import Business.Models.MessageIn;
+import Business.Models.MessageOut;
+import client.MessageObject;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
@@ -19,6 +21,10 @@ public class HubConnect {
 
         //Start the connection
         chatConnection.start().blockingAwait();
+    }
+
+    public void sendMessage(String message, int chatId) {
+        chatConnection.send("SendMessage", new MessageOut(message, chatId));
     }
 
 }

@@ -7,16 +7,16 @@ import java.util.HashMap;
 
 public class User implements IUser, IToMap {
 
-    private int ID;
+    private String ID;
     private String name;
 
-    public User(int ID, String name) {
+    public User(String ID, String name) {
         this.ID = ID;
         this.name = name;
     }
 
     @Override
-    public int getID() {
+    public String getID() {
         return ID;
     }
 
@@ -33,7 +33,7 @@ public class User implements IUser, IToMap {
     @Override
     public HashMap<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("userId", String.valueOf(ID));
+        map.put("userId", ID);
         return map;
     }
 }

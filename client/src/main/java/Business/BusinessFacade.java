@@ -19,15 +19,23 @@ public class BusinessFacade implements IBusinessFacade {
     private RestConnect restConnect = new RestConnect();
 
     private String token = null;
+    private User user = new User("d8d65767-ca69-4abb-974e-a21883096b4e", "Jeff");
+
     @Override
     public void injectMessageReceiver(IMessageReceiver messageReceiver) {
 
     }
 
     @Override
-    public <T> T get(PathEnum path, String route, HashMap<String, String> param) {
-        return restConnect.get(path, route, param, token);
+    public <T> T getChats(HashMap<String, String> param) {
+        return restConnect.get(PathEnum.GetChats, user.getID(), param, token);
 
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        //TODO Place ChatID somewhere/refactor
+        hubConnect.sendMessage(message, 1);
     }
 
     public void addDummyData() {

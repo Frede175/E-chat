@@ -6,5 +6,6 @@
 <HBox prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MainController">
     <children>
         <fx:include source="ChatList.fxml" fx:id="chatList" />
+        <fx:include source="SendMessage.fxml" fx:id="sendMessage" />
     </children>
 </HBox>

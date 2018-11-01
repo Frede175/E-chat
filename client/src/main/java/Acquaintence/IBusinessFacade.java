@@ -10,5 +10,6 @@ public interface IBusinessFacade {
     void addDummyData();
     boolean login(String username, String password);
     void injectMessageReceiver(IMessageReceiver messageReceiver);
-    <T> T get(PathEnum path, String route, HashMap<String, String> param);
+    <T> T getChats(HashMap<String, String> param);
+    void sendMessage(String message);
 }
