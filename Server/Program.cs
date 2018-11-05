@@ -21,6 +21,19 @@ namespace Server
             var host = CreateWebHostBuilder(args).Build();
 
 
+            using (var scope = host.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+
+                try
+                {
+                    ApplicationDbInitializer.SeedUsersAsync(serviceProvider).Wait();
+                } catch (Exception ex){
+                    var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, " An error occured seeding the DB :( ");
+                }
+            }
+
             host.Run();
 
 

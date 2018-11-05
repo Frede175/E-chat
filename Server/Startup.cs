@@ -25,6 +25,8 @@ using OpenIddict.Abstractions;
 using OpenIddict.Validation;
 using Server.Service.Interfaces;
 using Server.Service;
+using Microsoft.AspNetCore.Authorization;
+using Server.Security;
 
 namespace Server
 {
@@ -47,6 +49,7 @@ namespace Server
 
             });
             services.AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -98,7 +101,7 @@ namespace Server
 
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IChatService, ChatService>();
-
+            services.AddSingleton<IAuthorizationHandler, PermissionsAuthorizationHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR().AddJsonProtocol();
