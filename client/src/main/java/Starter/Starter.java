@@ -7,6 +7,7 @@ import Business.*;
 
 public class Starter {
     public static void main(String[] args) {
+
         IGUI gui = new GUI();
 
         IBusinessFacade business = new BusinessFacade();

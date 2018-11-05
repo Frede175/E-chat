@@ -2,10 +2,11 @@ package Business.Models;
 
 import Acquaintence.IChat;
 import Acquaintence.IPage;
+import Acquaintence.IToMap;
 
 import java.util.HashMap;
 
-public class Page implements IPage {
+public class Page implements IPage, IToMap {
 
     private int page;
     private int pageSize;
@@ -24,4 +25,13 @@ public class Page implements IPage {
     public int getPageSize() {
         return pageSize;
     }
+
+    @Override
+    public HashMap<String, String> toMap() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("page", String.valueOf(page));
+        map.put("pageSize", String.valueOf(pageSize));
+        return map;
+    }
 }
+
