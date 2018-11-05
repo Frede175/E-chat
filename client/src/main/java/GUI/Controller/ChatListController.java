@@ -21,7 +21,7 @@ public class ChatListController {
     public ListView<String> chatList;
 
     public void getData() {
-        ArrayList<String> stringList = new ArrayList<>();
+        /*ArrayList<String> stringList = new ArrayList<>();
         //chatList = new ListView<>();
         List<Chat> chats = GUI.GUI.getInstance().getBusiness().getChats(department.toMap());
         if(chats != null) {
@@ -34,7 +34,7 @@ public class ChatListController {
         chatList.setPrefHeight(70);
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         chatList.setItems(names);
-        chatList.setCellFactory(ComboBoxListCell.forListView(names));
+        chatList.setCellFactory(ComboBoxListCell.forListView(names));*/
 
     }
 

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.icu.impl.Trie2;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -36,7 +37,7 @@ public class RestConnect {
     private final Gson gson = new Gson();
     // /api/values
 
-    public String login(String username, String password) {
+    public RequestResponse<String> login(String username, String password) {
 
         try {
 
@@ -69,19 +70,19 @@ public class RestConnect {
             JsonObject json = new JsonParser().parse(result.toString()).getAsJsonObject();
 
             if (json != null) {
-                if(json.has("error")) {
-                    return "error";
+                if(json.get("error") != null) {
+                    return new RequestResponse<>(null, ConnectionState.WRONG_LOGIN);
                 }
-                return json.get("access_token").getAsString();
+                return new RequestResponse<>(json.get("access_token").getAsString(), ConnectionState.SUCCESS);
             }
             return null;
 
         } catch (IOException e) {
-            return "noConnection";
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
     }
 
-    public <T, T1> T get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
+    public <T, T1> RequestResponse<T> get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
         {
             try {
 
@@ -114,16 +115,16 @@ public class RestConnect {
 
                 T obj = gson.fromJson(result.toString(), type);
 
-                return obj;
+                return new RequestResponse<T>(obj, ConnectionState.SUCCESS);
 
             } catch (IOException e) {
                 e.printStackTrace();
+                return new RequestResponse<T>(null, ConnectionState.NO_CONNECTION);
             }
 
         }
-        return null;
     }
-    public <T, T1, T2> T2 post(PathEnum path, T param, T1 content, String token) {
+    public <T, T1, T2> RequestResponse<T2> post(PathEnum path, T param, T1 content, String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
@@ -138,15 +139,15 @@ public class RestConnect {
             response = client.execute(request);
             System.out.println("Response Code Post: "
                     + response.getStatusLine().getStatusCode());
+            return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-
-        return null;
     }
 
 
-    public <T, T1, T2> T2 delete(PathEnum path, T route, String token) {
+    public <T, T1> RequestResponse<T1> delete(PathEnum path, T route, String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
@@ -160,15 +161,15 @@ public class RestConnect {
             response = client.execute(request);
             System.out.println("Response Code Post: "
                     + response.getStatusLine().getStatusCode());
+            return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-
-        return null;
     }
 
     //TODO implement
-    public <T , T1, T2> T2 put(PathEnum path, T route, T1 content, String token) {
+    public <T , T1, T2> RequestResponse<T2> put(PathEnum path, T route, T1 content, String token) {
         try {
             HttpClient client = HttpClientBuilder.create().build();
 
@@ -184,12 +185,11 @@ public class RestConnect {
             response = client.execute(request);
             System.out.println("Response Code Post: "
                     + response.getStatusLine().getStatusCode());
+            return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-
-        return null;
-
     }
 
     /***

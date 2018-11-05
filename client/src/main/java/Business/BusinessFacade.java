@@ -6,6 +6,7 @@ import Acquaintence.IMessageReceiver;
 import Acquaintence.IUser;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
+import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
 import Business.Models.Chat;
 import Business.Models.CreateUser;
@@ -28,7 +29,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public <T> T getChats(HashMap<String, String> param) {
+    public <T> RequestResponse<T> getChats(HashMap<String, String> param) {
         return restConnect.get(PathEnum.GetChats, user.getID(), param, token);
     }
 
@@ -40,17 +41,15 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public ConnectionState login(String username, String password) {
-        String temp = restConnect.login(username, password);
-        if(temp.equals("error")) {
-            return ConnectionState.WRONG_LOGIN;
-        } else if(temp.equals("noConnection")) {
-            return ConnectionState.NO_CONNECTION;
-        } else {
-            token = temp;
+        RequestResponse<String> temp = restConnect.login(username, password);
+        if(temp.getConnectionState() == ConnectionState.SUCCESS) {
+            token = temp.getResponse();
             hubConnect.connect(token);
-            user = restConnect.get(PathEnum.GetUserInfo, null, null, token);
+            RequestResponse<User> data = restConnect.get(PathEnum.GetUserInfo, null, null, token);
+            user = data.getResponse();
             System.out.println(user.getName());
-            return ConnectionState.SUCCESS;
+
         }
+        return temp.getConnectionState();
     }
 }
