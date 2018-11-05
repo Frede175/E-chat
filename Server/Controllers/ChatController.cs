@@ -122,11 +122,8 @@ namespace Server.Controllers
             var chat = await _chatService.GetSpecificChat(chatId);
             if (chat != null)
             {
-                var result = (await _chatService.GetUsersInChat(chatId)).Select(c => new User()).ToList();
-                if (result != null)
-                {
-                    return result;
-                }
+                var result = (await _chatService.GetUsersInChat(chatId)).Select(c => new User(c)).ToList();
+                return result;
             }
             return null;
         }
