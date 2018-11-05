@@ -31,9 +31,11 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/Role/add
         [HttpPost]
         [RequiresPermissionAttribute(Permission.CreateUserRole)]
-        public async Task<ActionResult> CreateUserRole(string role, List<Permission> permissions)
+        public async Task<ActionResult> CreateUserRole(string role, List<string> addedPermissions)
         {
             var newRole = await _roleManager.FindByNameAsync(role);
+            string[] permissions = Enum.GetNames(typeof(Permission));
+
 
             if (newRole == null)
             {
@@ -41,8 +43,12 @@ namespace Server.Controllers
                 var result = await _roleManager.CreateAsync(newRole);
                 if (result.Succeeded)
                 {
-                    foreach(Permission permission in permissions){
-                        await _roleManager.AddClaimAsync(newRole, new Claim(UserClaimTypes.Permission, permission.ToString()));
+                    foreach(string permission in addedPermissions)
+                    {
+                        if (permissions.Contains(permission))
+                        {
+                            await _roleManager.AddClaimAsync(newRole, new Claim(UserClaimTypes.Permission, permission));
+                        }
                     }
 
                     return new OkResult();
