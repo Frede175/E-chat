@@ -3,16 +3,12 @@ package Business;
 import Acquaintence.ConnectionState;
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IMessageReceiver;
-import Acquaintence.IUser;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
 import Business.Connection.RestConnect;
-import Business.Models.Chat;
-import Business.Models.CreateUser;
 import Business.Models.User;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
 
@@ -29,7 +25,8 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public <T> T getChats(HashMap<String, String> param) {
-        return restConnect.get(PathEnum.GetChats, user.getID(), param, token);
+        System.out.println(user.getSub());
+        return restConnect.get(PathEnum.GetChats, user.getSub(), param, token);
     }
 
     @Override
