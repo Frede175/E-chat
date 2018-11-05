@@ -31,6 +31,12 @@ namespace Server.Security
         GetContacts,
         CreateUser,
         DeleteUser,
-        AddAdditionalRole
+        AddAdditionalRole,
+
+
+        //RoleController
+
+        CreateUserRole,
+        AddPermissionToRole
     }
 }

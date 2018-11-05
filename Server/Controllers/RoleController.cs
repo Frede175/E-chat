@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -28,8 +30,8 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/Role/add
         [HttpPost]
-        [RequiresPermissionAttribute(Permission.AddUserToDepartment)]
-        public async Task<ActionResult> AddUserRole(string role, List<Permission> permissions)
+        [RequiresPermissionAttribute(Permission.CreateUserRole)]
+        public async Task<ActionResult> CreateUserRole(string role, List<Permission> permissions)
         {
             var newRole = await _roleManager.FindByNameAsync(role);
 
@@ -49,6 +51,24 @@ namespace Server.Controllers
             return BadRequest();
         }
 
+        // POST: https://localhost:5001/api/Role/addPermission
+        [HttpPost]
+        [RequiresPermissionAttribute(Permission.AddPermissionToRole)]
+        public async Task<ActionResult> AddPermissionToRole(string permissionName,IdentityRole role)
+        {
+            string[] permissions = Enum.GetNames(typeof(Permission));
+
+            if (permissions.Contains(permissionName))
+            {
+            var result = await _roleManager.AddClaimAsync(role, new Claim(UserClaimTypes.Permission, permissionName));
+
+                if (result.Succeeded)
+                {
+                    return new OkResult();
+                }
+            }
+            return new BadRequestResult();
+        }
     }
 }
 
