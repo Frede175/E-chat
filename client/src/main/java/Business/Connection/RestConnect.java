@@ -1,6 +1,7 @@
 package Business.Connection;
 
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IToMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -76,11 +77,8 @@ public class RestConnect {
             return null;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            return "noConnection";
         }
-
-        return null;
-
     }
 
     public <T, T1> T get(PathEnum path, T1 route, HashMap<String, String> param, String token) {

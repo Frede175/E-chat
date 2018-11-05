@@ -1,5 +1,6 @@
 package Business;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IMessageReceiver;
 import Acquaintence.IUser;
@@ -43,15 +44,17 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public boolean login(String username, String password) {
+    public ConnectionState login(String username, String password) {
         String temp = restConnect.login(username, password);
         System.out.println("Business: " + temp);
-        if(!temp.equals("error")) {
+        if(temp.equals("error")) {
+            return ConnectionState.WRONG_LOGIN;
+        } else if(temp.equals("noConnection")) {
+            return ConnectionState.NO_CONNECTION;
+        } else {
             token = temp;
             hubConnect.connect(token);
-            return true;
-        } else {
-            return false;
+            return ConnectionState.SUCCESS;
         }
     }
 }

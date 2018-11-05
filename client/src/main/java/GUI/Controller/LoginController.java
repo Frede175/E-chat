@@ -23,15 +23,20 @@ public class LoginController {
 
     @FXML
     public void login() {
-        if(GUI.getInstance().getBusiness().login(usernameTF.getText(), passwordTF.getText())) {
-            try {
-                Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
-                GUI.getInstance().getStage().setScene(new Scene(root));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            errorL.setOpacity(1);
+        switch (GUI.getInstance().getBusiness().login(usernameTF.getText(), passwordTF.getText())) {
+            case SUCCESS:
+                try {
+                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
+                    GUI.getInstance().getStage().setScene(new Scene(root));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case WRONG_LOGIN:
+                errorL.setText("Username or password is incorrect");
+                break;
+            case NO_CONNECTION:
+                errorL.setText("No connection to server");
         }
     }
 }

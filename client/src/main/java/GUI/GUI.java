@@ -38,8 +38,6 @@ public class GUI extends Application implements IGUI {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
         Scene scene = new Scene(root);
         gui.stage = stage;
-        stage.setMinHeight(720.0);
-        stage.setMinWidth(1280.0);
         stage.setScene(scene);
         stage.setTitle("E-Chat");
         //stage.getIcons().add(new Image("Images/icon.png"));
