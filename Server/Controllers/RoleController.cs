@@ -60,13 +60,14 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/Role/addPermission
         [HttpPost]
         [RequiresPermissionAttribute(Permission.AddPermissionToRole)]
-        public async Task<ActionResult> AddPermissionToRole(string permissionName,IdentityRole role)
+        public async Task<ActionResult> AddPermissionToRole(string permissionName,string role)
         {
-            string[] permissions = Enum.GetNames(typeof(Permission));
+            var permissions = Enum.GetNames(typeof(Permission));
+            var userRole = await _roleManager.FindByNameAsync(role);
 
-            if (permissions.Contains(permissionName))
+            if (permissions.Contains(permissionName) && userRole != null)
             {
-            var result = await _roleManager.AddClaimAsync(role, new Claim(UserClaimTypes.Permission, permissionName));
+                var result = await _roleManager.AddClaimAsync(userRole, new Claim(UserClaimTypes.Permission, permissionName));
 
                 if (result.Succeeded)
                 {
@@ -75,6 +76,35 @@ namespace Server.Controllers
             }
             return new BadRequestResult();
         }
+
+        // POST: https://localhost:5001/api/Role/removePermission
+        [HttpPost]
+        [RequiresPermissionAttribute(Permission.RemovePermissionFromRole)]
+        public async Task<ActionResult> RemovePermissionFromRole(string permissionName, string role)
+        {
+            var permissions = Enum.GetNames(typeof(Permission));
+            var userRole = await _roleManager.FindByNameAsync(role);
+
+            if (permissions.Contains(permissionName) && userRole != null)
+            {
+                var result = await _roleManager.RemoveClaimAsync(userRole, new Claim(UserClaimTypes.Permission, permissionName));
+
+                if (result.Succeeded){
+                    return new OkResult();
+                }
+            }
+
+            return new BadRequestResult();
+
+        }
+
+
+
+
+
+
+
+
     }
 }
 
