@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -100,5 +101,9 @@ namespace Server.Service
             return false;
         }
 
+        public async Task<Department> GetSpecificDepartment(string name)
+        {
+            return await _department.Cast<Department>().SingleOrDefaultAsync(d => string.Equals(d.Name, name, StringComparison.InvariantCultureIgnoreCase));
+        }
     }
 }

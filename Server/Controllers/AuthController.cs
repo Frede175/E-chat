@@ -139,35 +139,6 @@ namespace Server.Controllers
 
             return ticket;
         }
-
-        [HttpPost] 
-        [AllowAnonymous]
-        public async Task<ActionResult<string>> CreateUser(CreateUserModel model)
-        {
-            _logger.LogDebug($"Creating user {model.UserName}.");
-            var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null)
-            {
-
-                var newUser = new ApplicationUser()
-                {
-                    UserName = model.UserName
-                };
-
-                var result = await _userManager.CreateAsync(newUser, model.Password);
-
-                if (result.Succeeded)
-                {
-                    return "Success!";
-                }
-                return "Failed!";
-            }
-
-            return "Allready exists!";
-            //return BadRequest();
-        }
-
-
     }
 
     public class CreateUserModel

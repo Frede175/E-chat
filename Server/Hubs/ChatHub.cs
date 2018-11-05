@@ -42,7 +42,7 @@ namespace Server.Hubs
         public async override Task OnConnectedAsync()
         {
             var userId = _userManager.GetUserId(Context.User);
-            var chats = await _chatService.RetrieveChatsAsync(userId);
+            var chats = await _chatService.GetChatsAsync(userId);
             var chatIds = chats.Select(c => c.Id);
 
             foreach (int chatId in chatIds)

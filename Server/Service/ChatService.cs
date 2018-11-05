@@ -44,7 +44,7 @@ namespace Server.Service
             {
                 foreach (string userId in userIds)
                 {
-                    _userChat.Add(new UserChat() { UserId = userId, ChatId = chat.Id});
+                    _userChat.Add(new UserChat() { UserId = userId, ChatId = chat.Id });
                 }
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
@@ -78,12 +78,14 @@ namespace Server.Service
         /// </summary>
         /// <returns>The chat async.</returns>
         /// <param name="chat">Chat.</param>
-        public async Task<bool> CreateChatAsync(Chat chat)
+        public async Task<bool> CreateChatAsync(Chat chat, string userId)
         {
+            chat.UserChats = new List<UserChat>() { new UserChat { UserId = userId } };
             _chats.Add(chat);
+
             var result = await _context.SaveChangesAsync();
 
-            if (result == 1)
+            if (result == 2)
             {
                 return true;
             }
@@ -101,8 +103,8 @@ namespace Server.Service
         {
             var chat = await _chats.FindAsync(chatId);
             if (!chat.UserChats.Any(u => u.UserId == user.Id))
-            {   
-                _userChat.Add(new UserChat() { UserId = user.Id, ChatId = chat.Id});
+            {
+                _userChat.Add(new UserChat() { UserId = user.Id, ChatId = chat.Id });
                 _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
@@ -126,7 +128,7 @@ namespace Server.Service
             var chat = await _chats.FindAsync(chatId);
             if (chat != null)
             {
-                _userChat.Remove(new UserChat() { UserId = user.Id, ChatId = chat.Id});
+                _userChat.Remove(new UserChat() { UserId = user.Id, ChatId = chat.Id });
 
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
@@ -154,7 +156,7 @@ namespace Server.Service
                 {
                     if (chat.UserChats.Any(u => u.UserId == userId))
                     {
-                        _userChat.Remove(new UserChat() { UserId = userId, ChatId = chat.Id});
+                        _userChat.Remove(new UserChat() { UserId = userId, ChatId = chat.Id });
                     }
                 }
                 _chats.Update(chat);
@@ -174,14 +176,15 @@ namespace Server.Service
         /// </summary>
         /// <returns>The chats async.</returns>
         /// <param name="user">User.</param>
-        public async Task<ICollection<Chat>> RetrieveChatsAsync(string userId, int departmentId)
+        public async Task<ICollection<Chat>> GetChatsAsync(string userId, int departmentId)
         {
             return await _chats.Cast<Chat>()
                                .Where(c => c.Department.Id == departmentId &&
                                       c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
-        public async Task<ICollection<Chat>> RetrieveChatsAsync(string userId) {
+        public async Task<ICollection<Chat>> GetChatsAsync(string userId)
+        {
             return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
@@ -189,8 +192,9 @@ namespace Server.Service
         {
             var chat = await _chats.FindAsync(chatId);
 
-            if (chat != null) {
-                
+            if (chat != null)
+            {
+
                 return chat.Messages.OrderByDescending(m => m.TimeStamp).Skip(pageSize * page).Take(pageSize).ToList();
             }
 
@@ -226,6 +230,13 @@ namespace Server.Service
                 }
             }
             return null;
+        }
+
+        public async Task<Chat> GetSpecificChat(int depId, string chatName)
+        {
+            return await _chats.Cast<Chat>().SingleOrDefaultAsync(c => string.Equals
+                                                                  (c.Name, chatName, StringComparison.InvariantCultureIgnoreCase) &&
+                                                                    c.DepartmentId == depId);
         }
     }
 }
