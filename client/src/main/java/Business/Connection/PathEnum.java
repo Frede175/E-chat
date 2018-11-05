@@ -3,6 +3,7 @@ package Business.Connection;
 import Business.Models.Chat;
 import Business.Models.Department;
 import Business.Models.MessageIn;
+import Business.Models.User;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -23,7 +24,8 @@ public enum PathEnum {
     RemoveUserFromChat("/api/chat/remove/", ConnectionType.POST, null),
     AddUserToChat("/api/chat/add/", ConnectionType.POST, null),
     LeaveChat("/api/chat/leave/", ConnectionType.POST, null),
-    PutChatRoom("/api/chat/", ConnectionType.PUT, null);
+    PutChatRoom("/api/chat/", ConnectionType.PUT, null),
+    GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<User>() {}.getType());
 
     private PathEnum(String path, ConnectionType type, Type resultType) {
         this.path = path;

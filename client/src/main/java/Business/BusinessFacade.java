@@ -20,7 +20,7 @@ public class BusinessFacade implements IBusinessFacade {
     private RestConnect restConnect = new RestConnect();
 
     private String token = null;
-    private User user = new User("d8d65767-ca69-4abb-974e-a21883096b4e", "Jeff");
+    private User user;
 
     @Override
     public void injectMessageReceiver(IMessageReceiver messageReceiver) {
@@ -30,7 +30,6 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public <T> T getChats(HashMap<String, String> param) {
         return restConnect.get(PathEnum.GetChats, user.getID(), param, token);
-
     }
 
     @Override
@@ -39,14 +38,9 @@ public class BusinessFacade implements IBusinessFacade {
         hubConnect.sendMessage(message, 1);
     }
 
-    public void addDummyData() {
-        String result = restConnect.post(PathEnum.CreateUser, null, new CreateUser("admin", "Password123*"), null);
-    }
-
     @Override
     public ConnectionState login(String username, String password) {
         String temp = restConnect.login(username, password);
-        System.out.println("Business: " + temp);
         if(temp.equals("error")) {
             return ConnectionState.WRONG_LOGIN;
         } else if(temp.equals("noConnection")) {
@@ -54,6 +48,8 @@ public class BusinessFacade implements IBusinessFacade {
         } else {
             token = temp;
             hubConnect.connect(token);
+            user = restConnect.get(PathEnum.GetUserInfo, null, null, token);
+            System.out.println(user.getName());
             return ConnectionState.SUCCESS;
         }
     }
