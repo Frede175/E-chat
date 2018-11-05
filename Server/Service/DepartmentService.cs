@@ -20,6 +20,7 @@ namespace Server.Service
         public DepartmentService(ApplicationDbContext context)
         {
             _department = context.Set<Department>();
+            _userDepartment = context.Set<UserDepartment>();
             _context = context;
         }
 

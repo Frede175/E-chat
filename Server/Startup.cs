@@ -48,8 +48,7 @@ namespace Server
                 options.UseOpenIddict();
 
             });
-            services.AddDefaultIdentity<ApplicationUser>()
-                .AddRoles<IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -77,7 +76,8 @@ namespace Server
                     options.UseMvc();
 
                     // Enable the token endpoint.
-                    options.EnableTokenEndpoint("/connect/token");
+                    options.EnableTokenEndpoint("/connect/token")
+                        .EnableUserinfoEndpoint("/api/userinfo");
 
                     // Enable the password flow.
                     options.AllowPasswordFlow();
@@ -94,6 +94,7 @@ namespace Server
 
             services.AddAuthentication(options =>
             {
+                options.DefaultAuthenticateScheme = OpenIddictValidationDefaults.AuthenticationScheme;
                 options.DefaultScheme = OpenIddictValidationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIddictValidationDefaults.AuthenticationScheme;
             });
@@ -106,11 +107,11 @@ namespace Server
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR().AddJsonProtocol();
 
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
             if (env.IsDevelopment())
@@ -130,11 +131,6 @@ namespace Server
 
             app.UseAuthentication();
             app.UseMvc();
-
-
-            //Not working atm. Need to add async if want to use.
-            //await ApplicationDbInitializer.SeedUsersAsync(userManager);  
-
         }
 
 
