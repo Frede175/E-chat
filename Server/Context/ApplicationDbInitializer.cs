@@ -21,24 +21,8 @@ namespace Server.Context
             var departmentService = services.GetRequiredService<IDepartmentService>();
             var chatService = services.GetRequiredService<IChatService>();
 
-            //Create department:
-            var department = await departmentService.GetSpecificDepartment("Main");
-            
-            if (department == null) {
-                var result = await departmentService.CreateDepartmentAsync(new Department() {
-                    Name = "Main"
-                });
-                if (!result) return;
-                department = await departmentService.GetSpecificDepartment("Main");
-            }
-            
-            
-            
             //Create role:
 
-
-
-            
             var role = await roleManager.FindByNameAsync("admin");
             if (role == null) {
                 role = new IdentityRole("admin");
@@ -60,10 +44,17 @@ namespace Server.Context
 
             await userManager.AddToRoleAsync(user, role.Name);
 
-
-
-
-            //await AddAllPermissions(user, userManager);
+            //Create department:
+            var department = await departmentService.GetSpecificDepartment("Main");
+            
+            if (department == null) {
+                var result = await departmentService.CreateDepartmentAsync(new Department() {
+                    Name = "Main"
+                });
+                if (!result) return;
+                department = await departmentService.GetSpecificDepartment("Main");
+                await departmentService.AddUsersToDepartmentAsync(department.Id, user);
+            }
 
 
             var chat = await chatService.GetSpecificChat(department.Id, "Main");

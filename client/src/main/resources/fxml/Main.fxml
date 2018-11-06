@@ -7,6 +7,10 @@
     <children>
         <fx:include source="ChatList.fxml" fx:id="chatList" />
         <fx:include source="SendMessage.fxml" fx:id="sendMessage" />
+
         <fx:include source="ChatBox.fxml" fx:id="chatBox" />
+
+        <fx:include source="ChatHeader.fxml" fx:id="chatHeader" />
+
     </children>
 </HBox>
