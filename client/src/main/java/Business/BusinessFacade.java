@@ -63,6 +63,7 @@ public class BusinessFacade implements IBusinessFacade {
             hubConnect.connect(token);
             RequestResponse<User> data = restConnect.get(PathEnum.GetUserInfo, null, null, token);
             user = data.getResponse();
+            getDepartments();
         }
         return temp.getConnectionState();
     }
