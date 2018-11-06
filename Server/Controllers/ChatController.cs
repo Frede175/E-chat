@@ -112,5 +112,22 @@ namespace Server.Controllers
 
             return new BadRequestResult();
         }
+
+
+        // GET: https://localhost:5001/api/chat/getUsers/
+        [HttpGet]
+        [RequiresPermissionAttribute(Permission.GetUsersInChat)]
+        public async Task<List<User>> GetUsersInChat(int chatId)
+        {
+            var chat = await _chatService.GetSpecificChat(chatId);
+            if (chat != null)
+            {
+                var result = (await _chatService.GetUsersInChat(chatId)).Select(c => new User(c)).ToList();
+                return result;
+            }
+            return null;
+        }
+
+
     }
 }
