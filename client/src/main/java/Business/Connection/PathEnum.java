@@ -16,7 +16,7 @@ public enum PathEnum {
     GetDepartments("/api/department/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
     CreateUser("/api/Auth", ConnectionType.POST, null),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
-    GetMessages("/api/messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
+    GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
     DeleteUser("/api/departments/", ConnectionType.DELETE, null),
     CreateChatroom("/api/chat/", ConnectionType.POST, null),
     GetChats("/api/chat/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
@@ -25,7 +25,8 @@ public enum PathEnum {
     AddUserToChat("/api/chat/add/", ConnectionType.POST, null),
     LeaveChat("/api/chat/leave/", ConnectionType.POST, null),
     PutChatRoom("/api/chat/", ConnectionType.PUT, null),
-    GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<User>() {}.getType());
+    GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<User>() {}.getType()),
+    GetUsersInChat("/api/user/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType());
 
     private PathEnum(String path, ConnectionType type, Type resultType) {
         this.path = path;

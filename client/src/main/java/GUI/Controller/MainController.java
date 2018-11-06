@@ -8,7 +8,12 @@ public class MainController {
     private ChatListController chatListController;
 
     @FXML
+    private ChatBoxController chatBoxController;
+
+    @FXML
     public void initialize() {
         chatListController.getData();
+        chatBoxController.getData();
     }
+
 }

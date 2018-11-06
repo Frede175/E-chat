@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.icu.impl.Trie2;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -211,9 +210,11 @@ public class RestConnect {
         if(param != null) {
             url = url.concat("?");
             for (Map.Entry<String, String> entry : param.entrySet()) {
-                url = url.concat(entry.getKey() + "=" + entry.getValue());
-            }
+                url = url.concat(entry.getKey() + "=" + entry.getValue() + "&");
+            }//TODO Better fix for &
+            url = url.substring(0, url.length() - 1);
         }
+        System.out.println("URL: " + url);
         //TODO delete this line
         //url = url.concat("?departmenId=1");
 
