@@ -28,7 +28,11 @@ namespace Server.Service.Interfaces
 
         Task<ICollection<Chat>> GetChatsAsync(string userId);
 
+        Task<Chat> GetSpecificChat(int chatId);
+
         Task<Chat> GetSpecificChat(int depId, string chatName);
+
+        Task<List<ApplicationUser>> GetUsersInChat(int chatId);
 
     }
 }

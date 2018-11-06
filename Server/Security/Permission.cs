@@ -23,6 +23,7 @@ namespace Server.Security
         LeaveChat,
         AddUserToChat,
         RemoveUserFromChat,
+        GetUsersInChat,
 
 
         //UserController
@@ -31,6 +32,13 @@ namespace Server.Security
         GetContacts,
         CreateUser,
         DeleteUser,
-        AddAdditionalRole
+        AddAdditionalRole,
+
+
+        //RoleController
+
+        CreateUserRole,
+        AddPermissionToRole,
+        RemovePermissionFromRole
     }
 }

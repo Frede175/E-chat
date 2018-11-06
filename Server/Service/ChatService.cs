@@ -232,11 +232,22 @@ namespace Server.Service
             return null;
         }
 
+        public async Task<Chat> GetSpecificChat(int chatId)
+        {
+            return await _chats.FindAsync(chatId);
+        }
+
         public async Task<Chat> GetSpecificChat(int depId, string chatName)
         {
             return await _chats.Cast<Chat>().SingleOrDefaultAsync(c => string.Equals
                                                                   (c.Name, chatName, StringComparison.InvariantCultureIgnoreCase) &&
                                                                     c.DepartmentId == depId);
+        }
+
+
+        public async Task<List<ApplicationUser>> GetUsersInChat(int chatId)
+        {
+            return await _userChat.Where(u => u.ChatId == chatId).Select(u => u.ApplicationUser).ToListAsync();
         }
     }
 }
