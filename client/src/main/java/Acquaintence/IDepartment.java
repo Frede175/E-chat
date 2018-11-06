@@ -1,7 +1,7 @@
 package Acquaintence;
 
 public interface IDepartment {
-    int getID();
+    int getId();
     String getName();
     void setName(String name);
 }

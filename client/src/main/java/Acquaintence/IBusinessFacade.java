@@ -9,6 +9,8 @@ import java.util.List;
 public interface IBusinessFacade {
     ConnectionState login(String username, String password);
     void injectMessageReceiver(IMessageReceiver messageReceiver);
-    <T> RequestResponse<T> getChats(HashMap<String, String> param);
+    RequestResponse<List<IChat>> getChats();
     void sendMessage(String message);
+    <T> RequestResponse<T> getUsersInChat();
+    RequestResponse<List<IDepartment>> getDepartments();
 }
