@@ -30,6 +30,8 @@ namespace Server.Service.Interfaces
 
         Task<Chat> GetSpecificChat(int chatId);
 
+        Task<Chat> GetSpecificChat(int depId, string chatName);
+
         Task<List<ApplicationUser>> GetUsersInChat(int chatId);
 
     }

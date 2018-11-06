@@ -237,20 +237,17 @@ namespace Server.Service
             return await _chats.FindAsync(chatId);
         }
 
-
-        public async Task<List<ApplicationUser>> GetUsersInChat(int chatId)
+        public async Task<Chat> GetSpecificChat(int depId, string chatName)
         {
-            var chat = await _chats.FindAsync(chatId);
-
-            if (chat != null)
-            {
-                var users = chat.UserChats.Select(c => c.ApplicationUser).ToList();
-                return users;
-            }
-            return null;
+            return await _chats.Cast<Chat>().SingleOrDefaultAsync(c => string.Equals
+                                                                  (c.Name, chatName, StringComparison.InvariantCultureIgnoreCase) &&
+                                                                    c.DepartmentId == depId);
         }
 
 
-
+        public async Task<List<ApplicationUser>> GetUsersInChat(int chatId)
+        {
+            return await _userChat.Where(u => u.ChatId == chatId).Select(u => u.ApplicationUser).ToListAsync();
+        }
     }
 }
