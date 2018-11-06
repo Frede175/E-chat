@@ -2,14 +2,18 @@ package Business;
 
 import Acquaintence.ConnectionState;
 import Acquaintence.IBusinessFacade;
+import Acquaintence.IChat;
 import Acquaintence.IMessageReceiver;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
+import Business.Models.Chat;
 import Business.Models.User;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
 
@@ -18,6 +22,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     private String token = null;
     private User user;
+    private Chat chat;
 
     @Override
     public void injectMessageReceiver(IMessageReceiver messageReceiver) {
@@ -25,8 +30,10 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public <T> RequestResponse<T> getChats(HashMap<String, String> param) {
+    public RequestResponse<List<? extends IChat>> getChats(HashMap<String, String> param) {
         return restConnect.get(PathEnum.GetChats, user.getSub(), param, token);
+        //chat = response.getResponse().get(0);
+        //return response;
     }
 
     @Override
