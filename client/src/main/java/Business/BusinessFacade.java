@@ -34,17 +34,34 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, user.getSub(), currentDepartment.toMap(), token);
-        chat = response.getResponse().get(0);
+
+        if(!response.getResponse().isEmpty()) {
+            currentChat = response.getResponse().get(0);
+            chats = response.getResponse();
+            System.out.println(currentChat + " " + chats);
+        }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
 
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, user.getSub(),null,token);
+
         if(!response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
+            departments = response.getResponse();
+            System.out.println(currentDepartment + " " + departments);
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public void setCurrentChat(int chatID) {
+        if(currentChat.getID() != chatID) {
+            currentChat = chats.get(chatID);
+            System.out.println("currentchat blev ændret");
+        }
+        System.out.println("currentchat var den samme");
     }
 
     @Override

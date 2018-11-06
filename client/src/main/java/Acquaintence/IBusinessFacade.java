@@ -20,4 +20,6 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IUser>> getUsersInChat();
     RequestResponse<List<? extends IDepartment>> getDepartments();
 
+    void setCurrentChat(int chatID);
+
 }

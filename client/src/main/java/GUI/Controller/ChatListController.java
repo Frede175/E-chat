@@ -25,17 +25,13 @@ public class ChatListController {
     public void getData() {
         ArrayList<String> stringList = new ArrayList<>();
 
-        chatList = new ListView<>();
         RequestResponse<List<? extends IChat>> response = GUI.GUI.getInstance().getBusiness().getChats();
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
             System.out.println("Not null");
             for (IChat chat : response.getResponse()) {
                 stringList.add(chat.getName());
             }
-            stringList.add("element");
-            stringList.add("noget");
-            stringList.add("something");
-
+        stringList.add("outofbounds");
 
         }
         chatList.setPrefWidth(100);
@@ -47,12 +43,11 @@ public class ChatListController {
 
 
         chatList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
                 @Override
                 public void handle(MouseEvent event) {
-                System.out.println((chatList.getSelectionModel().getSelectedIndex()));
-                }
+                    GUI.GUI.getInstance().getBusiness().setCurrentChat(response.getResponse().get(chatList.getSelectionModel().getSelectedIndex()).getID());
             }
+        }
         );
 
 

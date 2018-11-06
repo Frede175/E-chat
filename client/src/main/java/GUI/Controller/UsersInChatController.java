@@ -1,5 +1,8 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
+import Acquaintence.IChat;
+import Acquaintence.IUser;
 import Business.Connection.RequestResponse;
 import Business.Models.User;
 import javafx.collections.FXCollections;
@@ -20,14 +23,15 @@ public class UsersInChatController {
     public void setUserlist() {
         ArrayList<String> stringList = new ArrayList<>();
 
-        RequestResponse<List<User>> response = GUI.GUI.getInstance().getBusiness().getUsersInChat();
-        List<User> users = response.getResponse();
-        if (users != null) {
+        RequestResponse<List<? extends IUser>> response = GUI.GUI.getInstance().getBusiness().getUsersInChat();
+        if (response.getConnectionState() == ConnectionState.SUCCESS) {
             System.out.println("Not null");
-            for (User user : users) {
+            for (IUser user : response.getResponse()) {
                 stringList.add(user.getName());
             }
+
         }
+
         Userlist.setPrefWidth(100);
         Userlist.setPrefHeight(70);
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
