@@ -17,7 +17,7 @@ public class ChatBoxController{
     @FXML
     public ListView chatBox;
 
-    // Takes the content from MessagesIn and shows it in the ListVeiw in the GUI
+    // Takes the content from MessagesIn and shows it in the ListVeiw in the GUI TODO it should work.. but not quite yet
     public void getData(){
         RequestResponse<List<MessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
 
