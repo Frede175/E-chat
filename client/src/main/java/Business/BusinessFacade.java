@@ -42,7 +42,7 @@ public class BusinessFacade implements IBusinessFacade {
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, user.getSub(),null,token);
         if(!response.getResponse().isEmpty()) {
-            currentDepartment = (Department) response.getResponse().get(0);
+            currentDepartment = response.getResponse().get(0);
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
@@ -54,7 +54,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public <T> RequestResponse<T> getUsersInChat() {
+    public RequestResponse<List<? extends IUser>> getUsersInChat() {
         return restConnect.get(PathEnum.GetUsersInChat, currentChat.getID(), null, token );
     }
 
@@ -71,7 +71,8 @@ public class BusinessFacade implements IBusinessFacade {
         return temp.getConnectionState();
     }
 
-    public <T> RequestResponse<T> getMessages() {
+    @Override
+    public RequestResponse<List<? extends IMessageIn>> getMessages() {
         return restConnect.get(PathEnum.GetMessages, chat.getID(), new Page(0,20).toMap(), token);
     }
 

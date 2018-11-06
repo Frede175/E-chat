@@ -15,9 +15,9 @@ public interface IBusinessFacade {
     void sendMessage(String message);
 
 
-    <T> RequestResponse<T> getMessages();
+    RequestResponse<List<? extends IMessageIn>> getMessages();
 
-    <T> RequestResponse<T> getUsersInChat();
+    RequestResponse<List<? extends IUser>> getUsersInChat();
     RequestResponse<List<? extends IDepartment>> getDepartments();
 
 }
