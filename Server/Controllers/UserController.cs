@@ -89,10 +89,10 @@ namespace Server.Controllers
         }
 
 
-        // DELETE: https://localhost:5001/api/User/create
+        // DELETE: https://localhost:5001/api/User/delete
         [HttpDelete]
         [RequiresPermissionAttribute(Permission.DeleteUser)]
-        public async Task<ActionResult> CreateUser(string userId)
+        public async Task<ActionResult> DeleteUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
 

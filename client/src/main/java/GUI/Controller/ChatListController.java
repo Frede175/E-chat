@@ -1,8 +1,9 @@
 package GUI.Controller;
 
+
+import Acquaintence.ConnectionState;
 import Acquaintence.IChat;
 import Business.Connection.RequestResponse;
-import Business.Models.Chat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -24,15 +25,14 @@ public class ChatListController {
     public void getData() {
         ArrayList<String> stringList = new ArrayList<>();
 
-        RequestResponse<List<IChat>> response = GUI.GUI.getInstance().getBusiness().getChats();
-        List<IChat> chats = response.getResponse();
-        System.out.println(chats.get(0).getID());
-        if(chats != null) {
+        chatList = new ListView<>();
+        RequestResponse<List<? extends IChat>> response = GUI.GUI.getInstance().getBusiness().getChats();
+        if (response.getConnectionState() == ConnectionState.SUCCESS) {
             System.out.println("Not null");
-            for (IChat chat : chats) {
+            for (IChat chat : response.getResponse()) {
                 stringList.add(chat.getName());
             }
-        stringList.add("element");
+            stringList.add("element");
             stringList.add("noget");
             stringList.add("something");
 
@@ -48,11 +48,12 @@ public class ChatListController {
 
         chatList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-            @Override
-            public void handle(MouseEvent event) {
+                @Override
+                public void handle(MouseEvent event) {
                 System.out.println((chatList.getSelectionModel().getSelectedIndex()));
+                }
             }
-        });
+        );
 
 
     }

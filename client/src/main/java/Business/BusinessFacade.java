@@ -1,5 +1,6 @@
 package Business;
 
+
 import Acquaintence.*;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
@@ -7,9 +8,9 @@ import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
 import Business.Models.Chat;
 import Business.Models.Department;
+import Business.Models.Page;
 import Business.Models.User;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
@@ -17,9 +18,10 @@ public class BusinessFacade implements IBusinessFacade {
     private HubConnect hubConnect = new HubConnect();
     private RestConnect restConnect = new RestConnect();
     private List<Department> departments;
-    private Department currentdepartment;
+    private Department currentDepartment;
     private String token = null;
     private User user;
+    private Chat chat;
     private Chat currentChat;
     private List<Chat> chats;
 
@@ -30,18 +32,19 @@ public class BusinessFacade implements IBusinessFacade {
 
 
     @Override
-    public RequestResponse<List<IChat>> getChats() {
-        RequestResponse<List<IChat>> response = restConnect.get(PathEnum.GetChats, user.getSub(), currentdepartment.toMap(), token);
-        currentChat = (Chat) response.getResponse().get(0);
-
-        return response;
+    public RequestResponse<List<? extends IChat>> getChats() {
+        RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, user.getSub(), currentDepartment.toMap(), token);
+        chat = response.getResponse().get(0);
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
-    public RequestResponse<List<IDepartment>> getDepartments() {
-        RequestResponse<List<IDepartment>> response = restConnect.get(PathEnum.GetDepartments, user.getSub(),null,token);
-        currentdepartment = (Department) response.getResponse().get(0);
 
-        return response;
+    public RequestResponse<List<? extends IDepartment>> getDepartments() {
+        RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, user.getSub(),null,token);
+        if(!response.getResponse().isEmpty()) {
+            currentDepartment = (Department) response.getResponse().get(0);
+        }
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
     @Override
@@ -67,4 +70,9 @@ public class BusinessFacade implements IBusinessFacade {
         }
         return temp.getConnectionState();
     }
+
+    public <T> RequestResponse<T> getMessages() {
+        return restConnect.get(PathEnum.GetMessages, chat.getID(), new Page(0,20).toMap(), token);
+    }
+
 }
