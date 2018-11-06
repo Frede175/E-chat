@@ -18,6 +18,6 @@ public interface IBusinessFacade {
     <T> RequestResponse<T> getMessages();
 
     <T> RequestResponse<T> getUsersInChat();
-    RequestResponse<List<IDepartment>> getDepartments();
+    RequestResponse<List<? extends IDepartment>> getDepartments();
 
 }

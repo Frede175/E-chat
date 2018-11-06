@@ -19,14 +19,14 @@ public class ChatBoxController{
 
     // Takes the content from MessagesIn and shows it in the ListVeiw in the GUI TODO it should work.. but not quite yet
     public void getData(){
-        RequestResponse<List<MessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
+        /*RequestResponse<List<MessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
 
         ObservableList<String> messages = FXCollections.observableArrayList ();
         for (MessageIn message : response.getResponse()) {
             messages.add(message.getTimeStamp() + " " + message.getUser().getName() + "     " + message.getContent());
         }
 
-        chatBox.setItems(messages);
+        chatBox.setItems(messages);*/
 
     }
 }
