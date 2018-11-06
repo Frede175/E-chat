@@ -7,6 +7,8 @@ import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
+import Business.Models.Chat;
+import Business.Models.Page;
 import Business.Models.User;
 
 import java.util.HashMap;
@@ -18,6 +20,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     private String token = null;
     private User user;
+    private Chat chat;
 
     @Override
     public void injectMessageReceiver(IMessageReceiver messageReceiver) {
@@ -48,4 +51,9 @@ public class BusinessFacade implements IBusinessFacade {
         }
         return temp.getConnectionState();
     }
+
+    public <T> RequestResponse<T> getMessages() {
+        return restConnect.get(PathEnum.GetMessages, chat.getID(), new Page(0,20).toMap(), token);
+    }
+
 }

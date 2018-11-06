@@ -11,4 +11,7 @@ public interface IBusinessFacade {
     void injectMessageReceiver(IMessageReceiver messageReceiver);
     <T> RequestResponse<T> getChats(HashMap<String, String> param);
     void sendMessage(String message);
+
+    <T> RequestResponse<T> getMessages();
+
 }
