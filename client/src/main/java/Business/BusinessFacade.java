@@ -61,9 +61,15 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public void setCurrentChat(int chatID) {
         if(currentChat.getId() != chatID) {
-            currentChat = chats.get(chatID);
-            System.out.println("currentchat blev ændret");
-        }
+            for (Chat tempchat: chats) {
+                if(tempchat.getId() == chatID) {
+                    currentChat = tempchat;
+                    System.out.println("currentchat blev ændret til chatten med id'et " + tempchat.getId());
+                    break;
+                }
+                break;
+            }
+        } else
         System.out.println("currentchat var den samme");
     }
 
