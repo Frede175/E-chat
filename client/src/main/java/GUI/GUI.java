@@ -51,7 +51,7 @@ public class GUI extends Application implements IGUI {
     }
 
     @Override
-    public IGUINotifier getMessageReceiver() {
+    public IGUINotifier getGUINotifier() {
         return new GUINotifier();
     }
 

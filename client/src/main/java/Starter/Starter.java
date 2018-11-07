@@ -12,7 +12,7 @@ public class Starter {
 
         IBusinessFacade business = new BusinessFacade();
 
-        business.injectGUINotifier(gui.getMessageReceiver());
+        business.injectGUINotifier(gui.getGUINotifier());
 
         gui.injectBusinessFacade(business);
 

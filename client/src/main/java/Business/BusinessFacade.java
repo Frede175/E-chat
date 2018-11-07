@@ -68,8 +68,9 @@ public class BusinessFacade implements IBusinessFacade {
                 }
                 break;
             }
-        } else
-        System.out.println("currentchat var den samme");
+        } else {
+            System.out.println("currentchat var den samme");
+        }
     }
 
     @Override
