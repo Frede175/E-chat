@@ -98,6 +98,24 @@ namespace Server.Controllers
 
         }
 
+        // DELETE: https://localhost:5001/api/Role/delete/{role}
+        [HttpDelete("")]
+        [RequiresPermissionAttribute(Permission.DeleteRole)]
+        public async Task<ActionResult> DeleteRole(string role)
+        {
+            var thisRole = await _roleManager.FindByNameAsync(role);
+
+            if (thisRole != null)
+            {
+                var result = await _roleManager.DeleteAsync(thisRole);
+
+                if (result.Succeeded)
+                {
+                    return new OkResult();
+                }
+            }
+            return new BadRequestResult();
+        }
 
     }
 }

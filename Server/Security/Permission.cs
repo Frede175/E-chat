@@ -39,6 +39,7 @@ namespace Server.Security
 
         CreateUserRole,
         AddPermissionToRole,
-        RemovePermissionFromRole
+        RemovePermissionFromRole,
+        DeleteRole
     }
 }
