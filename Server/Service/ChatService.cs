@@ -210,7 +210,7 @@ namespace Server.Service
         /// <param name="message">Message.</param>
         public async Task<Message> SendMessageAsync(int chatId, string userId, string content)
         {
-            var chat = await _chats.FindAsync(chatId);
+            var chat = await _chats.Cast<Chat>().Include(c => c.Messages).SingleOrDefaultAsync(c => c.Id == chatId);
             if (!string.IsNullOrEmpty(content))
             {
                 var message = new Message()
@@ -226,6 +226,7 @@ namespace Server.Service
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
                 {
+                    await _context.Entry(message).Reference(m => m.ApplicationUser).LoadAsync();
                     return message;
                 }
             }
