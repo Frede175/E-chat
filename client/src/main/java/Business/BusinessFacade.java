@@ -32,11 +32,14 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IChat>> getChats() {
+        System.out.println("Det her er result koden");
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, user.getSub(), currentDepartment.toMap(), token);
-
+        System.out.println(response.getResponse());
+        System.out.println("ID'et er " + response.getResponse().get(0).getId() + " når det kommer over fra serveren");
         if(!response.getResponse().isEmpty()) {
             currentChat = response.getResponse().get(0);
             chats = response.getResponse();
+            System.out.println("currentChats ID " + currentChat.getId());
             System.out.println(currentChat + " " + chats);
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
@@ -56,7 +59,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void setCurrentChat(int chatID) {
-        if(currentChat.getID() != chatID) {
+        if(currentChat.getId() != chatID) {
             currentChat = chats.get(chatID);
             System.out.println("currentchat blev ændret");
         }
@@ -66,12 +69,12 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public void sendMessage(String message) {
         //TODO Place ChatID somewhere/refactor
-        hubConnect.sendMessage(message, currentChat.getID());
+        hubConnect.sendMessage(message, currentChat.getId());
     }
 
     @Override
     public RequestResponse<List<? extends IUser>> getUsersInChat() {
-        return restConnect.get(PathEnum.GetUsersInChat, currentChat.getID(), null, token );
+        return restConnect.get(PathEnum.GetUsersInChat, currentChat.getId(), null, token );
     }
 
     @Override
@@ -89,7 +92,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
-        return restConnect.get(PathEnum.GetMessages, currentChat.getID(), new Page(0,20).toMap(), token);
+        return restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
     }
 
 }

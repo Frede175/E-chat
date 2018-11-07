@@ -4,17 +4,17 @@ import Acquaintence.IChat;
 
 public class Chat implements IChat {
 
-    private int ID;
+    private int id;
     private String name;
 
-    public Chat(int ID, String name) {
-        this.ID = ID;
+    public Chat(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
     @Override
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     @Override
