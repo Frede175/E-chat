@@ -1,17 +1,8 @@
 package client;
 
-import Acquaintence.IMessageReceiver;
-import Business.Connection.PathEnum;
-import Business.Connection.RestConnect;
-import Business.Models.Chat;
-import Business.Models.CreateUser;
+import Acquaintence.IGUINotifier;
 import Business.Models.Department;
-import Business.Models.MessageIn;
 import com.microsoft.signalr.HubConnection;
-import com.microsoft.signalr.HubConnectionBuilder;
-import io.reactivex.Single;
-
-import java.util.List;
 
 public class Client {
 
@@ -23,9 +14,9 @@ public class Client {
 
     private HubConnection chatConnection;
 
-    private IMessageReceiver messageReceiver;
+    private IGUINotifier messageReceiver;
 
-    public Client(IMessageReceiver messageReceiver) {
+    public Client(IGUINotifier messageReceiver) {
         /*this.messageReceiver = messageReceiver;
 
         RestConnect rest = new RestConnect();
