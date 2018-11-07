@@ -3,7 +3,6 @@ package GUI.Controller;
 
 import Acquaintence.IMessageIn;
 import Business.Connection.RequestResponse;
-import Business.Models.MessageIn;
 import GUI.GUI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,20 +19,21 @@ public class ChatBoxController{
 
     // Takes the content from MessagesIn and shows it in the ListVeiw in the GUI TODO it should work.. but not quite yet
     public void getData(){
-        //RequestResponse<List<? extends IMessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
+        RequestResponse<List<? extends IMessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
 
-        //System.out.println(response.toString());
+        System.out.println(response.toString());
 
-        /*if(response == null){
+        if(response == null){
             System.out.println("No messages cunt");
         }else{
+            System.out.println("I LIVESSS IT LIVESSS");
             ObservableList<String> messages = FXCollections.observableArrayList ();
-            for (MessageIn message : response.getResponse()) {
+            for (IMessageIn message : response.getResponse()) {
                 messages.add(message.getTimeStamp() + " " + message.getUser().getName() + "     " + message.getContent());
             }
 
             chatBox.setItems(messages);
-        }*/
+        }
 
 
     }
