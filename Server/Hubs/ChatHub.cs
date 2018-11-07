@@ -33,7 +33,7 @@ namespace Server.Hubs
 
             var returnMessage = await _chatService.SendMessageAsync(message.ChatId, userId, message.Content);
             if(returnMessage != null){
-                await Clients.Group(message.ChatId.ToString()).SendAsync("RecieveMessage", new Message(returnMessage, message.ChatId));
+                await Clients.Group(message.ChatId.ToString()).SendAsync("ReceiveMessage", new Message(returnMessage, message.ChatId));
             }
 
         }
