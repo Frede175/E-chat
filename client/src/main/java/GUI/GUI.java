@@ -2,19 +2,12 @@ package GUI;
 
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IGUI;
-import Acquaintence.IMessageReceiver;
-import Business.Connection.PathEnum;
-import Business.Models.Chat;
-import Business.Models.Department;
+import Acquaintence.IGUINotifier;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GUI extends Application implements IGUI {
     /**
@@ -58,8 +51,8 @@ public class GUI extends Application implements IGUI {
     }
 
     @Override
-    public IMessageReceiver getMessageReceiver() {
-        return new MessageReceiver();
+    public IGUINotifier getMessageReceiver() {
+        return new GUINotifier();
     }
 
     /**

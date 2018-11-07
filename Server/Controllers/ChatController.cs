@@ -114,8 +114,8 @@ namespace Server.Controllers
         }
 
 
-        // GET: https://localhost:5001/api/chat/getUsers/
-        [HttpGet]
+        // GET: https://localhost:5001/api/chat/users/{chatId}
+        [HttpGet ("users/{chatId}")]
         [RequiresPermissionAttribute(Permission.GetUsersInChat)]
         public async Task<List<User>> GetUsersInChat(int chatId)
         {

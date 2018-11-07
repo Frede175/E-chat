@@ -1,5 +1,6 @@
 package Business.Connection;
 
+import Acquaintence.IGUINotifier;
 import Business.Models.MessageIn;
 import Business.Models.MessageOut;
 import client.MessageObject;
@@ -10,6 +11,11 @@ import io.reactivex.Single;
 public class HubConnect {
 
     private HubConnection chatConnection;
+    private IGUINotifier guiNotifier;
+
+    public void injectGUINotifier(IGUINotifier guiNotifier) {
+        this.guiNotifier = guiNotifier;
+    }
 
     public void connect(String token) {
         chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
@@ -17,7 +23,7 @@ public class HubConnect {
                 .build();
 
         //Add message receive method callback
-        //chatConnection.on("ReceiveMessage", this.messageReceiver::recieve, MessageIn.class);
+        chatConnection.on("ReceiveMessage", this.guiNotifier::recieve, MessageIn.class);
 
         //Start the connection
         chatConnection.start().blockingAwait();

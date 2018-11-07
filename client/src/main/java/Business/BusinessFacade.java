@@ -21,13 +21,12 @@ public class BusinessFacade implements IBusinessFacade {
     private Department currentDepartment;
     private String token = null;
     private User user;
-    private Chat chat;
     private Chat currentChat;
     private List<Chat> chats;
 
     @Override
-    public void injectMessageReceiver(IMessageReceiver messageReceiver) {
-
+    public void injectGUINotifier(IGUINotifier guiNotifier) {
+        hubConnect.injectGUINotifier(guiNotifier);
     }
 
 
@@ -76,7 +75,7 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public void sendMessage(String message) {
         //TODO Place ChatID somewhere/refactor
-        hubConnect.sendMessage(message, 1);
+        hubConnect.sendMessage(message, currentChat.getId());
     }
 
     @Override
@@ -99,7 +98,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
-        return restConnect.get(PathEnum.GetMessages, chat.getId(), new Page(0,20).toMap(), token);
+        return restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
     }
 
 }

@@ -195,7 +195,7 @@ namespace Server.Service
             if (chat != null)
             {
 
-                return chat.Messages.OrderByDescending(m => m.TimeStamp).Skip(pageSize * page).Take(pageSize).ToList();
+                return _messages.Where(c => c.Id == chat.Id).OrderByDescending(m => m.TimeStamp).Skip(pageSize * page).Take(pageSize).ToList();
             }
 
             return null;
