@@ -90,7 +90,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
-        return restConnect.get(PathEnum.GetMessages, chat.getID(), new Page(0,20).toMap(), token);
+        return restConnect.get(PathEnum.GetMessages, currentChat.getID(), new Page(0,20).toMap(), token);
     }
 
 }
