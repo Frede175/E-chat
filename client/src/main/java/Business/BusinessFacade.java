@@ -2,15 +2,14 @@ package Business;
 
 
 import Acquaintence.*;
+import Acquaintence.Event.MessageEvent;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
-import Business.Models.Chat;
-import Business.Models.Department;
-import Business.Models.Page;
-import Business.Models.User;
+import Business.Models.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
@@ -24,9 +23,19 @@ public class BusinessFacade implements IBusinessFacade {
     private Chat currentChat;
     private List<Chat> chats;
 
+
+    public BusinessFacade() {
+        EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
+    }
+
+    private void getMessage(MessageEvent event) {
+        currentChat.addMessage((MessageIn) event.getMessageIn());
+    }
+
     @Override
     public void injectGUINotifier(IGUINotifier guiNotifier) {
         hubConnect.injectGUINotifier(guiNotifier);
+        hubConnect.injectBusinessFacade(this);
     }
 
 
@@ -99,7 +108,16 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
-        return restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
+        RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
+        if(currentChat != null) {
+            currentChat.addMessages(response.getResponse());
+        }
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public Chat getCurrentChat() {
+        return currentChat;
     }
 
 }

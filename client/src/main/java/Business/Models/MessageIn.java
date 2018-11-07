@@ -44,4 +44,9 @@ public class MessageIn implements IMessageIn {
     public int getChatID() {
         return chatID;
     }
+
+    @Override
+    public int compareTo(IMessageIn o) {
+        return timeStamp.compareTo(o.getTimeStamp());
+    }
 }

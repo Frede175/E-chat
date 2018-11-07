@@ -1,12 +1,16 @@
 package GUI;
 
+import Acquaintence.IBusinessFacade;
 import Acquaintence.IGUINotifier;
-import Business.Models.MessageIn;
+import Acquaintence.IMessageIn;
 
 public class GUINotifier implements IGUINotifier {
 
+
+
     @Override
-    public void recieve(MessageIn message) {
-        System.out.println("Besked modtaget");
+    public void recieve(IMessageIn message) {
+        //businessFacade.getCurrentChat().addMessage(message);
+        // TODO Call update on GUI
     }
 }

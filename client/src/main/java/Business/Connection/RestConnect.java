@@ -4,6 +4,7 @@ package Business.Connection;
 import Acquaintence.ConnectionState;
 import Acquaintence.IToMap;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.icu.impl.Trie2;
@@ -21,10 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
@@ -33,8 +31,14 @@ public class RestConnect {
     private String url = "https://localhost:5001";
     private final String formType = "application/x-www-form-urlencoded";
     //private final String url = "https://ptsv2.com";
-    private final Gson gson = new Gson();
+    private final Gson gson;
     // /api/values
+
+    public RestConnect() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new DateDeserialize());
+        gson = gsonBuilder.create();
+    }
 
     public RequestResponse<String> login(String username, String password) {
 
@@ -111,6 +115,7 @@ public class RestConnect {
                 Type type = path.getResultType();
 
                 System.out.println(result.toString());
+
 
                 T obj = gson.fromJson(result.toString(), type);
 
