@@ -211,7 +211,7 @@ namespace Server.Service
         public async Task<Message> SendMessageAsync(int chatId, string userId, string content)
         {
             var chat = await _chats.Cast<Chat>().Include(c => c.Messages).SingleOrDefaultAsync(c => c.Id == chatId);
-            if (!string.IsNullOrEmpty(content))
+            if (!string.IsNullOrEmpty(content) && chat != null)
             {
                 var message = new Message()
                 {
