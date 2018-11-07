@@ -106,5 +106,10 @@ namespace Server.Service
         {
             return await _department.Cast<Department>().SingleOrDefaultAsync(d => string.Equals(d.Name, name, StringComparison.InvariantCultureIgnoreCase));
         }
+
+        public async Task<Department> GetSpecificDepartment(int depId)
+        {
+            return await _department.Cast<Department>().SingleOrDefaultAsync(d => d.Id.Equals(depId));
+        }
     }
 }

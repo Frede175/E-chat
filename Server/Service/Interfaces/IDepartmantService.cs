@@ -23,6 +23,7 @@ namespace Server.Service.Interfaces
 
         Task<Department> GetSpecificDepartment(string name);
 
+        Task<Department> GetSpecificDepartment(int depId);
 
     }
 }

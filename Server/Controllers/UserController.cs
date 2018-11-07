@@ -64,9 +64,9 @@ namespace Server.Controllers
         }
 
         // POST: https://localhost:5001/api/User/create
-        [HttpPost]
+        [HttpPost("create")]
         [RequiresPermissionAttribute(Permission.CreateUser)]
-        public async Task<ActionResult> CreateUser(CreateUserModel model)
+        public async Task<ActionResult> CreateUser(CreateUser model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null)
@@ -90,7 +90,7 @@ namespace Server.Controllers
 
 
         // DELETE: https://localhost:5001/api/User/delete
-        [HttpDelete]
+        [HttpDelete("delete/{userId}")]
         [RequiresPermissionAttribute(Permission.DeleteUser)]
         public async Task<ActionResult> DeleteUser(string userId)
         {
@@ -111,7 +111,7 @@ namespace Server.Controllers
 
 
         // PUT https://localhost:5001/api/User/{userId}
-        [HttpPut]
+        [HttpPut("{userId}")]
         [RequiresPermissionAttribute(Permission.AddAdditionalRole)]
         public async Task<ActionResult> AddAdditionalRole(string userId, string role) 
         {
