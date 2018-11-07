@@ -2,7 +2,7 @@ package Acquaintence;
 
 import Business.Models.MessageIn;
 
-public interface IMessageReceiver {
+public interface IGUINotifier {
     void recieve(MessageIn message);
 
 

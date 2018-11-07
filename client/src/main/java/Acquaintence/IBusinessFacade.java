@@ -1,15 +1,13 @@
 package Acquaintence;
 
-import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface IBusinessFacade {
 
     ConnectionState login(String username, String password);
-    void injectMessageReceiver(IMessageReceiver messageReceiver);
+    void injectGUINotifier(IGUINotifier guiNotifier);
     RequestResponse<List<? extends IChat>> getChats();
 
     void sendMessage(String message);

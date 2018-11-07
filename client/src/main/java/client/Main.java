@@ -2,7 +2,7 @@ package client;
 
 
 import Business.Models.Chat;
-import GUI.MessageReceiver;
+import GUI.GUINotifier;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,7 +31,7 @@ public class Main {
 
 
 
-        Client client = new Client(new MessageReceiver());
+        Client client = new Client(new GUINotifier());
 
         Scanner scanner = new Scanner(System.in);
 
