@@ -19,6 +19,11 @@ namespace Server.DbModels
         [ForeignKey("ApplicationUser")]
         public string SenderId { get; set; }
 
+        [ForeignKey("Chat")]
+        public int ChatId { get; set; }
+
+        public virtual Chat Chat { get; set; }
+
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }
