@@ -28,8 +28,8 @@ namespace Server.Controllers
 
 
 
-        // POST: https://localhost:5001/api/Role/add
-        [HttpPost]
+        // POST: https://localhost:5001/api/Role/{role}
+        [HttpPost("{role}")]
         [RequiresPermissionAttribute(Permission.CreateUserRole)]
         public async Task<ActionResult> CreateUserRole(string role, List<string> addedPermissions)
         {
@@ -57,10 +57,10 @@ namespace Server.Controllers
             return BadRequest();
         }
 
-        // POST: https://localhost:5001/api/Role/addPermission
-        [HttpPost]
+        // POST: https://localhost:5001/api/Role/addperm/{role}
+        [HttpPost("addperm/{role}")]
         [RequiresPermissionAttribute(Permission.AddPermissionToRole)]
-        public async Task<ActionResult> AddPermissionToRole(string permissionName,string role)
+        public async Task<ActionResult> AddPermissionToRole(string role, string permissionName)
         {
             var permissions = Enum.GetNames(typeof(Permission));
             var userRole = await _roleManager.FindByNameAsync(role);
@@ -78,9 +78,9 @@ namespace Server.Controllers
         }
 
         // POST: https://localhost:5001/api/Role/removePermission
-        [HttpPost]
+        [HttpPost("removeperm/{role}")]
         [RequiresPermissionAttribute(Permission.RemovePermissionFromRole)]
-        public async Task<ActionResult> RemovePermissionFromRole(string permissionName, string role)
+        public async Task<ActionResult> RemovePermissionFromRole(string role, string permissionName)
         {
             var permissions = Enum.GetNames(typeof(Permission));
             var userRole = await _roleManager.FindByNameAsync(role);
@@ -97,12 +97,6 @@ namespace Server.Controllers
             return new BadRequestResult();
 
         }
-
-
-
-
-
-
 
 
     }
