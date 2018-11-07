@@ -26,7 +26,7 @@ public class Main {
 
         Chat newChat = gson.fromJson(json, c);
 
-        System.out.println(newChat.getID() + ", " + newChat.getName());
+        System.out.println(newChat.getId() + ", " + newChat.getName());
 
 
 

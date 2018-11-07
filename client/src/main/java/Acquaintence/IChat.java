@@ -1,7 +1,7 @@
 package Acquaintence;
 
 public interface IChat {
-    int getID();
+    int getId();
     String getName();
     void setName(String name);
 }

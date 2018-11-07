@@ -45,7 +45,7 @@ public class ChatListController {
         chatList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    GUI.GUI.getInstance().getBusiness().setCurrentChat(response.getResponse().get(chatList.getSelectionModel().getSelectedIndex()).getID());
+                    GUI.GUI.getInstance().getBusiness().setCurrentChat(response.getResponse().get(chatList.getSelectionModel().getSelectedIndex()).getId());
             }
         }
         );
