@@ -195,7 +195,7 @@ namespace Server.Service
             if (chat != null)
             {
 
-                return _messages.Where(c => c.Id == chat.Id).OrderByDescending(m => m.TimeStamp).Skip(pageSize * page).Take(pageSize).ToList();
+                return await _messages.Include(m => m.ApplicationUser).Where(c => c.ChatId == chat.Id).OrderByDescending(m => m.TimeStamp).Skip(pageSize * page).Take(pageSize).ToListAsync();
             }
 
             return null;
@@ -211,21 +211,21 @@ namespace Server.Service
         public async Task<Message> SendMessageAsync(int chatId, string userId, string content)
         {
             var chat = await _chats.FindAsync(chatId);
-            if (!string.IsNullOrEmpty(content))
+            if (!string.IsNullOrEmpty(content) && chat != null)
             {
                 var message = new Message()
                 {
                     Content = content,
                     TimeStamp = DateTime.Now,
-                    SenderId = userId
+                    SenderId = userId,
+                    ChatId = chat.Id
                 };
 
-                chat.Messages.Add(message);
                 _messages.Add(message);
-                _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
                 {
+                    await _context.Entry(message).Reference(m => m.ApplicationUser).LoadAsync();
                     return message;
                 }
             }
