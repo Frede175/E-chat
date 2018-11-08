@@ -210,19 +210,18 @@ namespace Server.Service
         /// <param name="message">Message.</param>
         public async Task<Message> SendMessageAsync(int chatId, string userId, string content)
         {
-            var chat = await _chats.Cast<Chat>().Include(c => c.Messages).SingleOrDefaultAsync(c => c.Id == chatId);
+            var chat = await _chats.FindAsync(chatId);
             if (!string.IsNullOrEmpty(content) && chat != null)
             {
                 var message = new Message()
                 {
                     Content = content,
                     TimeStamp = DateTime.Now,
-                    SenderId = userId
+                    SenderId = userId,
+                    ChatId = chat.Id
                 };
 
-                chat.Messages.Add(message);
                 _messages.Add(message);
-                _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
                 {
