@@ -1,6 +1,7 @@
 package GUI.Controller;
 
 
+
 import javafx.fxml.FXML;
 
 public class MainController {
@@ -12,8 +13,8 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        chatListController.getData();
-        chatBoxController.getData();
+        chatListController.getChats();
+        chatBoxController.getMessages();
     }
 
 }

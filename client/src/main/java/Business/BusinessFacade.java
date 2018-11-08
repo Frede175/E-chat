@@ -8,8 +8,6 @@ import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
 import Business.Models.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
@@ -32,24 +30,13 @@ public class BusinessFacade implements IBusinessFacade {
         currentChat.addMessage((MessageIn) event.getMessageIn());
     }
 
-    @Override
-    public void injectGUINotifier(IGUINotifier guiNotifier) {
-        hubConnect.injectGUINotifier(guiNotifier);
-        hubConnect.injectBusinessFacade(this);
-    }
-
 
     @Override
     public RequestResponse<List<? extends IChat>> getChats() {
-        System.out.println("Det her er result koden");
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, user.getSub(), currentDepartment.toMap(), token);
-        System.out.println(response.getResponse());
-        System.out.println("ID'et er " + response.getResponse().get(0).getId() + " når det kommer over fra serveren");
         if(!response.getResponse().isEmpty()) {
             currentChat = response.getResponse().get(0);
             chats = response.getResponse();
-            System.out.println("currentChats ID " + currentChat.getId());
-            System.out.println(currentChat + " " + chats);
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
@@ -57,11 +44,9 @@ public class BusinessFacade implements IBusinessFacade {
 
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, user.getSub(),null,token);
-
         if(!response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
             departments = response.getResponse();
-            System.out.println(currentDepartment + " " + departments);
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
@@ -72,7 +57,6 @@ public class BusinessFacade implements IBusinessFacade {
             for (Chat tempchat: chats) {
                 if(tempchat.getId() == chatID) {
                     currentChat = tempchat;
-                    System.out.println("currentchat blev ændret til chatten med id'et " + tempchat.getId());
                     break;
                 }
                 break;
@@ -84,7 +68,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void sendMessage(String message) {
-        //TODO Place ChatID somewhere/refactor
         hubConnect.sendMessage(message, currentChat.getId());
     }
 

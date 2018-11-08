@@ -22,7 +22,7 @@ public class ChatListController {
     @FXML
     public ListView<String> chatList;
 
-    public void getData() {
+    public void getChats() {
         ArrayList<String> stringList = new ArrayList<>();
 
         RequestResponse<List<? extends IChat>> response = GUI.GUI.getInstance().getBusiness().getChats();
