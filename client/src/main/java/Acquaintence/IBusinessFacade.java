@@ -7,7 +7,6 @@ import java.util.List;
 public interface IBusinessFacade {
 
     ConnectionState login(String username, String password);
-    void injectGUINotifier(IGUINotifier guiNotifier);
     RequestResponse<List<? extends IChat>> getChats();
 
     void sendMessage(String message);

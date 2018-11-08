@@ -12,8 +12,6 @@ public class Starter {
 
         IBusinessFacade business = new BusinessFacade();
 
-        business.injectGUINotifier(gui.getGUINotifier());
-
         gui.injectBusinessFacade(business);
 
         gui.startApplication(args);
