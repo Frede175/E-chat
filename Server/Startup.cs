@@ -77,6 +77,7 @@ namespace Server
 
                     // Enable the token endpoint.
                     options.EnableTokenEndpoint("/connect/token")
+                        .EnableLogoutEndpoint("/connect/logout")
                         .EnableUserinfoEndpoint("/api/userinfo");
 
                     // Enable the password flow.
