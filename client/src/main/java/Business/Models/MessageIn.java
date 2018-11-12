@@ -1,22 +1,24 @@
 package Business.Models;
 
-import Acquaintence.IMessage;
+import Acquaintence.IMessageIn;
 
 import java.util.Date;
 
-public class Message implements IMessage {
+public class MessageIn implements IMessageIn {
 
     private int ID;
+    private int chatID;
     private String content;
     private Date timeStamp;
     private User user;
 
 
-    public Message(int ID, String content, Date timeStamp, User user) {
+    public MessageIn(int ID, String content, Date timeStamp, User user, int chatID) {
         this.ID = ID;
         this.content = content;
         this.timeStamp = timeStamp;
         this.user = user;
+        this.chatID = chatID;
     }
 
     @Override
@@ -37,5 +39,14 @@ public class Message implements IMessage {
     @Override
     public User getUser() {
         return user;
+    }
+
+    public int getChatID() {
+        return chatID;
+    }
+
+    @Override
+    public int compareTo(IMessageIn o) {
+        return timeStamp.compareTo(o.getTimeStamp());
     }
 }

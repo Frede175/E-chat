@@ -1,7 +1,11 @@
 package Acquaintence;
 
+import java.util.ArrayList;
+
 public interface IUser {
-    int getID();
+    String getSub();
     String getName();
+    ArrayList<String> getRoles();
+    ArrayList<String> getPermissions();
     void setName(String name);
 }

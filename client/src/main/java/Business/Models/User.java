@@ -3,26 +3,41 @@ package Business.Models;
 import Acquaintence.IToMap;
 import Acquaintence.IUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User implements IUser, IToMap {
 
-    private int ID;
+    private String sub;
     private String name;
+    private ArrayList<String> roles;
+    private ArrayList<String> permissions;
 
-    public User(int ID, String name) {
-        this.ID = ID;
+    public User(String sub, String name, ArrayList<String> roles, ArrayList<String> permissions) {
+        this.sub = sub;
         this.name = name;
+        this.roles = roles;
+        this.permissions = permissions;
     }
 
     @Override
-    public int getID() {
-        return ID;
+    public String getSub() {
+        return sub;
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public ArrayList<String> getRoles() {
+        return roles;
+    }
+
+    @Override
+    public ArrayList<String> getPermissions() {
+        return permissions;
     }
 
     @Override
@@ -33,7 +48,7 @@ public class User implements IUser, IToMap {
     @Override
     public HashMap<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("userId", String.valueOf(ID));
+        map.put("userId", sub);
         return map;
     }
 }

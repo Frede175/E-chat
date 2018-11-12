@@ -1,8 +1,10 @@
 package Business.Connection;
 
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IToMap;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.icu.impl.Trie2;
@@ -20,10 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
@@ -32,10 +31,16 @@ public class RestConnect {
     private String url = "https://localhost:5001";
     private final String formType = "application/x-www-form-urlencoded";
     //private final String url = "https://ptsv2.com";
-    private final Gson gson = new Gson();
+    private final Gson gson;
     // /api/values
 
-    public String login(String username, String password) {
+    public RestConnect() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new DateDeserialize());
+        gson = gsonBuilder.create();
+    }
+
+    public RequestResponse<String> login(String username, String password) {
 
         try {
 
@@ -51,6 +56,7 @@ public class RestConnect {
             HttpResponse response = client.execute(request);
 
 
+
             System.out.println("Response Code Login: "
                     + response.getStatusLine().getStatusCode());
 
@@ -63,24 +69,23 @@ public class RestConnect {
                 result.append(line);
             }
 
-            System.out.println(result.toString());
 
             JsonObject json = new JsonParser().parse(result.toString()).getAsJsonObject();
 
             if (json != null) {
-                return json.get("access_token").getAsString();
+                if(json.get("error") != null) {
+                    return new RequestResponse<>(null, ConnectionState.WRONG_LOGIN);
+                }
+                return new RequestResponse<>(json.get("access_token").getAsString(), ConnectionState.SUCCESS);
             }
             return null;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-
-        return null;
-
     }
 
-    public <T, T1> T get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
+    public <T, T1> RequestResponse<T> get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
         {
             try {
 
@@ -106,22 +111,24 @@ public class RestConnect {
                     result.append(line);
                 }
 
-                System.out.println(result.toString());
 
                 Type type = path.getResultType();
 
-                T newObject = gson.fromJson(result.toString(), type);
+                System.out.println(result.toString());
 
-                return newObject;
+
+                T obj = gson.fromJson(result.toString(), type);
+
+                return new RequestResponse<T>(obj, ConnectionState.SUCCESS);
 
             } catch (IOException e) {
                 e.printStackTrace();
+                return new RequestResponse<T>(null, ConnectionState.NO_CONNECTION);
             }
 
         }
-        return null;
     }
-    public <T, T1, T2> T2 post(PathEnum path, T param, T1 content, String token) {
+    public <T, T1, T2> RequestResponse<T2> post(PathEnum path, T param, T1 content, String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
@@ -132,20 +139,19 @@ public class RestConnect {
 
             request.addHeader("Content-type", "application/json");
             HttpResponse response = null;
-            System.out.println(request.getEntity().toString());
 
             response = client.execute(request);
             System.out.println("Response Code Post: "
                     + response.getStatusLine().getStatusCode());
+            return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-
-        return null;
     }
 
 
-    public <T, T1, T2> T2 delete(PathEnum path, T route, String token) {
+    public <T, T1> RequestResponse<T1> delete(PathEnum path, T route, String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
@@ -159,15 +165,15 @@ public class RestConnect {
             response = client.execute(request);
             System.out.println("Response Code Post: "
                     + response.getStatusLine().getStatusCode());
+            return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-
-        return null;
     }
 
     //TODO implement
-    public <T , T1, T2> T2 put(PathEnum path, T route, T1 content, String token) {
+    public <T , T1, T2> RequestResponse<T2> put(PathEnum path, T route, T1 content, String token) {
         try {
             HttpClient client = HttpClientBuilder.create().build();
 
@@ -179,17 +185,15 @@ public class RestConnect {
 
             request.addHeader("Content-type", "application/json");
             HttpResponse response = null;
-            System.out.println(request.getEntity().toString());
 
             response = client.execute(request);
             System.out.println("Response Code Post: "
                     + response.getStatusLine().getStatusCode());
+            return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-
-        return null;
-
     }
 
     /***
@@ -211,14 +215,15 @@ public class RestConnect {
         if(param != null) {
             url = url.concat("?");
             for (Map.Entry<String, String> entry : param.entrySet()) {
-                url = url.concat(entry.getKey() + "=" + entry.getValue());
-            }
+                url = url.concat(entry.getKey() + "=" + entry.getValue() + "&");
+            }//TODO Better fix for &
+            url = url.substring(0, url.length() - 1);
         }
+        System.out.println("URL: " + url);
         //TODO delete this line
         //url = url.concat("?departmenId=1");
 
 
-        System.out.println(url);
         switch (path.getType()){
             case POST: {
 
