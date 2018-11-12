@@ -20,4 +20,6 @@ public interface IBusinessFacade {
     IChat getCurrentChat();
     void setCurrentChat(int chatID);
 
+    void createUser(String username, String password);
+
 }

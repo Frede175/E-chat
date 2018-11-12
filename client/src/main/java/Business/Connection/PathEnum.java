@@ -14,7 +14,7 @@ public enum PathEnum {
 
     CreateDepartment("/api/department/", ConnectionType.POST, null),
     GetDepartments("/api/department/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
-    CreateUser("/api/Auth", ConnectionType.POST, null),
+    CreateUser("/api/User/create/", ConnectionType.POST, null),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
     GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
     DeleteUser("/api/departments/", ConnectionType.DELETE, null),

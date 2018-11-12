@@ -55,6 +55,8 @@ public class BusinessFacade implements IBusinessFacade {
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
+
+
     @Override
     public void setCurrentChat(int chatID) {
         if(currentChat.getId() != chatID) {
@@ -68,6 +70,12 @@ public class BusinessFacade implements IBusinessFacade {
         } else {
             System.out.println("currentchat var den samme");
         }
+    }
+
+    @Override
+    public void createUser(String username, String password) {
+        CreateUser usertosend = new CreateUser(username,password);
+        restConnect.post(PathEnum.CreateUser,null, usertosend, token);
     }
 
     @Override
