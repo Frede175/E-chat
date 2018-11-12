@@ -20,8 +20,8 @@ public class ChatBoxController{
 
     @FXML
     public ListView<IMessageIn> chatBox;
-    private ObservableList<IMessageIn> messages;// = FXCollections.observableArrayList();
-    private SortedList<IMessageIn> sortedMessages;// = new SortedList<IMessageIn>(messages);
+    private ObservableList<IMessageIn> messages;
+    private SortedList<IMessageIn> sortedMessages;
 
 
     @FXML
@@ -56,7 +56,7 @@ public class ChatBoxController{
         RequestResponse<List<? extends IMessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
 
         if(response == null){
-            // Add zero messages
+
         }else{
             messages.addAll(response.getResponse());
 
