@@ -25,5 +25,7 @@ namespace Server.Service.Interfaces
 
         Task<Department> GetSpecificDepartment(int depId);
 
+        Task<List<ApplicationUser>> GetUsersInDepartments(params int[] ids);
+
     }
 }

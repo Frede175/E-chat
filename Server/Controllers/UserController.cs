@@ -58,9 +58,9 @@ namespace Server.Controllers
         {
             var deps = await _departmentService.GetDepartmentsAsync(userId);
 
-            var x = deps.SelectMany(d => d.UserDepartments.Select(u => new User(u.ApplicationUser)));
+            var users = await _departmentService.GetUsersInDepartments(deps.Select(d => d.Id).ToArray());
 
-            return x.ToList();
+            return users.Select(a => new User(a)).ToList();
         }
 
         // POST: https://localhost:5001/api/User/create
