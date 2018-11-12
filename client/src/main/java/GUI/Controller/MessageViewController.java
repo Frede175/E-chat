@@ -1,6 +1,5 @@
 package GUI.Controller;
 
-
 import Acquaintence.Event.MessageEvent;
 import Acquaintence.EventManager;
 import Acquaintence.IMessageIn;
@@ -13,19 +12,22 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-
-public class ChatBoxController{
+public class MessageViewController {
 
     @FXML
     public ListView<IMessageIn> chatBox;
+
     private ObservableList<IMessageIn> messages;
     private SortedList<IMessageIn> sortedMessages;
 
-
     @FXML
     public void initialize() {
+        // Registers the event listener
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
 
         messages = FXCollections.observableArrayList();
@@ -43,8 +45,11 @@ public class ChatBoxController{
                 setText(item.getTimeStamp() + " | " + item.getUser().getName() + " | " + item.getContent());
             }
         });
+        // Scrolls to the newest message
+        Platform.runLater( () -> chatBox.scrollTo(messages.size()-1) );
     }
 
+    // The event listener method
     private void getMessage(MessageEvent messageEvent) {
         Platform.runLater(() -> {
             IMessageIn message = messageEvent.getMessageIn();
@@ -52,14 +57,13 @@ public class ChatBoxController{
         });
     }
 
+    // Gets the messages upon start
     public void getMessages(){
         RequestResponse<List<? extends IMessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
-
-        if(response == null){
-
-        }else{
-            messages.addAll(response.getResponse());
-
+        if(response != null){
+            List<? extends IMessageIn> mes = response.getResponse();
+            Collections.reverse(mes);
+            messages.addAll(mes);
         }
     }
 }
