@@ -20,6 +20,16 @@ public class UsersInChatController {
     @FXML
     public ListView<String> Userlist;
 
+    private ObservableList<String> meh;
+
+    public void initializa(){
+        meh = FXCollections.observableArrayList();
+        meh.add("Lars er cool nok.. lidt træls med bajer, men stadig.");
+        Userlist.setItems(meh);
+    }
+
+
+
     public void setUserlist() {
         ArrayList<String> stringList = new ArrayList<>();
 
