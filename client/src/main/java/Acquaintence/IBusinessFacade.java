@@ -18,6 +18,6 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IDepartment>> getDepartments();
 
     IChat getCurrentChat();
-    void setCurrentChat(int chatID);
+    //void setCurrentChat(int chatID);
 
 }
