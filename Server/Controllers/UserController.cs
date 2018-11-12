@@ -43,7 +43,7 @@ namespace Server.Controllers
 
 
         // GET: https://localhost:5001/api/User/ 
-        [HttpGet("{userId}"), Produces("application/json")]
+        [HttpGet, Produces("application/json")]
         [RequiresPermissionAttribute(Permission.GetUsers)]
         public async Task<ActionResult<ICollection<User>>> GetUsers()
         {
@@ -56,11 +56,7 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(Permission.GetContacts)]
         public async Task<ActionResult<ICollection<User>>> GetContacts(string userId)
         {
-            var deps = await _departmentService.GetDepartmentsAsync(userId);
-
-            var x = deps.SelectMany(d => d.UserDepartments.Select(u => new User(u.ApplicationUser)));
-
-            return x.ToList();
+            return (await _departmentService.GetContacts(userId)).Select(a => new User(a)).ToList();
         }
 
         // POST: https://localhost:5001/api/User/create

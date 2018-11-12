@@ -21,6 +21,8 @@ namespace Server.Service.Interfaces
 
         Task<List<Department>> GetDepartmentsAsync(string userId);
 
+        Task<List<ApplicationUser>> GetContacts(string userId);
+
         Task<Department> GetSpecificDepartment(string name);
 
         Task<Department> GetSpecificDepartment(int depId);

@@ -38,6 +38,12 @@ namespace Server.Service
             return await _department.Cast<Department>().ToListAsync();
         }
 
+        public async Task<List<ApplicationUser>> GetContacts(string userId) {
+            var de = _department.Cast<Department>().Where(d => d.UserDepartments.Any(u => u.UserId == userId));
+
+            return await _userDepartment.Where(d => de.Select(i => i.Id).Contains(d.DepartmentId)).Select(a => a.ApplicationUser).ToListAsync();
+        }
+
         public async Task<List<Department>> GetDepartmentsAsync(string userId)
         {
             return await _department.Cast<Department>().Where(d => d.UserDepartments.Any(u => u.UserId == userId)).ToListAsync();

@@ -1,6 +1,8 @@
 package Acquaintence;
 
 import Business.Connection.RequestResponse;
+import Business.Models.Chat;
+import Business.Models.User;
 
 import java.util.List;
 
@@ -8,6 +10,11 @@ public interface IBusinessFacade {
 
     ConnectionState login(String username, String password);
     RequestResponse<List<? extends IChat>> getChats();
+    RequestResponse<List<? extends  IUser>> getUsers();
+    RequestResponse<String> createDirectMessage(String name, User user);
+    RequestResponse<String> addUserToSpecificChat(String userSub, Chat chat);
+
+
 
     void sendMessage(String message);
 

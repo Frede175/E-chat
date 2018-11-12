@@ -56,6 +56,33 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public RequestResponse<List<? extends IUser>> getUsers() {
+        RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, user.getSub(), null, token);
+        if(!response.getResponse().isEmpty()) {
+            //TODO Dont write this
+            System.out.println("This bitch empty");
+        }
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    //TODO DM should not be added to currentDepartment, should be fixed by server
+    @Override
+    public RequestResponse<String> createDirectMessage(String name, User otherUser) {
+        Chat chat = new Chat(name);
+        RequestResponse<String> response = restConnect.post(PathEnum.CreateChatroom, currentDepartment.getId(), chat, token);
+        addUserToSpecificChat(otherUser.getSub(), chat);
+
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public RequestResponse<String> addUserToSpecificChat(String userSub, Chat chat) {
+        RequestResponse<String> response = restConnect.post(PathEnum.AddUserToChat, chat.getId(), userSub, token);
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+
+    @Override
     public void setCurrentChat(int chatID) {
         if(currentChat.getId() != chatID) {
             for (Chat tempchat : chats) {
@@ -77,7 +104,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IUser>> getUsersInChat() {
-        return restConnect.get(PathEnum.GetUsersInChat, currentChat.getId(), null, token );
+        return restConnect.get(PathEnum.GetUsers, currentChat.getId(), null, token );
     }
 
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
