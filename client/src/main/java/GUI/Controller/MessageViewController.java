@@ -27,6 +27,7 @@ public class MessageViewController {
 
     @FXML
     public void initialize() {
+        // Registers the event listener
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
 
         messages = FXCollections.observableArrayList();
@@ -44,8 +45,11 @@ public class MessageViewController {
                 setText(item.getTimeStamp() + " | " + item.getUser().getName() + " | " + item.getContent());
             }
         });
+        // Scrolls to the newest message
+        Platform.runLater( () -> chatBox.scrollTo(messages.size()-1) );
     }
 
+    // The event listener method
     private void getMessage(MessageEvent messageEvent) {
         Platform.runLater(() -> {
             IMessageIn message = messageEvent.getMessageIn();
@@ -53,6 +57,7 @@ public class MessageViewController {
         });
     }
 
+    // Gets the messages upon start
     public void getMessages(){
         RequestResponse<List<? extends IMessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
         if(response != null){
