@@ -1,7 +1,9 @@
 package GUI.Controller;
 
+import Acquaintence.Event.ChangeChatEvent;
 import Acquaintence.Event.MessageEvent;
 import Acquaintence.EventManager;
+import Acquaintence.IChat;
 import Acquaintence.IMessageIn;
 import Business.Connection.RequestResponse;
 import GUI.GUI;
@@ -13,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +32,7 @@ public class MessageViewController {
     public void initialize() {
         // Registers the event listener
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
+        EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeChat);
 
         messages = FXCollections.observableArrayList();
         sortedMessages = new SortedList<>(messages);
@@ -55,6 +59,17 @@ public class MessageViewController {
             IMessageIn message = messageEvent.getMessageIn();
             messages.add(message);
         });
+    }
+
+    private void changeChat(ChangeChatEvent changeChatEvent) {
+        messages.clear();
+        IChat chat = changeChatEvent.getChat();
+        if(chat.getMessages() != null){
+            List<? extends IMessageIn> mes = new ArrayList<>();
+            mes.addAll(chat.getMessages());
+            Collections.reverse(mes);
+            messages.addAll(mes);
+        }
     }
 
     // Gets the messages upon start
