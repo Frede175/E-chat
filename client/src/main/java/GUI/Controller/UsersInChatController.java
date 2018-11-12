@@ -22,9 +22,9 @@ public class UsersInChatController {
 
     private ObservableList<String> meh;
 
-    public void initializa(){
+    public void initialize(){
         meh = FXCollections.observableArrayList();
-        meh.add("Lars er cool nok.. lidt træls med bajer, men stadig.");
+        meh.add("Lars er cool nok.. kun lidt...s");
         Userlist.setItems(meh);
     }
 
