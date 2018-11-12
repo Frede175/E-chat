@@ -12,7 +12,7 @@ namespace Server.Service.Interfaces
 
         Task<Message> SendMessageAsync(int chatId, string userId, string content);
 
-        Task<bool> CreateChatAsync(Chat chat, string userId);
+        Task<Chat> CreateChatAsync(Chat chat, string userId);
 
         Task<bool> RemoveChatAsync(int chatId, ApplicationUser user);
 
@@ -25,6 +25,8 @@ namespace Server.Service.Interfaces
         Task<ICollection<Message>> RetrieveMessagesAsync(int chatId, int page, int pageSize);
 
         Task<ICollection<Chat>> GetChatsAsync(string userId, int departmentId);
+
+        Task<Chat> GetChatAsync(int chatId);
 
         Task<ICollection<Chat>> GetChatsAsync(string userId);
 

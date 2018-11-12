@@ -60,12 +60,12 @@ namespace Server.Context
             var chat = await chatService.GetSpecificChat(department.Id, "Main");
 
             if (chat == null) {
-                var result = await chatService.CreateChatAsync(new Chat() {
+                chat = await chatService.CreateChatAsync(new Chat() {
                     DepartmentId = department.Id,
                     Name = "Main"
                 }, user.Id);
-                if (!result) return;
-                chat = await chatService.GetSpecificChat(department.Id, "Main");
+                if (chat == null) return;
+                //chat = await chatService.GetSpecificChat(department.Id, "Main");
             }
             
         }
