@@ -19,7 +19,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
             
-                    <fx:include fx:id="chatBox" source="ChatBox.fxml" />
+                    <fx:include fx:id="chatBox" source="MessageView.fxml" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
