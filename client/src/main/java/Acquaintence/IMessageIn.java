@@ -7,4 +7,5 @@ public interface IMessageIn extends Comparable<IMessageIn> {
     String getContent();
     Date getTimeStamp();
     IUser getUser();
+    int getChatId();
 }

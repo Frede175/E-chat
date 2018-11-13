@@ -26,12 +26,20 @@ public class BusinessFacade implements IBusinessFacade {
 
     public BusinessFacade() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
-        EventManager.getInstance().registerListener(ChangeChatEvent.class, this::setCurrentChat);
     }
 
     /* Listener methods */
     private void getMessage(MessageEvent event) {
-        currentChat.addMessage((MessageIn) event.getMessageIn());
+        for(Chat chat : chats) {
+            if(chat.getId() == event.getMessageIn().getChatId()) {
+                if(chat.getMessages().isEmpty()) {
+                    // TODO make new thread for downloading existing messages
+                    getMessages(chat.getId());
+                }
+                chat.addMessage((MessageIn) event.getMessageIn());
+                break;
+            }
+        }
     }
 
     @Override
@@ -50,12 +58,6 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, loginUser.getSub(), null, token);
-        if(!response.getResponse().isEmpty()) {
-            //TODO Dont write this
-            System.out.println("GetUsers not empty");
-        } else {
-            System.out.println("GetUsers empty");
-        }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
@@ -64,7 +66,6 @@ public class BusinessFacade implements IBusinessFacade {
     public RequestResponse<Chat> createDirectMessage(String name, IUser otherUser) {
         Chat chat = new Chat(name);
         RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, currentDepartment.getId(), chat, token);
-        System.out.println("Otheruser's ID = " + otherUser.getId());
         addUserToSpecificChat(otherUser.getId(), response.getResponse());
 
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
@@ -72,14 +73,26 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<String> addUserToSpecificChat(String userId, IChat chat) {
-        System.out.println("Chat id = " + chat.getId());
-        System.out.println("USer ID = " + userId);
         RequestResponse<String> response = restConnect.post(PathEnum.AddUserToChat, chat.getId(), userId, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
-    private void setCurrentChat(ChangeChatEvent event) {
-        currentChat = (Chat) event.getChat();
+    @Override
+    public void setCurrentChat(int chatId) {
+        if(currentChat.getId() != chatId) {
+            for (Chat tempchat : chats) {
+                if(tempchat.getId() == chatId) {
+                    currentChat = tempchat;
+                    if(currentChat.getMessages().isEmpty()) {
+                        getMessages();
+                    }
+                    EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
+                    break;
+                }
+            }
+        } else {
+            System.out.println("currentchat var den samme");
+        }
     }
 
     @Override
@@ -112,6 +125,19 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public RequestResponse<List<? extends IMessageIn>> getMessages(int chatId) {
+        RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, chatId, new Page(0,20).toMap(), token);
+        for(Chat chat : chats) {
+            if(chat.getId() == chatId) {
+                if (chat.getMessages().isEmpty()) {
+                    chat.addMessages(response.getResponse());
+                }
+            }
+        }
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
         RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
         if(currentChat != null) {
@@ -124,5 +150,4 @@ public class BusinessFacade implements IBusinessFacade {
     public void sendMessage(String message) {
         hubConnect.sendMessage(message, currentChat.getId());
     }
-
 }

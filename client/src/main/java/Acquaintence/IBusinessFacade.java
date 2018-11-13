@@ -12,8 +12,9 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends  IUser>> getUsers();
     RequestResponse<Chat> createDirectMessage(String name, IUser user);
     RequestResponse<String> addUserToSpecificChat(String userSub, IChat chat);
-
+    void setCurrentChat(int chatId);
     void sendMessage(String message);
+    RequestResponse<List<? extends IMessageIn>> getMessages(int chatId);
     RequestResponse<List<? extends IMessageIn>> getMessages();
     RequestResponse<List<? extends IUser>> getUsersInChat();
     RequestResponse<List<? extends IDepartment>> getDepartments();

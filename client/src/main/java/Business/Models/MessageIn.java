@@ -6,24 +6,28 @@ import java.util.Date;
 
 public class MessageIn implements IMessageIn {
 
-    private int ID;
-    private int chatID;
+    private int Id;
+    private int chatId;
     private String content;
     private Date timeStamp;
     private User user;
 
+    public MessageIn() {
 
-    public MessageIn(int ID, String content, Date timeStamp, User user, int chatID) {
-        this.ID = ID;
+    }
+
+
+    public MessageIn(int Id, String content, Date timeStamp, User user, int chatId) {
+        this.Id = Id;
         this.content = content;
         this.timeStamp = timeStamp;
         this.user = user;
-        this.chatID = chatID;
+        this.chatId = chatId;
     }
 
     @Override
     public int getID() {
-        return ID;
+        return Id;
     }
 
     @Override
@@ -41,8 +45,9 @@ public class MessageIn implements IMessageIn {
         return user;
     }
 
-    public int getChatID() {
-        return chatID;
+    @Override
+    public int getChatId() {
+        return chatId;
     }
 
     @Override

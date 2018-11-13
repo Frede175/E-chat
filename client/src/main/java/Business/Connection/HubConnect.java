@@ -31,6 +31,7 @@ public class HubConnect {
 
     public void receive(MessageIn message) {
         EventManager.getInstance().fireEvent(new MessageEvent(this, message));
+        System.out.println("Chat id from hub: " + message.getChatId());
     }
 
 }
