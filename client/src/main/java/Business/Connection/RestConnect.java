@@ -35,9 +35,7 @@ public class RestConnect {
     // /api/values
 
     public RestConnect() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new DateDeserialize());
-        gson = gsonBuilder.create();
+        gson = new Gson();
     }
 
     public RequestResponse<String> login(String username, String password) {
