@@ -68,8 +68,8 @@ namespace Server.Controllers
         }
 
 
-        // GET: https://localhost:5001/api/User/{userId}
-        [HttpGet("{userId}"), Produces("application/json")]
+        // GET: https://localhost:5001/api/User/contacts/{userId}
+        [HttpGet("contacts/{userId}"), Produces("application/json")]
         [RequiresPermissionAttribute(Permission.GetContacts)]
         public async Task<ActionResult<ICollection<User>>> GetContacts(string userId)
         {

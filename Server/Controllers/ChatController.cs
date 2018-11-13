@@ -45,8 +45,8 @@ namespace Server.Controllers
         }
 
 
-        // GET: https://localhost:5001/api/chat/{userId} 
-        [HttpGet("{userId}"), Produces("application/json")]
+        // GET: https://localhost:5001/api/chat/user/{userId} 
+        [HttpGet("user/{userId}"), Produces("application/json")]
         [RequiresPermissionAttribute(Permission.GetChats)]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
