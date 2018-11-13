@@ -2,6 +2,7 @@ package Business;
 
 
 import Acquaintence.*;
+import Acquaintence.Event.ChangeChatEvent;
 import Acquaintence.Event.MessageEvent;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
@@ -25,6 +26,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     public BusinessFacade() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
+        EventManager.getInstance().registerListener(ChangeChatEvent.class, this::setCurrentChat);
     }
 
     /* Listener methods */
@@ -46,16 +48,6 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public RequestResponse<List<? extends IChat>> getChats() {
-        RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
-        if(!response.getResponse().isEmpty()) {
-            currentChat = response.getResponse().get(0);
-            chats = response.getResponse();
-        }
-        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
-    }
-
-    @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, loginUser.getSub(), null, token);
         if(!response.getResponse().isEmpty()) {
@@ -69,7 +61,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     //TODO DM should not be added to currentDepartment, should be fixed by server
     @Override
-    public RequestResponse<String> createDirectMessage(String name, IUser otherUser) {
+    public RequestResponse<Chat> createDirectMessage(String name, IUser otherUser) {
         Chat chat = new Chat(name);
         RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, currentDepartment.getId(), chat, token);
         System.out.println("Otheruser's ID = " + otherUser.getId());
@@ -86,20 +78,18 @@ public class BusinessFacade implements IBusinessFacade {
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
+    private void setCurrentChat(ChangeChatEvent event) {
+        currentChat = (Chat) event.getChat();
+    }
 
     @Override
-    public void setCurrentChat(int chatID) {
-        if(currentChat.getId() != chatID) {
-            for (Chat tempchat : chats) {
-                if(tempchat.getId() == chatID) {
-                    currentChat = tempchat;
-                    break;
-                }
-                break;
-            }
-        } else {
-            System.out.println("currentchat var den samme");
+    public RequestResponse<List<? extends IChat>> getChats() {
+        RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
+        if(!response.getResponse().isEmpty()) {
+            currentChat = response.getResponse().get(0);
+            chats = response.getResponse();
         }
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
     @Override
@@ -109,7 +99,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IUser>> getUsersInChat() {
-        return restConnect.get(PathEnum.GetUsers, currentChat.getId(), null, token );
+        return restConnect.get(PathEnum.GetUsersInChat, currentChat.getId(), null, token );
     }
 
     public RequestResponse<List<? extends IDepartment>> getDepartments() {

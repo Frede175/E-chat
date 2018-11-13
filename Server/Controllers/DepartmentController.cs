@@ -52,7 +52,7 @@ namespace Server.Controllers
         }
 
         // GET: https://localhost:5001/api/Department/{id} 
-        [HttpGet("{userId}"), Produces("application/json")]
+        [HttpGet("user/{userId}"), Produces("application/json")]
         [RequiresPermissionAttribute(Permission.GetUserDepartments)]
         public async Task<ActionResult<ICollection<Department>>> GetUserDepartments(string userId)
         {

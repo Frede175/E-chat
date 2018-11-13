@@ -7,24 +7,15 @@ import Business.Models.User;
 import java.util.List;
 
 public interface IBusinessFacade {
-
     ConnectionState login(String username, String password);
     RequestResponse<List<? extends IChat>> getChats();
     RequestResponse<List<? extends  IUser>> getUsers();
-    RequestResponse<String> createDirectMessage(String name, IUser user);
+    RequestResponse<Chat> createDirectMessage(String name, IUser user);
     RequestResponse<String> addUserToSpecificChat(String userSub, IChat chat);
 
-
-
     void sendMessage(String message);
-
-
     RequestResponse<List<? extends IMessageIn>> getMessages();
-
     RequestResponse<List<? extends IUser>> getUsersInChat();
     RequestResponse<List<? extends IDepartment>> getDepartments();
-
     IChat getCurrentChat();
-    void setCurrentChat(int chatID);
-
 }
