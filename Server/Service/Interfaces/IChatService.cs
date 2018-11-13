@@ -12,7 +12,7 @@ namespace Server.Service.Interfaces
 
         Task<Message> SendMessageAsync(int chatId, string userId, string content);
 
-        Task<bool> CreateChatAsync(Chat chat, string userId);
+        Task<Chat> CreateChatAsync(Chat chat, string userId);
 
         Task<bool> RemoveChatAsync(int chatId, ApplicationUser user);
 

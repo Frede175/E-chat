@@ -7,7 +7,7 @@ namespace Server.Service.Interfaces
 {
     public interface IDepartmentService
     {
-        Task<bool> CreateDepartmentAsync(Department department);
+        Task<Department> CreateDepartmentAsync(Department department);
 
         Task<bool> RemoveDepartmentASync(int id);
 
@@ -21,11 +21,11 @@ namespace Server.Service.Interfaces
 
         Task<List<Department>> GetDepartmentsAsync(string userId);
 
-        Task<List<ApplicationUser>> GetContacts(string userId);
-
         Task<Department> GetSpecificDepartment(string name);
 
         Task<Department> GetSpecificDepartment(int depId);
+
+        Task<List<ApplicationUser>> GetUsersInDepartments(params int[] ids);
 
     }
 }

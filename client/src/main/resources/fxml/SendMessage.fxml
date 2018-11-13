@@ -8,7 +8,7 @@
 
 <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SendMessageController">
    <children>
-      <TextField fx:id="messageTF" prefHeight="80.0" prefWidth="396.0" promptText="Write message">
+      <TextField fx:id="messageTF" onAction="#sendMessage" prefHeight="80.0" prefWidth="396.0" promptText="Write message">
          <HBox.margin>
             <Insets bottom="10.0" top="10.0" />
          </HBox.margin>

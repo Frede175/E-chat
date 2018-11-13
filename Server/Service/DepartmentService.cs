@@ -25,12 +25,12 @@ namespace Server.Service
         }
 
 
-        public async Task<bool> CreateDepartmentAsync(Department department)
+        public async Task<Department> CreateDepartmentAsync(Department department)
         {
             _department.Add(department);
             var result = await _context.SaveChangesAsync();
-            if (result == 1) return true;
-            return false;
+            if (result == 1) return department;
+            return null;
         }
 
         public async Task<List<Department>> GetDepartmentsAsync()
@@ -38,10 +38,8 @@ namespace Server.Service
             return await _department.Cast<Department>().ToListAsync();
         }
 
-        public async Task<List<ApplicationUser>> GetContacts(string userId) {
-            var de = _department.Cast<Department>().Where(d => d.UserDepartments.Any(u => u.UserId == userId));
-
-            return await _userDepartment.Where(d => de.Select(i => i.Id).Contains(d.DepartmentId)).Select(a => a.ApplicationUser).ToListAsync();
+        public async Task<List<ApplicationUser>> GetUsersInDepartments(params int[] ids) {
+            return await _userDepartment.Cast<UserDepartment>().Where(i => ids.Contains(i.DepartmentId)).Select(d => d.ApplicationUser).ToListAsync();
         }
 
         public async Task<List<Department>> GetDepartmentsAsync(string userId)

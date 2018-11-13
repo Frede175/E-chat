@@ -30,8 +30,8 @@ namespace Server.Controllers
 
         private readonly ILogger<UserController> _logger;
 
-        public UserController (IDepartmentService departmentService, 
-                               UserManager<ApplicationUser> userManager, 
+        public UserController(IDepartmentService departmentService,
+                               UserManager<ApplicationUser> userManager,
                                IChatService chatService,
                                ILogger<UserController> logger)
         {
@@ -39,6 +39,23 @@ namespace Server.Controllers
             _userManager = userManager;
             _chatService = chatService;
             _logger = logger;
+        }
+
+
+        // GET: https://localhost:5001/api/User/{userId}
+        [HttpGet("{userId}", Name = "GetUser"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.GetUsers)]
+        public async Task<ActionResult<User>> GetUser(string userId)
+        {
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new User(user));
         }
 
 
@@ -56,7 +73,11 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(Permission.GetContacts)]
         public async Task<ActionResult<ICollection<User>>> GetContacts(string userId)
         {
-            return (await _departmentService.GetContacts(userId)).Select(a => new User(a)).ToList();
+            var deps = await _departmentService.GetDepartmentsAsync(userId);
+
+            var users = await _departmentService.GetUsersInDepartments(deps.Select(d => d.Id).ToArray());
+
+            return users.Select(a => new User(a)).ToList();
         }
 
         // POST: https://localhost:5001/api/User/create
@@ -77,9 +98,8 @@ namespace Server.Controllers
 
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, new User(newUser));
                 }
-                return BadRequest();
             }
             return BadRequest();
         }
@@ -109,7 +129,7 @@ namespace Server.Controllers
         // PUT https://localhost:5001/api/User/{userId}
         [HttpPut("{userId}")]
         [RequiresPermissionAttribute(Permission.AddAdditionalRole)]
-        public async Task<ActionResult> AddAdditionalRole(string userId, string role) 
+        public async Task<ActionResult> AddAdditionalRole(string userId, string role)
         {
 
             var user = await _userManager.FindByIdAsync(userId);
@@ -141,7 +161,8 @@ namespace Server.Controllers
 
             var s = "Claims: ";
 
-            foreach (var c in User.Claims) {
+            foreach (var c in User.Claims)
+            {
                 s += $"\n {{{c.Type}, {c.Value}}}";
             }
             _logger.LogDebug(s);
@@ -163,20 +184,20 @@ namespace Server.Controllers
 
             //if (User.HasClaim(OpenIdConnectConstants.Claims.Scope, OpenIddictConstants.Scopes.Roles))
             //{
-                claims["roles"] = JArray.FromObject(await _userManager.GetRolesAsync(user));
+            claims["roles"] = JArray.FromObject(await _userManager.GetRolesAsync(user));
             //}
 
             claims[OpenIdConnectConstants.Claims.Name] = await _userManager.GetUserNameAsync(user);
 
             claims["permissions"] = JArray.FromObject(User.Claims.Where(c => c.Type == UserClaimTypes.Permission).Select(c => c.Value));
 
-            
+
 
             // Note: the complete list of standard claims supported by the OpenID Connect specification
             // can be found here: http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
 
             return Json(claims);
-}
+        }
 
 
 

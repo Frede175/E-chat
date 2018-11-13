@@ -27,6 +27,7 @@ using Server.Service.Interfaces;
 using Server.Service;
 using Microsoft.AspNetCore.Authorization;
 using Server.Security;
+using Newtonsoft.Json;
 
 namespace Server
 {
@@ -77,6 +78,7 @@ namespace Server
 
                     // Enable the token endpoint.
                     options.EnableTokenEndpoint("/connect/token")
+                        .EnableLogoutEndpoint("/connect/logout")
                         .EnableUserinfoEndpoint("/api/userinfo");
 
                     // Enable the password flow.
@@ -104,7 +106,9 @@ namespace Server
             services.AddScoped<IChatService, ChatService>();
             services.AddSingleton<IAuthorizationHandler, PermissionsAuthorizationHandler>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options => {
+                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            });
             services.AddSignalR().AddJsonProtocol();
 
 
