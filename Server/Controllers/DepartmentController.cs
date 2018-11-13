@@ -27,6 +27,21 @@ namespace Server.Controllers
 
         }
 
+        // GET: https://localhost:5001/api/Department/{departmentId}
+        [HttpGet("{departmentId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.GetDepartments)]
+        public async Task<ActionResult<ICollection<Department>>> GetDepartment(int departmentId)
+        {
+            var department = await _departmentService.GetSpecificDepartment(departmentId);
+            if (department == null) {
+                return NotFound();
+            }
+
+            return Ok(new Department(department));
+
+        }
+
+
         // GET: https://localhost:5001/api/Department
         [HttpGet, Produces("application/json")]
         [RequiresPermissionAttribute(Permission.GetDepartments)]
@@ -53,9 +68,9 @@ namespace Server.Controllers
                 Name = department.Name
             };
             var result = await _departmentService.CreateDepartmentAsync(d);
-            if (result)
+            if (result != null)
             {
-                return new StatusCodeResult(201);
+                return AcceptedAtAction(nameof(GetDepartments), new { departmentId = result.Id }, new Department(result));
             }
             return new BadRequestResult();
         }

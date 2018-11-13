@@ -55,7 +55,7 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            return new User(user);
+            return Ok(new User(user));
         }
 
 
@@ -100,7 +100,6 @@ namespace Server.Controllers
                 {
                     return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, new User(newUser));
                 }
-                return BadRequest();
             }
             return BadRequest();
         }

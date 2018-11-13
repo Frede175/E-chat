@@ -25,12 +25,12 @@ namespace Server.Service
         }
 
 
-        public async Task<bool> CreateDepartmentAsync(Department department)
+        public async Task<Department> CreateDepartmentAsync(Department department)
         {
             _department.Add(department);
             var result = await _context.SaveChangesAsync();
-            if (result == 1) return true;
-            return false;
+            if (result == 1) return department;
+            return null;
         }
 
         public async Task<List<Department>> GetDepartmentsAsync()

@@ -36,7 +36,7 @@ namespace Server.Controllers
         [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
         [RequiresPermissionAttribute(Permission.CreateChat)]
         public async Task<ActionResult> GetChat(int chatId) {
-            var chat = await _chatService.GetChatAsync(chatId);
+            var chat = await _chatService.GetSpecificChat(chatId);
 
             if (chat != null) {
                 return Ok(new Chat(chat));

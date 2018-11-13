@@ -51,7 +51,7 @@ namespace Server.Context
                 var result = await departmentService.CreateDepartmentAsync(new Department() {
                     Name = "Main"
                 });
-                if (!result) return;
+                if (result == null) return;
                 department = await departmentService.GetSpecificDepartment("Main");
                 await departmentService.AddUsersToDepartmentAsync(department.Id, user);
             }

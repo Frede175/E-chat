@@ -7,7 +7,7 @@ namespace Server.Service.Interfaces
 {
     public interface IDepartmentService
     {
-        Task<bool> CreateDepartmentAsync(Department department);
+        Task<Department> CreateDepartmentAsync(Department department);
 
         Task<bool> RemoveDepartmentASync(int id);
 
