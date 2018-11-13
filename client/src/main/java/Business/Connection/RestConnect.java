@@ -114,7 +114,7 @@ public class RestConnect {
 
                 Type type = path.getResultType();
 
-                System.out.println(result.toString());
+                System.out.println(result.toString() + " lol");
 
 
                 T obj = gson.fromJson(result.toString(), type);

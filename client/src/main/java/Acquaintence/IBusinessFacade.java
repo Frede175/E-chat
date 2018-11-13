@@ -11,8 +11,8 @@ public interface IBusinessFacade {
     ConnectionState login(String username, String password);
     RequestResponse<List<? extends IChat>> getChats();
     RequestResponse<List<? extends  IUser>> getUsers();
-    RequestResponse<String> createDirectMessage(String name, User user);
-    RequestResponse<String> addUserToSpecificChat(String userSub, Chat chat);
+    RequestResponse<String> createDirectMessage(String name, IUser user);
+    RequestResponse<String> addUserToSpecificChat(String userSub, IChat chat);
 
 
 

@@ -1,7 +1,7 @@
 package GUI.Controller;
 
-import Acquaintence.ConnectionState;
-import Acquaintence.IUser;
+import Acquaintence.*;
+import Acquaintence.Event.ChangeChatListEvent;
 import Business.Connection.RequestResponse;
 import Business.Models.User;
 import GUI.GUI;
@@ -29,15 +29,14 @@ public class UserListController {
 
         response = GUI.getInstance().getBusiness().getUsers();
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
-            System.out.println("Not null");
             for (IUser user : response.getResponse()) {
                 stringList.add(user.getName());
+                System.out.println("printing admin");
+                System.out.println(user.getName());
             }
             stringList.add("outofbounds");
 
         }
-        userList.setPrefWidth(100);
-        userList.setPrefHeight(70);
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         userList.setItems(names);
         userList.setCellFactory(ComboBoxListCell.forListView(names));
@@ -47,19 +46,18 @@ public class UserListController {
 
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("clicked on " + userList.getSelectionModel().getSelectedItem());
-                User temp = null;
+                IUser temp = null;
                 for(IUser user : response.getResponse()) {
                     //TODO fix sub/id
-                    System.out.println(user.getName() + "'s sub is " + user.getSub());
                     if(user.getName().equals(userList.getSelectionModel().getSelectedItem())) {
                         System.out.println("Changed to: " + user.getName());
-                        temp = (User) user;
+                        temp = user;
                     }
                 }
-                System.out.println("Temp = " + temp.getName());
-                GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem(), temp);
+                System.out.println("Temp = " + temp.getId());
 
+                GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem(), temp);
+                EventManager.getInstance().fireEvent(new ChangeChatListEvent(this));
             }
         });
     }

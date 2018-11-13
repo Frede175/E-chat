@@ -1,0 +1,130 @@
+diff --git a/client/src/main/java/Acquaintence/IBusinessFacade.java b/client/src/main/java/Acquaintence/IBusinessFacade.java
+index a8d1f64..799b572 100644
+--- a/client/src/main/java/Acquaintence/IBusinessFacade.java
++++ b/client/src/main/java/Acquaintence/IBusinessFacade.java
+@@ -8,6 +8,7 @@ public interface IBusinessFacade {
+ 
+     ConnectionState login(String username, String password);
+     RequestResponse<List<? extends IChat>> getChats();
++    RequestResponse<List<? extends IUser>> getContacts();
+ 
+     void sendMessage(String message);
+ 
+diff --git a/client/src/main/java/Business/BusinessFacade.java b/client/src/main/java/Business/BusinessFacade.java
+index 2ca9ac8..e6f274d 100644
+--- a/client/src/main/java/Business/BusinessFacade.java
++++ b/client/src/main/java/Business/BusinessFacade.java
+@@ -41,6 +41,17 @@ public class BusinessFacade implements IBusinessFacade {
+         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+     }
+ 
++    @Override
++    public RequestResponse<List<? extends IUser>> getContacts() {
++        RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, user.getSub(), null, token);
++        if(!response.getResponse().isEmpty()) {
++            
++            currentChat = response.getResponse().get(0);
++            chats = response.getResponse();
++        }
++        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
++    }
++
+ 
+     public RequestResponse<List<? extends IDepartment>> getDepartments() {
+         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, user.getSub(),null,token);
+@@ -73,7 +84,7 @@ public class BusinessFacade implements IBusinessFacade {
+ 
+     @Override
+     public RequestResponse<List<? extends IUser>> getUsersInChat() {
+-        return restConnect.get(PathEnum.GetUsersInChat, currentChat.getId(), null, token );
++        return restConnect.get(PathEnum.GetUsers, currentChat.getId(), null, token );
+     }
+ 
+     @Override
+diff --git a/client/src/main/java/Business/Connection/PathEnum.java b/client/src/main/java/Business/Connection/PathEnum.java
+index 136c0d0..da1b257 100644
+--- a/client/src/main/java/Business/Connection/PathEnum.java
++++ b/client/src/main/java/Business/Connection/PathEnum.java
+@@ -26,7 +26,7 @@ public enum PathEnum {
+     LeaveChat("/api/chat/leave/", ConnectionType.POST, null),
+     PutChatRoom("/api/chat/", ConnectionType.PUT, null),
+     GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<User>() {}.getType()),
+-    GetUsersInChat("/api/user/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType());
++    GetUsers("/api/user/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType());
+ 
+     private PathEnum(String path, ConnectionType type, Type resultType) {
+         this.path = path;
+diff --git a/client/src/main/java/GUI/Controller/UserListController.java b/client/src/main/java/GUI/Controller/UserListController.java
+index cfcba3a..f6a4f0e 100644
+--- a/client/src/main/java/GUI/Controller/UserListController.java
++++ b/client/src/main/java/GUI/Controller/UserListController.java
+@@ -1,4 +1,44 @@
+ package GUI.Controller;
+ 
++import Acquaintence.IUser;
++import Business.Connection.RequestResponse;
++import Business.Models.User;
++import javafx.event.ActionEvent;
++import javafx.fxml.FXML;
++import javafx.scene.control.Label;
++import javafx.scene.control.ListView;
++
++import java.util.ArrayList;
++import java.util.List;
++
+ public class UserListController {
++
++        @FXML
++        private ListView<User> userList;
++
++        public void initialize() {
++            ArrayList<String> stringList = new ArrayList<>();
++
++            RequestResponse<List<? extends IUser>> response = GUI.GUI.getInstance().getBusiness().getUsers();
++            if (response.getConnectionState() == ConnectionState.SUCCESS) {
++                System.out.println("Not null");
++                for (IChat chat : response.getResponse()) {
++                    stringList.add(chat.getName());
++                }
++                stringList.add("outofbounds");
++
++            }
++            chatList.setPrefWidth(100);
++            chatList.setPrefHeight(70);
++            ObservableList<String> names = FXCollections.observableArrayList(stringList);
++            chatList.setItems(names);
++            chatList.setCellFactory(ComboBoxListCell.forListView(names));
++            chatList.getSelectionModel().selectFirst();
++
++        }
++
++        public void usersInChat(ActionEvent actionEvent) {
++        }
++
++
+ }
+diff --git a/client/src/main/resources/fxml/UserList.fxml b/client/src/main/resources/fxml/UserList.fxml
+index 76e6024..5acfb23 100644
+--- a/client/src/main/resources/fxml/UserList.fxml
++++ b/client/src/main/resources/fxml/UserList.fxml
+@@ -1,14 +1,11 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ 
+-<?import java.lang.*?>
+-<?import java.util.*?>
+-<?import javafx.scene.*?>
+-<?import javafx.scene.control.*?>
+-<?import javafx.scene.layout.*?>
++<?import javafx.scene.control.ListView?>
++<?import javafx.scene.layout.AnchorPane?>
+ 
+-<AnchorPane xmlns="http://javafx.com/javafx"
+-            xmlns:fx="http://javafx.com/fxml"
+-            fx:controller="$CONTROLLER_NAME$"
+-            prefHeight="400.0" prefWidth="600.0">
+ 
++<AnchorPane prefHeight="400.0" prefWidth="232.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.UserListController">
++   <children>
++      <ListView fx:id="userList" layoutY="-6.0" prefHeight="400.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
++   </children>
+ </AnchorPane>
