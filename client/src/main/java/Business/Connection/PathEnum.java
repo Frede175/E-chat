@@ -10,12 +10,14 @@ public enum PathEnum {
 
 
     CreateDepartment("/api/department/", ConnectionType.POST, null),
-    GetDepartments("/api/department/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
+    //
+    GetDepartments("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
     CreateUser("/api/Auth", ConnectionType.POST, null),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
     GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
     DeleteUser("/api/departments/", ConnectionType.DELETE, null),
-    CreateChatroom("/api/chat/", ConnectionType.POST, null),
+    CreateChatroom("/api/chat/user/", ConnectionType.POST, null),
+    //
     GetChats("/api/chat/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
     DeleteChatRoom("/api/chat/", ConnectionType.DELETE, null),
     RemoveUserFromChat("/api/chat/remove/", ConnectionType.POST, null),
@@ -23,7 +25,8 @@ public enum PathEnum {
     LeaveChat("/api/chat/leave/", ConnectionType.POST, null),
     PutChatRoom("/api/chat/", ConnectionType.PUT, null),
     GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<LoginUser>() {}.getType()),
-    GetUsers("/api/user/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType());
+    //
+    GetUsers("/api/contacts/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType());
 
     private PathEnum(String path, ConnectionType type, Type resultType) {
         this.path = path;

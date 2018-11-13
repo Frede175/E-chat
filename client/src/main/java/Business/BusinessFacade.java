@@ -71,9 +71,9 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<String> createDirectMessage(String name, IUser otherUser) {
         Chat chat = new Chat(name);
-        RequestResponse<String> response = restConnect.post(PathEnum.CreateChatroom, currentDepartment.getId(), chat, token);
+        RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, currentDepartment.getId(), chat, token);
         System.out.println("Otheruser's ID = " + otherUser.getId());
-        addUserToSpecificChat(otherUser.getId(), chat);
+        addUserToSpecificChat(otherUser.getId(), response.getResponse());
 
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
