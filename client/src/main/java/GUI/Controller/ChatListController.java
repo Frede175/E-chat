@@ -2,6 +2,8 @@ package GUI.Controller;
 
 
 import Acquaintence.ConnectionState;
+import Acquaintence.Event.ChangeChatEvent;
+import Acquaintence.EventManager;
 import Acquaintence.IChat;
 import Business.Connection.RequestResponse;
 import javafx.collections.FXCollections;
@@ -27,15 +29,10 @@ public class ChatListController {
 
         RequestResponse<List<? extends IChat>> response = GUI.GUI.getInstance().getBusiness().getChats();
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
-            System.out.println("Not null");
             for (IChat chat : response.getResponse()) {
                 stringList.add(chat.getName());
             }
-        stringList.add("outofbounds");
-
         }
-        chatList.setPrefWidth(100);
-        chatList.setPrefHeight(70);
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         chatList.setItems(names);
         chatList.setCellFactory(ComboBoxListCell.forListView(names));
@@ -43,12 +40,12 @@ public class ChatListController {
 
 
         chatList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    GUI.GUI.getInstance().getBusiness().setCurrentChat(response.getResponse().get(chatList.getSelectionModel().getSelectedIndex()).getId());
+            @Override
+            public void handle(MouseEvent event) {
+                // TODO Create check for same chat clicked
+                EventManager.getInstance().fireEvent(new ChangeChatEvent(this, response.getResponse().get(chatList.getSelectionModel().getSelectedIndex())));
             }
-        }
-        );
+        });
 
 
     }

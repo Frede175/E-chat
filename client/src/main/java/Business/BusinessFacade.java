@@ -2,6 +2,7 @@ package Business;
 
 
 import Acquaintence.*;
+import Acquaintence.Event.ChangeChatEvent;
 import Acquaintence.Event.MessageEvent;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
@@ -25,11 +26,15 @@ public class BusinessFacade implements IBusinessFacade {
 
     public BusinessFacade() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
+        EventManager.getInstance().registerListener(ChangeChatEvent.class, this::setCurrentChat);
     }
 
     /* Listener methods */
     private void getMessage(MessageEvent event) {
         currentChat.addMessage((MessageIn) event.getMessageIn());
+    }
+    private void setCurrentChat(ChangeChatEvent event) {
+        currentChat = (Chat) event.getChat();
     }
 
     @Override
@@ -50,24 +55,10 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, user.getSub(), currentDepartment.toMap(), token);
         if(!response.getResponse().isEmpty()) {
             currentChat = response.getResponse().get(0);
+            EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
             chats = response.getResponse();
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
-    }
-
-    @Override
-    public void setCurrentChat(int chatID) {
-        if(currentChat.getId() != chatID) {
-            for (Chat tempchat : chats) {
-                if(tempchat.getId() == chatID) {
-                    currentChat = tempchat;
-                    break;
-                }
-                break;
-            }
-        } else {
-            System.out.println("currentchat var den samme");
-        }
     }
 
     @Override

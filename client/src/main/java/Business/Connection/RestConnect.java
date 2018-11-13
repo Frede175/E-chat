@@ -35,9 +35,7 @@ public class RestConnect {
     // /api/values
 
     public RestConnect() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new DateDeserialize());
-        gson = gsonBuilder.create();
+        gson = new Gson();
     }
 
     public RequestResponse<String> login(String username, String password) {
@@ -128,12 +126,12 @@ public class RestConnect {
 
         }
     }
-    public <T, T1, T2> RequestResponse<T2> post(PathEnum path, T param, T1 content, String token) {
+    public <T, T1, T2> RequestResponse<T2> post(PathEnum path, T route, T1 content, String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPost request = request(path, param, null, token);
+            HttpPost request = request(path, route, null, token);
             StringEntity postingString = new StringEntity(gson.toJson(content));
             request.setEntity(postingString);
 
