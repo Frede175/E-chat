@@ -70,7 +70,7 @@ namespace Server.Controllers
             var result = await _departmentService.CreateDepartmentAsync(d);
             if (result != null)
             {
-                return AcceptedAtAction(nameof(GetDepartments), new { departmentId = result.Id }, new Department(result));
+                return CreatedAtAction(nameof(GetDepartments), new { departmentId = result.Id }, new Department(result));
             }
             return new BadRequestResult();
         }
