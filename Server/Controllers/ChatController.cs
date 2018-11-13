@@ -33,13 +33,23 @@ namespace Server.Controllers
 
         }
 
+        [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.CreateChat)]
+        public async Task<ActionResult> GetChat(int chatId) {
+            var chat = await _chatService.GetSpecificChat(chatId);
+
+            if (chat != null) {
+                return Ok(new Chat(chat));
+            }
+            return NotFound();
+        }
+
 
         // GET: https://localhost:5001/api/chat/{userId} 
         [HttpGet("{userId}"), Produces("application/json")]
         [RequiresPermissionAttribute(Permission.GetChats)]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
-            _logger.LogDebug("Department ID: " + departmentId);
             return (await _chatService.GetChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
         }
 
@@ -54,9 +64,9 @@ namespace Server.Controllers
                 DepartmentId = departmentId,
                 Name = chat.Name
             }, _userManager.GetUserId(HttpContext.User));
-            if (result)
+            if (result != null)
             {
-                return new OkResult();
+                return CreatedAtRoute(nameof(GetChat),new {chatId = result.Id} , new Chat(result));
             }
 
             return new BadRequestResult();

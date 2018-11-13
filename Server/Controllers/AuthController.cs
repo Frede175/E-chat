@@ -39,6 +39,14 @@ namespace Server.Controllers
             _identityOptions = options;
         }
 
+        [HttpPost("~/connect/logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout() {
+            await _signInManager.SignOutAsync();
+            
+            return SignOut(OpenIddictServerDefaults.AuthenticationScheme);
+        }
+
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
         {
