@@ -221,7 +221,7 @@ namespace Server.Service
                 var message = new Message()
                 {
                     Content = content,
-                    TimeStamp = DateTime.Now,
+                    TimeStamp = DateTime.UtcNow,
                     SenderId = userId,
                     ChatId = chat.Id
                 };
