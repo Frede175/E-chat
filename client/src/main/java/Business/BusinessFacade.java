@@ -55,25 +55,11 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, user.getSub(), currentDepartment.toMap(), token);
         if(!response.getResponse().isEmpty()) {
             currentChat = response.getResponse().get(0);
+            EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
             chats = response.getResponse();
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
-
-    /*@Override
-    public void setCurrentChat(int chatID) {
-        /*if(currentChat.getId() != chatID) {
-            for (Chat tempchat : chats) {
-                if(tempchat.getId() == chatID) {
-                    currentChat = tempchat;
-                    break;
-                }
-                break;
-            }
-        } else {
-            System.out.println("currentchat var den samme");
-        }
-    }*/
 
     @Override
     public Chat getCurrentChat() {
