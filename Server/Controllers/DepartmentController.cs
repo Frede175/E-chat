@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Server.Context;
 using Server.Models;
 using Server.Security;
@@ -20,10 +21,13 @@ namespace Server.Controllers
         private readonly IDepartmentService _departmentService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DepartmentController(IDepartmentService departmentService, UserManager<ApplicationUser> userManager)
+        private readonly ILogger<DepartmentController> _logger;
+
+        public DepartmentController(IDepartmentService departmentService, UserManager<ApplicationUser> userManager, ILogger<DepartmentController> logger)
         {
             _departmentService = departmentService;
             _userManager = userManager;
+            _logger = logger;
 
         }
 
@@ -78,8 +82,9 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/Department/{departmentId}
         [HttpPost("{departmentId}")]
         [RequiresPermissionAttribute(Permission.AddUserToDepartment)]
-        public async Task<IActionResult> AddUserToDepartment(int departmentId, string userId)
+        public async Task<IActionResult> AddUserToDepartment(int departmentId, [FromBody] string userId)
         {
+            _logger.LogDebug($"Department ID is: {departmentId} and user Id is: {userId}");   
             var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
             if (result)
             {

@@ -17,6 +17,12 @@ public class Chat implements IChat {
         messages = new TreeSet<>();
     }
 
+    public Chat(String name) {
+        this.name = name;
+        messages = new TreeSet<>();
+    }
+
+
     public Chat(int id, String name) {
         this.id = id;
         this.name = name;
