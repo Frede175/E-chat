@@ -10,14 +10,12 @@ public enum PathEnum {
 
 
     CreateDepartment("/api/department/", ConnectionType.POST, null),
-    //
     GetDepartments("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
     CreateUser("/api/user/create/", ConnectionType.POST, null),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
     GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
     DeleteUser("/api/departments/", ConnectionType.DELETE, null),
     CreateChatroom("/api/chat/", ConnectionType.POST, Chat.class),
-    //
     GetChats("/api/chat/user/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
     DeleteChatRoom("/api/chat/", ConnectionType.DELETE, null),
     RemoveUserFromChat("/api/chat/remove/", ConnectionType.POST, null),
