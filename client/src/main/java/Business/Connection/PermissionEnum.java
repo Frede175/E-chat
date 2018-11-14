@@ -3,6 +3,8 @@ package Business.Connection;
 
 public enum PermissionEnum {
 
+
+    //TODO remove strings in enum
     //DepartmentController
 
     GetUserDepartments("GetUserDepartments", PermissionType.DEPARTMENT),
@@ -16,7 +18,7 @@ public enum PermissionEnum {
 
     //ChatController
 
-    GetAllChats("GetAllChats", PermissionType.CHAT),
+    GetChats("GetAllChats", PermissionType.CHAT),
     CreateChat("CreateChat", PermissionType.CHAT),
     LeaveChat("LeaveChat", PermissionType.CHAT),
     AddUserToChat("AddUserToChat", PermissionType.CHAT),
