@@ -74,7 +74,7 @@ namespace Server.Controllers
         }
 
         // POST: https://localhost:5001/api/chat/{departmentId}
-        [HttpPost("{userId}")]
+        [HttpPost("private/{userId}")]
         [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<ActionResult> CreatePrivateChat(string userId, [FromBody] Chat chat)
         {
