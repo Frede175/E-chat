@@ -13,9 +13,11 @@ public class ChatHeaderController {
 
     public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeName);
+        // Changes the name to the name of the current chat on start up
+        chatNameL.setText(GUI.GUI.getInstance().getBusiness().getCurrentChat().getName());
     }
 
-    public void changeName(ChangeChatEvent event) {
+    private void changeName(ChangeChatEvent event) {
         chatNameL.setText(event.getChat().getName());
     }
 

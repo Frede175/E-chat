@@ -30,9 +30,6 @@ public class UsersInChatController {
             }
 
         }
-
-        Userlist.setPrefWidth(100);
-        Userlist.setPrefHeight(70);
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         Userlist.setItems(names);
         Userlist.setCellFactory(ComboBoxListCell.forListView(names));
