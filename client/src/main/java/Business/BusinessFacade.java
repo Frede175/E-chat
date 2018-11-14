@@ -78,6 +78,8 @@ public class BusinessFacade implements IBusinessFacade {
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
+
+
     @Override
     public void setCurrentChat(int chatId) {
         if(currentChat.getId() != chatId) {
@@ -97,6 +99,11 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void createUser(String username, String password) {
+        CreateUser usertosend = new CreateUser(username, password);
+        restConnect.post(PathEnum.CreateUser, null, usertosend, token);
+    }
+
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
         if(!response.getResponse().isEmpty()) {
