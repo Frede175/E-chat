@@ -2,7 +2,7 @@ package Business.Models;
 
 import Acquaintence.ILoginUser;
 import Acquaintence.IToMap;
-import Acquaintence.IUser;
+import Business.Connection.PermissionEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,13 +12,15 @@ public class LoginUser implements ILoginUser, IToMap {
     private String sub;
     private String name;
     private ArrayList<String> roles;
-    private ArrayList<String> permissions;
+    private ArrayList<String> userPermissions;
+    private ArrayList<String> adminPermissions;
 
-    public LoginUser(String sub, String name, ArrayList<String> roles, ArrayList<String> permissions) {
+    public LoginUser(String sub, String name, ArrayList<String> roles, ArrayList<String> userPermissions, ArrayList<String> adminPermissions) {
         this.sub = sub;
         this.name = name;
         this.roles = roles;
-        this.permissions = permissions;
+        this.userPermissions = userPermissions;
+        this.adminPermissions = userPermissions;
     }
 
     @Override
@@ -26,9 +28,22 @@ public class LoginUser implements ILoginUser, IToMap {
         return sub;
     }
 
+    /*
+    public void createList(ArrayList<String> permissions) {
+        private ArrayList<PermissionEnum>
+        for(String permission : permissions) {
+
+        }
+    }
+    */
+
     @Override
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getAdminPermissions() {
+        return adminPermissions;
     }
 
     @Override
@@ -37,8 +52,8 @@ public class LoginUser implements ILoginUser, IToMap {
     }
 
     @Override
-    public ArrayList<String> getPermissions() {
-        return permissions;
+    public ArrayList<String> getUserPermissions() {
+        return userPermissions;
     }
 
     @Override
