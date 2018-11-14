@@ -19,11 +19,5 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IUser>> getUsersInChat();
     RequestResponse<List<? extends IDepartment>> getDepartments();
     IChat getCurrentChat();
-<<<<<<< HEAD
-    void setCurrentChat(int chatID);
-
     void createUser(String username, String password);
-
-=======
->>>>>>> master
 }
