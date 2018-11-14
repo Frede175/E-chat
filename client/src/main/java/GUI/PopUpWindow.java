@@ -1,5 +1,6 @@
 package GUI;
 
+import Business.Connection.PermissionType;
 import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,10 +24,28 @@ public class PopUpWindow {
         stage.showAndWait();
     }
 
-    public static PopUpWindow createUserPopUp() {
+    public static PopUpWindow createAdminPopUp(PermissionType type) {
         PopUpWindow window = null;
         try {
-            window = new PopUpWindow("/fxml/CreateUser.fxml");
+            switch (type) {
+                case CHAT:
+                    //window = new PopUpWindow("/fxml/CreateUser.fxml");
+                    System.out.println("Open Chat admin");
+                    break;
+                case DEPARTMENT:
+                    //window = new PopUpWindow("/fxml/CreateUser.fxml");
+                    System.out.println("Open Department admin");
+                    break;
+                case USER:
+                    //window = new PopUpWindow("/fxml/CreateUser.fxml");
+                    System.out.println("Open User admin");
+                    break;
+                case ROLE:
+                    System.out.println("Open Role admin");
+                    window = new PopUpWindow("/fxml/CreateUser.fxml");
+                    break;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
