@@ -75,8 +75,7 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public void createUser(String username, String password) {
         CreateUser usertosend = new CreateUser(username,password);
-        RequestResponse<User> requestResponse = restConnect.post(PathEnum.CreateUser,null, usertosend, token);
-        User newuser = requestResponse.getResponse();
+        restConnect.post(PathEnum.CreateUser,null, usertosend, token);
     }
 
     @Override
