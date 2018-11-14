@@ -40,10 +40,12 @@ public class MessageViewController {
             @Override
             protected void updateItem(IMessageIn item, boolean empty) {
                 super.updateItem(item, empty);
-
-                if (empty) return;
-
-                setText(item.getTimeStamp() + " | " + item.getUser().getName() + " | " + item.getContent());
+                if (empty || item == null){
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item.getTimeStamp() + " | " + item.getUser().getName() + " | " + item.getContent());
+                }
             }
         });
         // Scrolls to the newest message
@@ -52,20 +54,22 @@ public class MessageViewController {
 
     // The event listener method for new message
     private void getMessage(MessageEvent messageEvent) {
-        Platform.runLater(() -> {
-            IMessageIn message = messageEvent.getMessageIn();
-            messages.add(message);
-        });
+        if(messageEvent.getMessageIn().getChatId() == GUI.getInstance().getBusiness().getCurrentChat().getId()) {
+            Platform.runLater(() -> {
+                IMessageIn message = messageEvent.getMessageIn();
+                messages.add(message);
+            });
+        }
     }
 
     // The event listener method for change chat
     private void changeChat(ChangeChatEvent changeChatEvent) {
-        messages.clear();
         IChat chat = changeChatEvent.getChat();
         if(chat.getMessages() != null){
             List<? extends IMessageIn> mes = new ArrayList<>(chat.getMessages());
-            messages.addAll(mes);
+            messages.setAll(mes);
         }
+
     }
 
     // Gets the messages upon start

@@ -25,15 +25,11 @@ public class UsersInChatController {
 
         RequestResponse<List<? extends IUser>> response = GUI.GUI.getInstance().getBusiness().getUsersInChat();
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
-            System.out.println("Not null");
             for (IUser user : response.getResponse()) {
                 stringList.add(user.getName());
             }
 
         }
-
-        Userlist.setPrefWidth(100);
-        Userlist.setPrefHeight(70);
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         Userlist.setItems(names);
         Userlist.setCellFactory(ComboBoxListCell.forListView(names));

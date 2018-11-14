@@ -21,12 +21,12 @@ namespace Server.Models
         }
 
 
-        public Message(DbModels.Message message, int chatId){
+        public Message(DbModels.Message message){
             Id = message.Id;
             TimeStamp = message.TimeStamp;
             Content = message.Content;
             user = new User(message.ApplicationUser);
-            ChatId = chatId;
+            ChatId = message.ChatId;
         }
     }
 }

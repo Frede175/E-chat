@@ -31,11 +31,7 @@ public class UserListController {
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
             for (IUser user : response.getResponse()) {
                 stringList.add(user.getName());
-                System.out.println("printing admin");
-                System.out.println(user.getName());
             }
-            stringList.add("outofbounds");
-
         }
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         userList.setItems(names);
@@ -50,14 +46,12 @@ public class UserListController {
                 for(IUser user : response.getResponse()) {
                     //TODO fix sub/id
                     if(user.getName().equals(userList.getSelectionModel().getSelectedItem())) {
-                        System.out.println("Changed to: " + user.getName());
                         temp = user;
                     }
                 }
-                System.out.println("Temp = " + temp.getId());
 
-                GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem(), temp);
-                EventManager.getInstance().fireEvent(new ChangeChatListEvent(this));
+                RequestResponse<? extends IChat> response = GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem(), temp);
+                EventManager.getInstance().fireEvent(new ChangeChatListEvent(this, response.getResponse()));
             }
         });
     }
