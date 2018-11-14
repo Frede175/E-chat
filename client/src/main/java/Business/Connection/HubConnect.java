@@ -14,7 +14,7 @@ public class HubConnect {
     private HubConnection chatConnection;
 
     public void connect(String token) {
-        chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
+        chatConnection = HubConnectionBuilder.create("https://group3server.azurewebsites.net/hubs/chat")//create("https://localhost:5001/hubs/chat")
                 .withAccessTokenProvider(Single.just(token))
                 .build();
 

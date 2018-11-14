@@ -45,10 +45,21 @@ namespace Server
 
             services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseNpgsql(Configuration["DB:Connectionstring"]);
+
+                if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production") {
+                    options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection"));
+                } else {
+                    options.UseNpgsql(Configuration["DB:Connectionstring"]);    
+                }
+                
+
+                
                 options.UseOpenIddict();
 
             });
+
+            services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
