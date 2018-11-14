@@ -31,6 +31,11 @@ namespace Server.Service
         }
 
 
+        public async Task<Chat> GetChatAsync(int chatId) {
+            return await _chats.FindAsync(chatId);
+        }
+
+
         /// <summary>
         /// Method for adding a new user to a chat
         /// </summary>
@@ -78,7 +83,7 @@ namespace Server.Service
         /// </summary>
         /// <returns>The chat async.</returns>
         /// <param name="chat">Chat.</param>
-        public async Task<bool> CreateChatAsync(Chat chat, string userId)
+        public async Task<Chat> CreateChatAsync(Chat chat, string userId)
         {
             chat.UserChats = new List<UserChat>() { new UserChat { UserId = userId } };
             _chats.Add(chat);
@@ -87,9 +92,9 @@ namespace Server.Service
 
             if (result == 2)
             {
-                return true;
+                return chat;
             }
-            return false;
+            return null;
         }
 
 
@@ -216,7 +221,7 @@ namespace Server.Service
                 var message = new Message()
                 {
                     Content = content,
-                    TimeStamp = DateTime.Now,
+                    TimeStamp = DateTime.UtcNow,
                     SenderId = userId,
                     ChatId = chat.Id
                 };

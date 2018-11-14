@@ -35,9 +35,7 @@ public class RestConnect {
     // /api/values
 
     public RestConnect() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new DateDeserialize());
-        gson = gsonBuilder.create();
+        gson = new Gson();
     }
 
     public RequestResponse<String> login(String username, String password) {
@@ -128,12 +126,12 @@ public class RestConnect {
 
         }
     }
-    public <T, T1, T2> RequestResponse<T2> post(PathEnum path, T param, T1 content, String token) {
+    public <T, T1, T2> RequestResponse<T2> post(PathEnum path, T route, T1 content, String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPost request = request(path, param, null, token);
+            HttpPost request = request(path, route, null, token);
             StringEntity postingString = new StringEntity(gson.toJson(content));
             request.setEntity(postingString);
 
@@ -143,6 +141,19 @@ public class RestConnect {
             response = client.execute(request);
             System.out.println("Response Code Post: "
                     + response.getStatusLine().getStatusCode());
+            if(response.getStatusLine().getStatusCode() == 201) {
+                BufferedReader rd = new BufferedReader(
+                        new InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer result = new StringBuffer();
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+                Type type = path.getResultType();
+                T2 obj = gson.fromJson(result.toString(), type);
+                return new RequestResponse<>(obj, ConnectionState.SUCCESS);
+            }
             return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();

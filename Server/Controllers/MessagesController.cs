@@ -24,7 +24,7 @@ namespace Server.Controllers
         // GET: https://localhost:5001/api/Messages/{chatId}
         [HttpGet("{chatId}"), Produces("application/json")]
         public async Task<ActionResult<ICollection<Message>>> GetMessages(int chatId, int pageNumber, int pageSize){
-            return (await _chatService.RetrieveMessagesAsync(chatId, pageNumber, pageSize)).Select(d => new Message(d, chatId)).ToList();
+            return (await _chatService.RetrieveMessagesAsync(chatId, pageNumber, pageSize)).Select(d => new Message(d)).ToList();
         }
 
         

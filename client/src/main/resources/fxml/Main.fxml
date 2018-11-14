@@ -19,7 +19,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
             
-                    <fx:include fx:id="chatBox" source="ChatBox.fxml" />
+                    <fx:include fx:id="chatBox" source="MessageView.fxml" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -34,8 +34,13 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0" />
           <AnchorPane>
                <children>
-                    <fx:include fx:id="chatList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="ChatList.fxml" />
+                   <fx:include fx:id="chatList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="ChatList.fxml" />
                </children>
+            </AnchorPane>
+            <AnchorPane>
+                <children>
+                    <fx:include fx:id="userList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="UserList.fxml" />
+                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
         </items>
@@ -43,3 +48,4 @@
 
     </children>
 </HBox>
+
