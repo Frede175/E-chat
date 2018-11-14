@@ -33,7 +33,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department/{departmentId}
         [HttpGet("{departmentId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetDepartments)]
+        [RequiresPermissionAttribute(Permission.GetAllDepartments)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartment(int departmentId)
         {
             var department = await _departmentService.GetSpecificDepartment(departmentId);
@@ -48,7 +48,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department
         [HttpGet, Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetDepartments)]
+        [RequiresPermissionAttribute(Permission.GetAllDepartments)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartments()
         {
             return (await _departmentService.GetDepartmentsAsync()).Select(d => new Department(d)).ToList();
@@ -57,7 +57,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department/{id} 
         [HttpGet("user/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetUserDepartments)]
+        [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<ActionResult<ICollection<Department>>> GetUserDepartments(string userId)
         {
             return (await _departmentService.GetDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();

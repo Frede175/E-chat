@@ -12,8 +12,10 @@ namespace Server.DbModels
 
         public string Name { get; set; }
 
+        public bool IsGroupChat {get;set;}
+
         [ForeignKey("Department")]
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
 
         public virtual ICollection<UserChat> UserChats { get; set; }
 

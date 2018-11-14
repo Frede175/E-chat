@@ -70,7 +70,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/contacts/{userId}
         [HttpGet("contacts/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetContacts)]
+        [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<ActionResult<ICollection<User>>> GetContacts(string userId)
         {
             var deps = await _departmentService.GetDepartmentsAsync(userId);
@@ -158,14 +158,6 @@ namespace Server.Controllers
             }
 
             var claims = new JObject();
-
-            var s = "Claims: ";
-
-            foreach (var c in User.Claims)
-            {
-                s += $"\n {{{c.Type}, {c.Value}}}";
-            }
-            _logger.LogDebug(s);
 
             // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
             claims[OpenIdConnectConstants.Claims.Subject] = await _userManager.GetUserIdAsync(user);
