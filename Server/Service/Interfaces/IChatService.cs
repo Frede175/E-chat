@@ -36,7 +36,7 @@ namespace Server.Service.Interfaces
 
         Task<bool> PrivateChatExists(string userId, string userId2);
 
-        Task<Chat> CreatePrivatechat(Chat chat, string userId, string userId2);
+        Task<Chat> CreatePrivateChat(Chat chat, string userId, string userId2);
 
     }
 }

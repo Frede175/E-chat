@@ -47,7 +47,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/chat/user/{userId} 
         [HttpGet("user/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetChats)]
+        [RequiresPermissionAttribute(Permission.GetAllChats)]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
             return (await _chatService.GetChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
@@ -75,7 +75,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("{userId}")]
-        [RequiresPermissionAttribute(Permission.CreatePrivateChat)]
+        [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<ActionResult> CreatePrivateChat(string userId, [FromBody] Chat chat)
         {
             var existsResult = await _chatService.PrivateChatExists(userId, _userManager.GetUserId(HttpContext.User));
@@ -161,7 +161,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/chat/users/{chatId}
         [HttpGet ("users/{chatId}")]
-        [RequiresPermissionAttribute(Permission.GetUsersInChat)]
+        [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<List<User>> GetUsersInChat(int chatId)
         {
             var chat = await _chatService.GetSpecificChat(chatId);

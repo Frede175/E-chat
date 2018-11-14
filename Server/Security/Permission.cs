@@ -7,8 +7,8 @@ namespace Server.Security
 
         //DepartmentController
 
-        GetUserDepartments,
-        GetDepartments,
+        // GetUserDepartments,
+        GetAllDepartments,
         CreateDepartment,
         AddUserToDepartment,
         RemoveUserFromDepartment,
@@ -18,19 +18,19 @@ namespace Server.Security
 
         //ChatController
 
-        GetChats,
+        GetAllChats,
         CreateChat,
-        CreatePrivateChat,
+        // CreatePrivateChat,
         LeaveChat,
         AddUserToChat,
         RemoveUserFromChat,
-        GetUsersInChat,
+        // GetUsersInChat,
 
 
         //UserController
 
         GetUsers,
-        GetContacts,
+        // GetContacts,
         CreateUser,
         DeleteUser,
         AddAdditionalRole,
@@ -41,6 +41,10 @@ namespace Server.Security
         CreateUserRole,
         AddPermissionToRole,
         RemovePermissionFromRole,
-        DeleteRole
+        DeleteRole,
+
+
+        //BasicRole
+        BasicPermissions
     }
 }
