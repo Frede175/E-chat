@@ -16,6 +16,8 @@ public class GUI extends Application implements IGUI {
 
     private Stage stage;
 
+    private PopUpWindow popUpWindow;
+
     /**
      * An instance of the IBusinessFacade.
      */
