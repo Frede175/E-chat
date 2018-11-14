@@ -260,5 +260,19 @@ namespace Server.Service
             return await _chats.AnyAsync(c => !c.IsGroupChat && c.UserChats.Count(u => u.UserId == userId || u.UserId == userId2) == 2);
         }
 
+        public async Task<Chat> CreatePrivateChat(Chat chat, string userId, string userId2)
+        {
+            chat.UserChats = new List<UserChat>() { new UserChat { UserId = userId }, new UserChat { UserId = userId2 } };
+            _chats.Add(chat);
+
+            var result = await _context.SaveChangesAsync();
+
+            if (result == 2)
+            {
+                return chat;
+            }
+            return null;
+        }
+
     }
 }
