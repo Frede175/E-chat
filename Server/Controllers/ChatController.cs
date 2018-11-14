@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Server.Context;
+using Server.Hubs;
 using Server.Models;
 using Server.Security;
 using Server.Service.Interfaces;
@@ -21,15 +23,20 @@ namespace Server.Controllers
     {
         private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHubContext<ChatHub> _chatHub;
 
         private readonly ILogger<ChatController> _logger;
 
 
-        public ChatController(IChatService chatService, UserManager<ApplicationUser> userManager, ILogger<ChatController> logger)
+        public ChatController(IChatService chatService,
+                              UserManager<ApplicationUser> userManager,
+                              ILogger<ChatController> logger,
+                              IHubContext<ChatHub> chathub)
         {
             _userManager = userManager;
             _chatService = chatService;
             _logger = logger;
+            _chatHub = chathub;
 
         }
 
