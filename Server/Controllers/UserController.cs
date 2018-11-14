@@ -159,14 +159,6 @@ namespace Server.Controllers
 
             var claims = new JObject();
 
-            var s = "Claims: ";
-
-            foreach (var c in User.Claims)
-            {
-                s += $"\n {{{c.Type}, {c.Value}}}";
-            }
-            _logger.LogDebug(s);
-
             // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
             claims[OpenIdConnectConstants.Claims.Subject] = await _userManager.GetUserIdAsync(user);
 
