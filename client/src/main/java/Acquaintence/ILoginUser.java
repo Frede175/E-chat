@@ -11,7 +11,7 @@ public interface ILoginUser {
 
     public ArrayList<String> getRoles();
 
-    public ArrayList<String> getPermissions();
+    public ArrayList<String> getUserPermissions();
 
     public void setName(String name);
 
