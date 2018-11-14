@@ -86,7 +86,6 @@ namespace Server.Controllers
         public async Task<ActionResult> CreateUser(CreateUser model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
-            _logger.LogDebug($"User is: {user}");
             if (user == null)
             {
 
