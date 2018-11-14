@@ -104,6 +104,11 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.post(PathEnum.CreateUser, null, usertosend, token);
     }
 
+    @Override
+    public ILoginUser getLoginUser() {
+        return loginUser;
+    }
+
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
         if(!response.getResponse().isEmpty()) {
@@ -158,4 +163,6 @@ public class BusinessFacade implements IBusinessFacade {
     public void sendMessage(String message) {
         hubConnect.sendMessage(message, currentChat.getId());
     }
+
+
 }

@@ -31,7 +31,11 @@
       </SplitPane>
       <SplitPane dividerPositions="0.1304, 0.8528" minWidth="500.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="500.0">
         <items>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                <children>
+                    <fx:include fx:id="loggedInUser" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="LoggedInUser.fxml" />
+                </children>
+            </AnchorPane>
           <AnchorPane>
                <children>
                    <fx:include fx:id="chatList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="ChatList.fxml" />

@@ -1,5 +1,6 @@
 package GUI;
 
+import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,7 +23,13 @@ public class PopUpWindow {
         stage.showAndWait();
     }
 
-    public static PopUpWindow createUserPopUp(String url) throws IOException {
-        return new PopUpWindow(url);
+    public static PopUpWindow createUserPopUp() {
+        PopUpWindow window = null;
+        try {
+            window = new PopUpWindow("/fxml/CreateUser.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return window;
     }
 }
