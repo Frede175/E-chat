@@ -34,5 +34,9 @@ namespace Server.Service.Interfaces
 
         Task<List<ApplicationUser>> GetUsersInChat(int chatId);
 
+        Task<bool> PrivateChatExists(string userId, string userId2);
+
+        Task<Chat> CreatePrivateChat(Chat chat, string userId, string userId2);
+
     }
 }
