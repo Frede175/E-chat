@@ -20,6 +20,7 @@ namespace Server.Security
 
         GetChats,
         CreateChat,
+        CreatePrivateChat,
         LeaveChat,
         AddUserToChat,
         RemoveUserFromChat,

@@ -62,11 +62,46 @@ namespace Server.Controllers
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
             {
                 DepartmentId = departmentId,
-                Name = chat.Name
+                Name = chat.Name,
+                IsGroupChat = true
             }, _userManager.GetUserId(HttpContext.User));
             if (result != null)
             {
                 return CreatedAtRoute(nameof(GetChat),new {chatId = result.Id} , new Chat(result));
+            }
+
+            return new BadRequestResult();
+        }
+
+        // POST: https://localhost:5001/api/chat/{departmentId}
+        [HttpPost("{userId}")]
+        [RequiresPermissionAttribute(Permission.CreatePrivateChat)]
+        public async Task<ActionResult> CreatePrivateChat(string userId, [FromBody] Chat chat)
+        {
+            var existsResult = await _chatService.PrivateChatExists(userId, _userManager.GetUserId(HttpContext.User));
+
+            if (existsResult == true) 
+            {
+                return new BadRequestResult();
+            }
+
+            var result = await _chatService.CreateChatAsync(new DbModels.Chat()
+            {
+                Name = chat.Name,
+                IsGroupChat = false,
+                
+            }, _userManager.GetUserId(HttpContext.User));
+
+            var result2 = await _chatService.CreateChatAsync(new DbModels.Chat()
+            {
+                Name = chat.Name,
+                IsGroupChat = false,
+
+            }, userId);
+
+            if (result != null && result2 != null)
+            {
+                return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
             return new BadRequestResult();

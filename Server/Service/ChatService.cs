@@ -254,5 +254,11 @@ namespace Server.Service
         {
             return await _userChat.Where(u => u.ChatId == chatId).Select(u => u.ApplicationUser).ToListAsync();
         }
+
+        public async Task<bool> PrivateChatExists(string userId, string userId2)
+        {
+            return await _chats.AnyAsync(c => !c.IsGroupChat && c.UserChats.Count(u => u.UserId == userId || u.UserId == userId2) == 2);
+        }
+
     }
 }
