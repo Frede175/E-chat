@@ -2,6 +2,7 @@ package Business.Models;
 
 import Acquaintence.ILoginUser;
 import Acquaintence.IToMap;
+import Business.Connection.PermissionEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,13 +19,23 @@ public class LoginUser implements ILoginUser, IToMap {
         this.sub = sub;
         this.name = name;
         this.roles = roles;
-        this.userPermissions = this.userPermissions;
+        this.userPermissions = userPermissions;
+        this.adminPermissions = userPermissions;
     }
 
     @Override
     public String getSub() {
         return sub;
     }
+
+    /*
+    public void createList(ArrayList<String> permissions) {
+        private ArrayList<PermissionEnum>
+        for(String permission : permissions) {
+
+        }
+    }
+    */
 
     @Override
     public String getName() {
