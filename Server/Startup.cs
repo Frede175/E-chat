@@ -42,7 +42,7 @@ namespace Server {
 
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production") {
                 services.AddDbContext<ApplicationDbContext>(options => {
-                    options.UseSqlServer(Configuration["MyDbConnection"]);
+                    options.UseSqlServer(Configuration.GetConnectionString("Connection"));
                     options.UseOpenIddict();
                 });
             } else {

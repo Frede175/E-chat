@@ -18,7 +18,7 @@ namespace Server
     {
         public static void Main(string[] args)
         {
-            var host = CreateWebHostBuilder(args).UseKestrel().Build();
+            var host = CreateWebHostBuilder(args).Build();
 
 
             using (var scope = host.Services.CreateScope())
@@ -41,6 +41,7 @@ namespace Server
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseKestrel()
                 .UseStartup<Startup>();
     }
 
