@@ -47,7 +47,7 @@ namespace Server
             {
 
                 if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production") {
-                    options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection"));
+                    options.UseSqlServer(Configuration["MyDbConnection"]);
                 } else {
                     options.UseNpgsql(Configuration["DB:Connectionstring"]);    
                 }
