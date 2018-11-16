@@ -1,5 +1,7 @@
 package Acquaintence;
 
+import Business.Connection.PermissionEnum;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +13,9 @@ public interface ILoginUser {
 
     public ArrayList<String> getRoles();
 
-    public ArrayList<String> getUserPermissions();
+    public ArrayList<PermissionEnum> getUserPermissions();
+
+    public ArrayList<PermissionEnum> getAdminPermissions();
 
     public void setName(String name);
 

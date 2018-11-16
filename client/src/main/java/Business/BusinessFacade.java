@@ -9,6 +9,8 @@ import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
 import Business.Models.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
@@ -50,6 +52,8 @@ public class BusinessFacade implements IBusinessFacade {
             hubConnect.connect(token);
             RequestResponse<LoginUser> data = restConnect.get(PathEnum.GetUserInfo, null, null, token);
             loginUser = data.getResponse();
+            loginUser.initializePermissions();
+            System.out.println("Name is " + loginUser.getName());
             getDepartments();
             getChats();
         }
