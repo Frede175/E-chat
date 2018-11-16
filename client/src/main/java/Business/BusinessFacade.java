@@ -9,7 +9,12 @@ import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
 import Business.Connection.RestConnect;
 import Business.Models.*;
+import GUI.GUI;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +22,11 @@ public class BusinessFacade implements IBusinessFacade {
 
     private HubConnect hubConnect = new HubConnect();
     private RestConnect restConnect = new RestConnect();
-    private List<Department> departments;
-    private Department currentDepartment;
-    private List<Chat> chats;
-    private Chat currentChat;
-    private LoginUser loginUser;
+    private List<Department> departments = null;
+    private Department currentDepartment = null;
+    private List<Chat> chats = null;
+    private Chat currentChat = null;
+    private LoginUser loginUser = null;
     private String token = null;
 
 
@@ -168,5 +173,21 @@ public class BusinessFacade implements IBusinessFacade {
         hubConnect.sendMessage(message, currentChat.getId());
     }
 
-
+    @Override
+    public void logout() {
+        // TODO Gets an server 400
+        restConnect.logout(token);
+        departments = null;
+        currentDepartment = null;
+        chats = null;
+        currentChat = null;
+        loginUser = null;
+        token = null;
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
+            GUI.getInstance().getStage().setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -5,7 +5,7 @@ public enum PermissionEnum {
 
 
     //TODO remove strings in enum
-    //DepartmentController
+    // DepartmentController
 
     GetUserDepartments("GetUserDepartments", PermissionType.DEPARTMENT),
     GetDepartments("GetDepartments", PermissionType.DEPARTMENT),
@@ -14,9 +14,10 @@ public enum PermissionEnum {
     RemoveUserFromDepartment("RemoveUserFromDepartment", PermissionType.DEPARTMENT),
     DeleteDepartment("DeleteDepartment", PermissionType.DEPARTMENT),
     UpdateDepartment("UpdateDepartment", PermissionType.DEPARTMENT),
+    GetAllDepartments("GetAllDepartments", PermissionType.DEPARTMENT),
 
 
-    //ChatController
+    // ChatController
 
     GetChats("GetAllChats", PermissionType.CHAT),
     CreateChat("CreateChat", PermissionType.CHAT),
@@ -24,9 +25,10 @@ public enum PermissionEnum {
     AddUserToChat("AddUserToChat", PermissionType.CHAT),
     RemoveUserFromChat("RemoveUserFromChat", PermissionType.CHAT),
     GetUsersInChat("GetUsersInChat", PermissionType.CHAT),
+    GetAllChats("GetAllChats", PermissionType.CHAT),
 
 
-    //UserController
+    // UserController
 
     GetUsers("GetUsers", PermissionType.USER),
     GetContacts("GetContacts", PermissionType.USER),
@@ -35,12 +37,15 @@ public enum PermissionEnum {
     AddAdditionalRole("AddAdditionalRole", PermissionType.USER),
 
 
-    //RoleController
+    // RoleController
 
     CreateUserRole("CreateUserRole", PermissionType.ROLE),
     AddPermissionToRole("AddPermissionToRole", PermissionType.ROLE),
     RemovePermissionFromRole("RemovePermissionFromRole", PermissionType.ROLE),
-    DeleteRole("DeleteRole", PermissionType.ROLE);
+    DeleteRole("DeleteRole", PermissionType.ROLE),
+
+    // Non-admin
+    BasicPermissions("BasicPermissions", null);
 
 
 
