@@ -28,6 +28,7 @@ using Server.Service;
 using Microsoft.AspNetCore.Authorization;
 using Server.Security;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Server {
     public class Startup {
@@ -123,14 +124,18 @@ namespace Server {
 
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+                app.UseHttpsRedirection();
             } else {
                 app.UseHsts();
+                app.UseForwardedHeaders(new ForwardedHeadersOptions {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
             }
-            //app.UseCors("AllowAll");
+
             app.UseSignalR(route => {
                 route.MapHub<ChatHub>("/hubs/chat");
             });
-            app.UseHttpsRedirection();
+
 
             app.UseAuthentication();
             app.UseMvc();
