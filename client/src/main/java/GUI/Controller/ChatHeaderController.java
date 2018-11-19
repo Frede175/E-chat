@@ -23,8 +23,6 @@ public class ChatHeaderController {
 
         PopOver popover = new PopOver();
 
-        chatNameL.setText(("Current chat: TODO"));
-
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/UsersInChat.fxml"));
 
         popover.setAutoFix(true);
