@@ -19,7 +19,6 @@ public class ChatHeaderController {
     @FXML
     private Button cHButton;
 
-
     public void usersInChatBtn(ActionEvent actionEvent) throws IOException {
 
         PopOver popover = new PopOver();
@@ -32,10 +31,7 @@ public class ChatHeaderController {
         popover.setAutoHide(true);
         popover.setHideOnEscape(true);
         popover.setDetachable(false);
-
-        popover.setTitle("FUCK THIS SHIT FUCK CUNT");
         popover.setContentNode(root);
-
 
         popover.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
         popover.show(cHButton);

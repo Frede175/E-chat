@@ -24,14 +24,9 @@ public class UsersInChatController {
 
         ArrayList<String> stringList = new ArrayList<>();
 
-
         RequestResponse<List<? extends IUser>> response = GUI.GUI.getInstance().getBusiness().getUsersInChat();
 
-        System.out.println( "Response: " + response);
-
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
-            System.out.println("Response connection = Not null.");
-
             for (IUser user : response.getResponse()) {
                 stringList.add(user.getName());
             }
@@ -42,7 +37,6 @@ public class UsersInChatController {
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         Userlist.setItems(names);
         Userlist.setCellFactory(ComboBoxListCell.forListView(names));
-
 
     }
 
