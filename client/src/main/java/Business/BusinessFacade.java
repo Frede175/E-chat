@@ -161,11 +161,14 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
-        RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
+
         if(currentChat != null) {
+            RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
             currentChat.addMessages(response.getResponse());
+            return new RequestResponse<>(response.getResponse(), response.getConnectionState());
         }
-        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+        return new RequestResponse<>(new ArrayList<MessageIn>(), ConnectionState.SUCCESS);
+
     }
 
     @Override

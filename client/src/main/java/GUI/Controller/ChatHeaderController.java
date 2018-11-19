@@ -2,6 +2,7 @@ package GUI.Controller;
 
 import Acquaintence.Event.ChangeChatEvent;
 import Acquaintence.EventManager;
+import Acquaintence.IChat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,7 +15,12 @@ public class ChatHeaderController {
     public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeName);
         // Changes the name to the name of the current chat on start up
-        chatNameL.setText(GUI.GUI.getInstance().getBusiness().getCurrentChat().getName());
+        IChat currentChat = GUI.GUI.getInstance().getBusiness().getCurrentChat();
+        if(currentChat != null) {
+            chatNameL.setText(currentChat.getName());
+        } else {
+            chatNameL.setText("");
+        }
     }
 
     private void changeName(ChangeChatEvent event) {
