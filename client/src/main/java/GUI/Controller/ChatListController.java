@@ -23,7 +23,7 @@ public class ChatListController {
     @FXML
     public ListView<String> chatList;
 
-    ObservableList<String> names;
+    private ObservableList<String> names;
 
     public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatListEvent.class, this::changeChatList);

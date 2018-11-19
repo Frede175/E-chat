@@ -66,6 +66,12 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void addUserToDepartment(User user, Department department) {
+        restConnect.post(PathEnum.AddUserToDeparment, department.getId(), user.getId(), token);
+    }
+
+
+    @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, loginUser.getSub(), null, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
@@ -75,9 +81,8 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<Chat> createDirectMessage(String name, IUser otherUser) {
         Chat chat = new Chat(name);
-        RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, currentDepartment.getId(), chat, token);
-        addUserToSpecificChat(otherUser.getId(), response.getResponse());
-
+        RequestResponse<Chat> response = restConnect.post(PathEnum.CreateDirectMessage, otherUser.getId(), chat, token);
+        setCurrentChat(response.getResponse().getId());
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
@@ -108,9 +113,10 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void createUser(String username, String password) {
-        CreateUser usertosend = new CreateUser(username, password);
-        restConnect.post(PathEnum.CreateUser, null, usertosend, token);
+    public User createUser(String username, String password) {
+        CreateUser userToSend = new CreateUser(username, password);
+        RequestResponse<User> response = restConnect.post(PathEnum.CreateUser, null, userToSend, token);
+        return response.getResponse();
     }
 
     @Override
@@ -141,6 +147,9 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, loginUser.getSub(),null,token);
         if(!response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
+            System.out.println("Current department = " + currentDepartment.getName());
+            //TODO Delete this, fam
+            //addUserToDepartment(createUser("Jeff14", "AdminAdmin123*"), currentDepartment);
             departments = response.getResponse();
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
