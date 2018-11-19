@@ -184,6 +184,7 @@ public class BusinessFacade implements IBusinessFacade {
         currentChat = null;
         loginUser = null;
         token = null;
+        hubConnect.disconnect();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
             GUI.getInstance().getStage().setScene(new Scene(root));

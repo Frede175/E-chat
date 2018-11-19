@@ -25,6 +25,10 @@ public class HubConnect {
         chatConnection.start().blockingAwait();
     }
 
+    public void disconnect() {
+        chatConnection.stop().blockingAwait();
+    }
+
     public void sendMessage(String message, int chatId) {
         chatConnection.send("SendMessage", new MessageOut(message, chatId));
     }
@@ -32,5 +36,6 @@ public class HubConnect {
     public void receive(MessageIn message) {
         EventManager.getInstance().fireEvent(new MessageEvent(this, message));
     }
+
 
 }
