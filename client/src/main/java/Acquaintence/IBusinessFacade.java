@@ -2,7 +2,6 @@ package Acquaintence;
 
 import Business.Connection.RequestResponse;
 import Business.Models.Chat;
-import Business.Models.User;
 
 import java.util.List;
 
@@ -20,4 +19,6 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IDepartment>> getDepartments();
     IChat getCurrentChat();
     void createUser(String username, String password);
+    ILoginUser getLoginUser();
+    void logout();
 }

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -12,8 +9,7 @@
         <items>
             <AnchorPane maxWidth="1.7976931348623157E308" minWidth="500.0" prefHeight="70.0" prefWidth="500.0">
                <children>
-            
-                                <fx:include fx:id="chatHeader" source="ChatHeader.fxml" />
+                   <fx:include fx:id="chatHeader" source="ChatHeader.fxml" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -31,7 +27,11 @@
       </SplitPane>
       <SplitPane dividerPositions="0.1304, 0.8528" minWidth="500.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="500.0">
         <items>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                <children>
+                    <fx:include fx:id="loggedInUser" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="LoggedInUser.fxml" />
+                </children>
+            </AnchorPane>
           <AnchorPane>
                <children>
                    <fx:include fx:id="chatList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="ChatList.fxml" />

@@ -3,7 +3,6 @@ package GUI.Controller;
 
 import Acquaintence.ConnectionState;
 import Acquaintence.Event.ChangeChatListEvent;
-import Acquaintence.Event.ChangeChatEvent;
 import Acquaintence.EventManager;
 import Acquaintence.IChat;
 import Business.Connection.RequestResponse;
@@ -15,7 +14,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.MouseEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

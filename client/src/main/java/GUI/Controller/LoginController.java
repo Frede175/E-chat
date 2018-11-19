@@ -27,6 +27,7 @@ public class LoginController {
             case SUCCESS:
                 try {
                     Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
+                    passwordTF.setText("");
                     GUI.getInstance().getStage().setScene(new Scene(root));
                 } catch (IOException e) {
                     e.printStackTrace();

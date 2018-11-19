@@ -83,6 +83,31 @@ public class RestConnect {
         }
     }
 
+    public RequestResponse<String> logout(String token) {
+
+        try {
+
+            HttpClient client = HttpClientBuilder.create().build();
+
+            HttpPost request = new HttpPost(url + "/connect/logout/");
+            request.addHeader("Content-type", "application/x-www-form-urlencoded");
+            request.addHeader("Authorization", "Bearer " + token);
+
+            HttpResponse response = client.execute(request);
+
+
+            System.out.println("Response Code Login: "
+                    + response.getStatusLine().getStatusCode());
+
+
+
+            return new RequestResponse<>("You have been logged out", ConnectionState.SUCCESS);
+
+        } catch (IOException e) {
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
+        }
+    }
+
     public <T, T1> RequestResponse<T> get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
         {
             try {

@@ -25,7 +25,8 @@ public enum PathEnum {
     GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<LoginUser>() {}.getType()),
     GetUsersInChat("/api/chat/users/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
     GetUsers("/api/user/contacts/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
-    AddUserToDeparment("/api/department/", ConnectionType.POST, null);
+    AddUserToDeparment("/api/department/", ConnectionType.POST, null),
+    LogOut("/connect/logout/", ConnectionType.POST, null);
 
 
     private PathEnum(String path, ConnectionType type, Type resultType) {

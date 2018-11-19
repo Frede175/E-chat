@@ -2,7 +2,8 @@ package Business.Models;
 
 import Acquaintence.ILoginUser;
 import Acquaintence.IToMap;
-import Acquaintence.IUser;
+import Business.Connection.PermissionEnum;
+import Business.Connection.PermissionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ public class LoginUser implements ILoginUser, IToMap {
     private String sub;
     private String name;
     private ArrayList<String> roles;
+    private ArrayList<PermissionEnum> userPermissions;
+    private ArrayList<PermissionEnum> adminPermissions;
     private ArrayList<String> permissions;
 
     public LoginUser(String sub, String name, ArrayList<String> roles, ArrayList<String> permissions) {
@@ -26,19 +29,50 @@ public class LoginUser implements ILoginUser, IToMap {
         return sub;
     }
 
+
+    public void initializePermissions() {
+        userPermissions = new ArrayList<>();
+        adminPermissions = new ArrayList<>();
+        for(String permission : this.permissions) {
+            PermissionEnum permissionEnum = PermissionEnum.valueOf(permission);
+            if(permissionEnum.hasElevatedPermission()) {
+                this.adminPermissions.add(permissionEnum);
+            } else {
+                this.userPermissions.add(permissionEnum);
+            }
+        }
+    }
+
+
     @Override
     public String getName() {
         return name;
     }
 
     @Override
-    public ArrayList<String> getRoles() {
-        return roles;
+    public ArrayList<PermissionEnum> getAdminPermissions() {
+        return adminPermissions;
     }
 
     @Override
-    public ArrayList<String> getPermissions() {
+    public ArrayList<PermissionEnum> getUserPermissions() {
+        return userPermissions;
+    }
+
+    @Override
+    public ArrayList<PermissionEnum> getUserPermissionsFromType(PermissionType type) {
+        ArrayList<PermissionEnum> permissions = new ArrayList();
+        for (PermissionEnum perm : adminPermissions) {
+            if(perm.getType() == type) {
+                permissions.add(perm);
+            }
+        }
         return permissions;
+    }
+
+    @Override
+    public ArrayList<String> getRoles() {
+        return roles;
     }
 
     @Override
