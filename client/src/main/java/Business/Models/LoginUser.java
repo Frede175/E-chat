@@ -36,10 +36,8 @@ public class LoginUser implements ILoginUser, IToMap {
         for(String permission : this.permissions) {
             PermissionEnum permissionEnum = PermissionEnum.valueOf(permission);
             if(permissionEnum.hasElevatedPermission()) {
-                System.out.println(permissionEnum.getPermission() + " added to AdminList");
                 this.adminPermissions.add(permissionEnum);
             } else {
-                System.out.println(permissionEnum.getPermission() + " added to UserList");
                 this.userPermissions.add(permissionEnum);
             }
         }
@@ -59,6 +57,17 @@ public class LoginUser implements ILoginUser, IToMap {
     @Override
     public ArrayList<PermissionEnum> getUserPermissions() {
         return userPermissions;
+    }
+
+    @Override
+    public ArrayList<PermissionEnum> getUserPermissionsFromType(PermissionType type) {
+        ArrayList<PermissionEnum> permissions = new ArrayList();
+        for (PermissionEnum perm : adminPermissions) {
+            if(perm.getType() == type) {
+                permissions.add(perm);
+            }
+        }
+        return permissions;
     }
 
     @Override

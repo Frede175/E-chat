@@ -9,8 +9,11 @@ namespace Server.Security
        
         public IEnumerable<Permission> RequiredPermissions { get; }
 
-        public PermissionsAuthorizationRequirement(IEnumerable<Permission> requiredPermissions)
+        public PermissionAttributeType Type {get;set;}
+
+        public PermissionsAuthorizationRequirement(PermissionAttributeType type, IEnumerable<Permission> requiredPermissions)
         {
+            Type = type;
             RequiredPermissions = requiredPermissions;
         }
     }

@@ -58,7 +58,6 @@ public class BusinessFacade implements IBusinessFacade {
             RequestResponse<LoginUser> data = restConnect.get(PathEnum.GetUserInfo, null, null, token);
             loginUser = data.getResponse();
             loginUser.initializePermissions();
-            System.out.println("Name is " + loginUser.getName());
             getDepartments();
             getChats();
         }
@@ -187,7 +186,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void logout() {
-        // TODO Gets an server 400
         restConnect.logout(token);
         departments = null;
         currentDepartment = null;

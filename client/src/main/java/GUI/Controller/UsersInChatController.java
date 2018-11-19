@@ -20,19 +20,22 @@ public class UsersInChatController {
     @FXML
     public ListView<String> Userlist;
 
-    public void setUserlist() {
+    public void initialize(){
+
         ArrayList<String> stringList = new ArrayList<>();
 
         RequestResponse<List<? extends IUser>> response = GUI.GUI.getInstance().getBusiness().getUsersInChat();
+
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
             for (IUser user : response.getResponse()) {
                 stringList.add(user.getName());
             }
-
         }
+
         ObservableList<String> names = FXCollections.observableArrayList(stringList);
         Userlist.setItems(names);
         Userlist.setCellFactory(ComboBoxListCell.forListView(names));
 
     }
+
 }

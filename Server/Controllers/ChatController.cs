@@ -41,7 +41,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.CreateChat)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateChat, Permission.AddUserToChat, Permission.RemoveUserFromChat)]
         public async Task<ActionResult> GetChat(int chatId) {
             var chat = await _chatService.GetSpecificChat(chatId);
 
@@ -54,16 +54,24 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/chat/user/{userId} 
         [HttpGet("user/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetAllChats)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateChat, Permission.AddUserToChat, Permission.RemoveUserFromChat)]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
             return (await _chatService.GetChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
         }
 
+        // GET: https://localhost:5001/api/chat/private/{userId} 
+        [HttpGet("private/{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
+        public async Task<ActionResult<List<Chat>>> GetPrivateChats(string userId)
+        {
+            return (await _chatService.GetPrivateChatsAsync(userId)).Select(d => new Chat(d)).ToList();
+        }
+
 
         // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("{departmentId}")]
-        [RequiresPermissionAttribute(Permission.CreateChat)]
+        [RequiresPermissionAttribute(permissions: Permission.CreateChat)]
         public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat)
         {
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
@@ -82,7 +90,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("private/{userId}")]
-        [RequiresPermissionAttribute(Permission.BasicPermissions)]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<ActionResult> CreatePrivateChat(string userId, [FromBody] Chat chat)
         {
             var currentUserId = _userManager.GetUserId(HttpContext.User);
@@ -111,7 +119,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/leave/{chatId}
         [HttpPost("leave/{chatId}")]
-        [RequiresPermissionAttribute(Permission.LeaveChat)]
+        [RequiresPermissionAttribute(permissions: Permission.LeaveChat)]
         public async Task<ActionResult> Leave(int chatId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -128,7 +136,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/add/{chatId}
         [HttpPost("add/{chatId}")]
-        [RequiresPermissionAttribute(Permission.AddUserToChat)]
+        [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
         public async Task<ActionResult> AddUserToChat(int chatId, [FromBody] string userId)
         {
             _logger.LogDebug("User ID: " + userId);
@@ -146,7 +154,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/remove/{chatId}
         [HttpPost("remove/{chatId}")]
-        [RequiresPermissionAttribute(Permission.RemoveUserFromChat)]
+        [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromChat)]
         public async Task<ActionResult> RemoveUserFromChat(int chatId, string userId)
         {
             var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
@@ -162,7 +170,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/chat/users/{chatId}
         [HttpGet ("users/{chatId}")]
-        [RequiresPermissionAttribute(Permission.BasicPermissions)]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<List<User>> GetUsersInChat(int chatId)
         {
             var chat = await _chatService.GetSpecificChat(chatId);

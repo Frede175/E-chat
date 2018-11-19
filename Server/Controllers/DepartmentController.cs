@@ -33,7 +33,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department/{departmentId}
         [HttpGet("{departmentId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetAllDepartments)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateDepartment, Permission.UpdateDepartment, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment, Permission.DeleteDepartment)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartment(int departmentId)
         {
             var department = await _departmentService.GetSpecificDepartment(departmentId);
@@ -48,7 +48,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department
         [HttpGet, Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetAllDepartments)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateDepartment, Permission.UpdateDepartment, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment, Permission.DeleteDepartment)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartments()
         {
             return (await _departmentService.GetDepartmentsAsync()).Select(d => new Department(d)).ToList();
@@ -57,14 +57,14 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department/{id} 
         [HttpGet("user/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.BasicPermissions)]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<ActionResult<ICollection<Department>>> GetUserDepartments(string userId)
         {
             return (await _departmentService.GetDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
         }
 
         [HttpPost]
-        [RequiresPermissionAttribute(Permission.CreateDepartment)]
+        [RequiresPermissionAttribute(permissions: Permission.CreateDepartment)]
         public async Task<IActionResult> CreateDepartment(Department department)
         {
             var d = new DbModels.Department()
@@ -81,7 +81,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/Department/{departmentId}
         [HttpPost("{departmentId}")]
-        [RequiresPermissionAttribute(Permission.AddUserToDepartment)]
+        [RequiresPermissionAttribute(permissions: Permission.AddUserToDepartment)]
         public async Task<IActionResult> AddUserToDepartment(int departmentId, [FromBody] string userId)
         {
             _logger.LogDebug($"Department ID is: {departmentId} and user Id is: {userId}");   
@@ -97,7 +97,7 @@ namespace Server.Controllers
 
         // DELETE: https://localhost:5001/api/Department/remove/{departmentId}
         [HttpDelete("remove/{departmentId}")]
-        [RequiresPermissionAttribute(Permission.DeleteDepartment)]
+        [RequiresPermissionAttribute(permissions: Permission.DeleteDepartment)]
         public async Task<ActionResult> RemoveDepartment(int departmentId)
         {
             var result = await _departmentService.RemoveDepartmentASync(departmentId);
@@ -113,7 +113,7 @@ namespace Server.Controllers
 
         //PUT: https://localhost:5001/api/Department/update/{departmentId}
         [HttpPut("update/{departmendId}")]
-        [RequiresPermissionAttribute(Permission.UpdateDepartment)]
+        [RequiresPermissionAttribute(permissions: Permission.UpdateDepartment)]
         public async Task<ActionResult> UpdateDepartment(int depId, string newName)
         {
             var dep = await _departmentService.GetSpecificDepartment(depId);
