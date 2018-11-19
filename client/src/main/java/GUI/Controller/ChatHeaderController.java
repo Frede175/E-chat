@@ -35,6 +35,10 @@ public class ChatHeaderController {
     @FXML
     private Button cHButton;
 
+    private void changeName(ChangeChatEvent event) {
+        chatNameL.setText(event.getChat().getName());
+    }
+
 
     public void usersInChatBtn(ActionEvent actionEvent) throws IOException {
 
