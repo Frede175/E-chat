@@ -28,7 +28,7 @@ import static org.apache.http.protocol.HTTP.USER_AGENT;
 
 public class RestConnect {
 
-    private String url = "https://group3server.azurewebsites.net";//"https://localhost:5001";
+    private String url = "https://localhost:5001";
     private final String formType = "application/x-www-form-urlencoded";
     //private final String url = "https://ptsv2.com";
     private final Gson gson;
