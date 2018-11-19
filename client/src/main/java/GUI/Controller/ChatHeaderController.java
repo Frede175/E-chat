@@ -36,14 +36,12 @@ public class ChatHeaderController {
 
     public void usersInChatBtn(ActionEvent actionEvent) throws IOException {
 
-        // Place "box" into the PopOver(); to get back to working mode.
         PopOver popover = new PopOver();
 
         chatNameL.setText(("Current chat: TODO"));
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/UsersInChat.fxml"));
 
-        popover.setContentNode(new Label("Test"));
         popover.setAutoFix(true);
         popover.setAutoHide(true);
         popover.setHideOnEscape(true);

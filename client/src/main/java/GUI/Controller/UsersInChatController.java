@@ -23,9 +23,36 @@ public class UsersInChatController {
     private ObservableList<String> meh;
 
     public void initialize(){
+
+
         meh = FXCollections.observableArrayList();
         meh.add("Lars er cool nok.. kun lidt...s");
+        meh.add("CUUUUUUUUUUUUUUUUUUUUNNNNNNNNNNNNN not T..");
         Userlist.setItems(meh);
+
+
+        // Kriss code. leger med den.
+        ArrayList<String> stringList = new ArrayList<>();
+
+
+        RequestResponse<List<? extends IUser>> response = GUI.GUI.getInstance().getBusiness().getUsersInChat();
+
+        System.out.println( "Response: " + response);
+
+        if (response.getConnectionState() == ConnectionState.SUCCESS) {
+            System.out.println("Not null");
+            for (IUser user : response.getResponse()) {
+                stringList.add(user.getName());
+            }
+        }
+
+        Userlist.setPrefWidth(100);
+        Userlist.setPrefHeight(70);
+        ObservableList<String> names = FXCollections.observableArrayList(stringList);
+        Userlist.setItems(names);
+        Userlist.setCellFactory(ComboBoxListCell.forListView(names));
+
+
     }
 
 
