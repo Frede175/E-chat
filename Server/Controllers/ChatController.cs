@@ -60,6 +60,14 @@ namespace Server.Controllers
             return (await _chatService.GetChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
         }
 
+        // GET: https://localhost:5001/api/chat/private/{userId} 
+        [HttpGet("private/{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
+        public async Task<ActionResult<List<Chat>>> GetPrivateChats(string userId)
+        {
+            return (await _chatService.GetPrivateChatsAsync(userId)).Select(d => new Chat(d)).ToList();
+        }
+
 
         // POST: https://localhost:5001/api/chat/{departmentId}
         [HttpPost("{departmentId}")]
