@@ -20,19 +20,6 @@ public class ChatHeaderController {
     private Button cHButton;
 
 
-    public void initialize(){
-
-        Label l = new Label("Lars du faktisk ikke så sej..");
-        VBox b = new VBox(l);
-        b.setStyle("-fx-background-color: #F399D7");
-
-        PopOver pop = new PopOver(b);
-        pop.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-
-        chatNameL.setOnMouseEntered(MouseEvent -> { pop.show(chatNameL);});
-        chatNameL.setOnMouseExited(MouseEvent -> {pop.hide();});
-    }
-
     public void usersInChatBtn(ActionEvent actionEvent) throws IOException {
 
         PopOver popover = new PopOver();
@@ -49,24 +36,10 @@ public class ChatHeaderController {
         popover.setTitle("FUCK THIS SHIT FUCK CUNT");
         popover.setContentNode(root);
 
-        //Scene scene = new Scene(root);
 
         popover.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
         popover.show(cHButton);
     }
 
-    /*public void initialize() {
-        EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeName);
-        // Changes the name to the name of the current chat on start up
-        chatNameL.setText(GUI.GUI.getInstance().getBusiness().getCurrentChat().getName());
-    }
-
-    private void changeName(ChangeChatEvent event) {
-        chatNameL.setText(event.getChat().getName());
-    }
-
-    public void usersInChat(ActionEvent actionEvent) {
-        chatNameL.setText("Lars er mega nice og sej");
-    }*/
 }
 

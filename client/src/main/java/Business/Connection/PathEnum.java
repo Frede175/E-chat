@@ -23,7 +23,7 @@ public enum PathEnum {
     LeaveChat("/api/chat/leave/", ConnectionType.POST, null),
     PutChatRoom("/api/chat/", ConnectionType.PUT, null),
     GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<LoginUser>() {}.getType()),
-    GetUsersInChat("/api/user/", ConnectionType.GET, new TypeToken<User>() {}.getType()),
+    GetUsersInChat("/api/chat/users/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
     GetUsers("/api/user/contacts/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
     AddUserToDeparment("/api/department/", ConnectionType.POST, null);
 
