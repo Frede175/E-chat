@@ -13,6 +13,9 @@ public class RequestResponse<T> implements IRequestResponse {
         this.connectionState = connectionState;
     }
 
+    public RequestResponse() {
+    }
+
     @Override
     public T getResponse() {
         return response;

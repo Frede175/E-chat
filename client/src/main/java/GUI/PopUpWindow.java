@@ -1,7 +1,6 @@
 package GUI;
 
 import Business.Connection.PermissionType;
-import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
