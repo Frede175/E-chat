@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
+using Server.Security;
 using Server.Service.Interfaces;
 
 namespace Server.Controllers
@@ -23,6 +24,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Messages/{chatId}
         [HttpGet("{chatId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<ActionResult<ICollection<Message>>> GetMessages(int chatId, int pageNumber, int pageSize){
             return (await _chatService.RetrieveMessagesAsync(chatId, pageNumber, pageSize)).Select(d => new Message(d)).ToList();
         }

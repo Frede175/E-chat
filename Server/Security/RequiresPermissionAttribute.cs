@@ -9,10 +9,10 @@ namespace Server.Security
 {
     public class RequiresPermissionAttribute : TypeFilterAttribute
     {
-        public RequiresPermissionAttribute(params Permission[] permissions)
+        public RequiresPermissionAttribute(PermissionAttributeType type = PermissionAttributeType.AND,  params Permission[] permissions)
       : base(typeof(RequiresPermissionAttributeImpl))
         {
-            Arguments = new[] { new PermissionsAuthorizationRequirement(permissions) };
+            Arguments = new[] { new PermissionsAuthorizationRequirement(type, permissions) };
         }
 
         private class RequiresPermissionAttributeImpl : Attribute, IAsyncResourceFilter

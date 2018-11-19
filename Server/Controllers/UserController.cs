@@ -44,10 +44,9 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/{userId}
         [HttpGet("{userId}", Name = "GetUser"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetUsers)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddAdditionalRole, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<User>> GetUser(string userId)
         {
-
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
@@ -61,7 +60,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/ 
         [HttpGet, Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetUsers)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddAdditionalRole, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<ICollection<User>>> GetUsers()
         {
             return await _userManager.Users.Select(u => new User(u)).ToListAsync();
@@ -70,7 +69,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/contacts/{userId}
         [HttpGet("contacts/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.BasicPermissions)]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<ActionResult<ICollection<User>>> GetContacts(string userId)
         {
             var deps = await _departmentService.GetDepartmentsAsync(userId);
@@ -82,7 +81,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/User/create
         [HttpPost("create")]
-        [RequiresPermissionAttribute(Permission.CreateUser)]
+        [RequiresPermissionAttribute(permissions: Permission.CreateUser)]
         public async Task<ActionResult> CreateUser(CreateUser model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
@@ -107,7 +106,7 @@ namespace Server.Controllers
 
         // DELETE: https://localhost:5001/api/User/delete
         [HttpDelete("delete/{userId}")]
-        [RequiresPermissionAttribute(Permission.DeleteUser)]
+        [RequiresPermissionAttribute(permissions: Permission.DeleteUser)]
         public async Task<ActionResult> DeleteUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -128,7 +127,7 @@ namespace Server.Controllers
 
         // PUT https://localhost:5001/api/User/{userId}
         [HttpPut("{userId}")]
-        [RequiresPermissionAttribute(Permission.AddAdditionalRole)]
+        [RequiresPermissionAttribute(permissions: Permission.AddAdditionalRole)]
         public async Task<ActionResult> AddAdditionalRole(string userId, string role)
         {
 
