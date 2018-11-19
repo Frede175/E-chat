@@ -56,9 +56,8 @@ namespace Server.Service
                 {
                     _userDepartment.Add(new UserDepartment() { UserId = user.Id, DepartmentId = department.Id });
                 }
-                _department.Update(department);
                 var result = await _context.SaveChangesAsync();
-                if (result == 1) return true;
+                if (result == users.Count()) return true;
             }
             return false;
         }
@@ -84,10 +83,8 @@ namespace Server.Service
                 {
                     _userDepartment.Remove(new UserDepartment(){UserId = user.Id, DepartmentId = department.Id});
                 }
-
-                _department.Update(department);
                 var result = await _context.SaveChangesAsync();
-                if (result == 1) return true;
+                if (result == users.Count()) return true;
             }
             return false;
         }
