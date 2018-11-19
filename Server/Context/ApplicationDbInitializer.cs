@@ -48,11 +48,10 @@ namespace Server.Context
             var department = await departmentService.GetSpecificDepartment("Main");
             
             if (department == null) {
-                var result = await departmentService.CreateDepartmentAsync(new Department() {
+                department = await departmentService.CreateDepartmentAsync(new Department() {
                     Name = "Main"
                 });
-                if (!result) return;
-                department = await departmentService.GetSpecificDepartment("Main");
+                if (department == null) return;
                 await departmentService.AddUsersToDepartmentAsync(department.Id, user);
             }
 
@@ -60,14 +59,14 @@ namespace Server.Context
             var chat = await chatService.GetSpecificChat(department.Id, "Main");
 
             if (chat == null) {
-                var result = await chatService.CreateChatAsync(new Chat() {
+                chat = await chatService.CreateChatAsync(new Chat() {
+                    IsGroupChat = true,
                     DepartmentId = department.Id,
                     Name = "Main"
                 }, user.Id);
-                if (!result) return;
-                chat = await chatService.GetSpecificChat(department.Id, "Main");
+                if (chat == null) return;
             }
-            
+
         }
 
         private static async Task<ApplicationUser> CreateUser(UserManager<ApplicationUser> userManager, string userName, string password) {

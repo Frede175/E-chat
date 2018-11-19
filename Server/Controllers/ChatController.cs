@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Server.Context;
+using Server.Hubs;
 using Server.Models;
 using Server.Security;
 using Server.Service.Interfaces;
@@ -21,25 +23,40 @@ namespace Server.Controllers
     {
         private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHubContext<ChatHub> _chatHub;
 
         private readonly ILogger<ChatController> _logger;
 
 
-        public ChatController(IChatService chatService, UserManager<ApplicationUser> userManager, ILogger<ChatController> logger)
+        public ChatController(IChatService chatService, 
+                              UserManager<ApplicationUser> userManager, 
+                              ILogger<ChatController> logger, 
+                              IHubContext<ChatHub> chathub)
         {
             _userManager = userManager;
             _chatService = chatService;
             _logger = logger;
+            _chatHub = chathub;
 
         }
 
+        [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.CreateChat)]
+        public async Task<ActionResult> GetChat(int chatId) {
+            var chat = await _chatService.GetSpecificChat(chatId);
 
-        // GET: https://localhost:5001/api/chat/{userId} 
-        [HttpGet("{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetChats)]
+            if (chat != null) {
+                return Ok(new Chat(chat));
+            }
+            return NotFound();
+        }
+
+
+        // GET: https://localhost:5001/api/chat/user/{userId} 
+        [HttpGet("user/{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.GetAllChats)]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
         {
-            _logger.LogDebug("Department ID: " + departmentId);
             return (await _chatService.GetChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
         }
 
@@ -52,11 +69,46 @@ namespace Server.Controllers
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
             {
                 DepartmentId = departmentId,
-                Name = chat.Name
+                Name = chat.Name,
+                IsGroupChat = true
             }, _userManager.GetUserId(HttpContext.User));
-            if (result)
+            if (result != null)
             {
-                return new OkResult();
+                return CreatedAtRoute(nameof(GetChat),new {chatId = result.Id} , new Chat(result));
+            }
+
+            return new BadRequestResult();
+        }
+
+        // POST: https://localhost:5001/api/chat/{departmentId}
+        [HttpPost("private/{userId}")]
+        [RequiresPermissionAttribute(Permission.BasicPermissions)]
+        public async Task<ActionResult> CreatePrivateChat(string userId, [FromBody] Chat chat)
+        {
+            var existsResult = await _chatService.PrivateChatExists(userId, _userManager.GetUserId(HttpContext.User));
+
+            if (existsResult == true) 
+            {
+                return new BadRequestResult();
+            }
+
+            var result = await _chatService.CreateChatAsync(new DbModels.Chat()
+            {
+                Name = chat.Name,
+                IsGroupChat = false,
+                
+            }, _userManager.GetUserId(HttpContext.User));
+
+            var result2 = await _chatService.CreateChatAsync(new DbModels.Chat()
+            {
+                Name = chat.Name,
+                IsGroupChat = false,
+
+            }, userId);
+
+            if (result != null && result2 != null)
+            {
+                return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
             return new BadRequestResult();
@@ -116,7 +168,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/chat/users/{chatId}
         [HttpGet ("users/{chatId}")]
-        [RequiresPermissionAttribute(Permission.GetUsersInChat)]
+        [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<List<User>> GetUsersInChat(int chatId)
         {
             var chat = await _chatService.GetSpecificChat(chatId);

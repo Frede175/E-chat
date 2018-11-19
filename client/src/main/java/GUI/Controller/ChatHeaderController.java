@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.PopOver;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class ChatHeaderController {
@@ -55,5 +54,19 @@ public class ChatHeaderController {
         popover.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
         popover.show(cHButton);
     }
+
+    /*public void initialize() {
+        EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeName);
+        // Changes the name to the name of the current chat on start up
+        chatNameL.setText(GUI.GUI.getInstance().getBusiness().getCurrentChat().getName());
+    }
+
+    private void changeName(ChangeChatEvent event) {
+        chatNameL.setText(event.getChat().getName());
+    }
+
+    public void usersInChat(ActionEvent actionEvent) {
+        chatNameL.setText("Lars er mega nice og sej");
+    }*/
 }
 

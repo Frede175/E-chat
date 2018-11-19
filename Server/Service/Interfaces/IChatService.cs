@@ -12,7 +12,7 @@ namespace Server.Service.Interfaces
 
         Task<Message> SendMessageAsync(int chatId, string userId, string content);
 
-        Task<bool> CreateChatAsync(Chat chat, string userId);
+        Task<Chat> CreateChatAsync(Chat chat, string userId);
 
         Task<bool> RemoveChatAsync(int chatId, ApplicationUser user);
 
@@ -33,6 +33,10 @@ namespace Server.Service.Interfaces
         Task<Chat> GetSpecificChat(int depId, string chatName);
 
         Task<List<ApplicationUser>> GetUsersInChat(int chatId);
+
+        Task<bool> PrivateChatExists(string userId, string userId2);
+
+        Task<Chat> CreatePrivateChat(Chat chat, string userId, string userId2);
 
     }
 }

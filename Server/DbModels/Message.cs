@@ -14,8 +14,6 @@ namespace Server.DbModels
 
         public string Content { get; set; }
 
-
-
         [ForeignKey("ApplicationUser")]
         public string SenderId { get; set; }
 
@@ -25,7 +23,7 @@ namespace Server.DbModels
 
         public virtual Chat Chat { get; set; }
 
-
         public virtual ApplicationUser ApplicationUser { get; set; }
+
     }
 }

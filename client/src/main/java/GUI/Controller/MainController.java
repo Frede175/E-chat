@@ -13,7 +13,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        chatListController.getChats();
         chatBoxController.getMessages();
     }
 

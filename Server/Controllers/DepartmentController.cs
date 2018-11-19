@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Server.Context;
 using Server.Models;
 using Server.Security;
@@ -20,16 +21,34 @@ namespace Server.Controllers
         private readonly IDepartmentService _departmentService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DepartmentController(IDepartmentService departmentService, UserManager<ApplicationUser> userManager)
+        private readonly ILogger<DepartmentController> _logger;
+
+        public DepartmentController(IDepartmentService departmentService, UserManager<ApplicationUser> userManager, ILogger<DepartmentController> logger)
         {
             _departmentService = departmentService;
             _userManager = userManager;
+            _logger = logger;
 
         }
 
+        // GET: https://localhost:5001/api/Department/{departmentId}
+        [HttpGet("{departmentId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.GetAllDepartments)]
+        public async Task<ActionResult<ICollection<Department>>> GetDepartment(int departmentId)
+        {
+            var department = await _departmentService.GetSpecificDepartment(departmentId);
+            if (department == null) {
+                return NotFound();
+            }
+
+            return Ok(new Department(department));
+
+        }
+
+
         // GET: https://localhost:5001/api/Department
         [HttpGet, Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetDepartments)]
+        [RequiresPermissionAttribute(Permission.GetAllDepartments)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartments()
         {
             return (await _departmentService.GetDepartmentsAsync()).Select(d => new Department(d)).ToList();
@@ -37,8 +56,8 @@ namespace Server.Controllers
         }
 
         // GET: https://localhost:5001/api/Department/{id} 
-        [HttpGet("{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(Permission.GetUserDepartments)]
+        [HttpGet("user/{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<ActionResult<ICollection<Department>>> GetUserDepartments(string userId)
         {
             return (await _departmentService.GetDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
@@ -53,9 +72,9 @@ namespace Server.Controllers
                 Name = department.Name
             };
             var result = await _departmentService.CreateDepartmentAsync(d);
-            if (result)
+            if (result != null)
             {
-                return new StatusCodeResult(201);
+                return CreatedAtAction(nameof(GetDepartments), new { departmentId = result.Id }, new Department(result));
             }
             return new BadRequestResult();
         }
@@ -63,8 +82,9 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/Department/{departmentId}
         [HttpPost("{departmentId}")]
         [RequiresPermissionAttribute(Permission.AddUserToDepartment)]
-        public async Task<IActionResult> AddUserToDepartment(int departmentId, string userId)
+        public async Task<IActionResult> AddUserToDepartment(int departmentId, [FromBody] string userId)
         {
+            _logger.LogDebug($"Department ID is: {departmentId} and user Id is: {userId}");   
             var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
             if (result)
             {
