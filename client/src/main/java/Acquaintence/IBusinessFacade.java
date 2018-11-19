@@ -2,8 +2,6 @@ package Acquaintence;
 
 import Business.Connection.RequestResponse;
 import Business.Models.Chat;
-import Business.Models.User;
-import org.eclipse.core.runtime.ILog;
 
 import java.util.List;
 

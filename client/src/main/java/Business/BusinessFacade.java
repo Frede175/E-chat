@@ -58,7 +58,6 @@ public class BusinessFacade implements IBusinessFacade {
             RequestResponse<LoginUser> data = restConnect.get(PathEnum.GetUserInfo, null, null, token);
             loginUser = data.getResponse();
             loginUser.initializePermissions();
-            System.out.println("Name is " + loginUser.getName());
             getDepartments();
             getChats();
         }

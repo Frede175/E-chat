@@ -101,7 +101,7 @@ public class RestConnect {
 
 
 
-            return new RequestResponse<>("You have been log outed", ConnectionState.SUCCESS);
+            return new RequestResponse<>("You have been logged out", ConnectionState.SUCCESS);
 
         } catch (IOException e) {
             return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
