@@ -28,32 +28,49 @@ using Server.Service;
 using Microsoft.AspNetCore.Authorization;
 using Server.Security;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.HttpOverrides;
 
-namespace Server
+namespace Server 
 {
-    public class Startup
+    public class Startup 
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration) 
         {
             Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services) 
         {
 
-            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseNpgsql(Configuration["DB:Connectionstring"]);
-                options.UseOpenIddict();
 
-            });
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production") 
+            {
+                services.AddDbContext<ApplicationDbContext>(options => 
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("Connection"));
+                    options.UseOpenIddict();
+                });
+            } else 
+            {
+                services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options => 
+                {
+                    options.UseNpgsql(Configuration["DB:Connectionstring"]);
+                    options.UseOpenIddict();
+                });
+            }
+
+
+
+
+            services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options =>
+            services.Configure<IdentityOptions>(options => 
             {
                 options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
                 options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
@@ -63,7 +80,7 @@ namespace Server
             services.AddOpenIddict()
 
                 // Register the OpenIddict core services.
-                .AddCore(options =>
+                .AddCore(options => 
                 {
                     // Register the Entity Framework stores and models.
                     options.UseEntityFrameworkCore()
@@ -71,7 +88,7 @@ namespace Server
                 })
 
                 // Register the OpenIddict server handler.
-                .AddServer(options =>
+                .AddServer(options => 
                 {
                     // Register the ASP.NET Core MVC binder used by OpenIddict.
                     options.UseMvc();
@@ -94,7 +111,7 @@ namespace Server
                 // Register the OpenIddict validation handler.
                 .AddValidation();
 
-            services.AddAuthentication(options =>
+            services.AddAuthentication(options => 
             {
                 options.DefaultAuthenticateScheme = OpenIddictValidationDefaults.AuthenticationScheme;
                 options.DefaultScheme = OpenIddictValidationDefaults.AuthenticationScheme;
@@ -106,8 +123,9 @@ namespace Server
             services.AddScoped<IChatService, ChatService>();
             services.AddSingleton<IAuthorizationHandler, PermissionsAuthorizationHandler>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options => {
-                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options => 
+            {
+                options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
             });
             services.AddSignalR().AddJsonProtocol();
 
@@ -115,23 +133,28 @@ namespace Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env) 
         {
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment()) 
             {
                 app.UseDeveloperExceptionPage();
-            }
-            else
+                app.UseHttpsRedirection();
+            } 
+            else 
             {
                 app.UseHsts();
+                app.UseForwardedHeaders(new ForwardedHeadersOptions 
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
             }
-            //app.UseCors("AllowAll");
-            app.UseSignalR(route =>
+
+            app.UseSignalR(route => 
             {
                 route.MapHub<ChatHub>("/hubs/chat");
             });
-            app.UseHttpsRedirection();
+
 
             app.UseAuthentication();
             app.UseMvc();
