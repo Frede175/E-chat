@@ -274,5 +274,9 @@ namespace Server.Service
             return null;
         }
 
+        public async Task<List<Chat>> GetPrivateChatsAsync(string userId)
+        {
+            return await _chats.Where(c => !c.IsGroupChat && c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
+        }
     }
 }
