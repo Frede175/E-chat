@@ -267,7 +267,7 @@ namespace Server.Service
 
             var result = await _context.SaveChangesAsync();
 
-            if (result == 2)
+            if (result == 3)
             {
                 return chat;
             }

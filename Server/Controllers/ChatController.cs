@@ -85,33 +85,27 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(Permission.BasicPermissions)]
         public async Task<ActionResult> CreatePrivateChat(string userId, [FromBody] Chat chat)
         {
-            var existsResult = await _chatService.PrivateChatExists(userId, _userManager.GetUserId(HttpContext.User));
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            var existsResult = await _chatService.PrivateChatExists(userId, currentUserId);
 
-            if (existsResult == true) 
+            if (existsResult == true || currentUserId == userId) 
             {
-                return new BadRequestResult();
+                return BadRequest();
             }
 
-            var result = await _chatService.CreateChatAsync(new DbModels.Chat()
+            var result = await _chatService.CreatePrivateChat(new DbModels.Chat()
             {
                 Name = chat.Name,
                 IsGroupChat = false,
                 
-            }, _userManager.GetUserId(HttpContext.User));
+            }, currentUserId, userId);
 
-            var result2 = await _chatService.CreateChatAsync(new DbModels.Chat()
-            {
-                Name = chat.Name,
-                IsGroupChat = false,
-
-            }, userId);
-
-            if (result != null && result2 != null)
+            if (result != null)
             {
                 return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
-            return new BadRequestResult();
+            return BadRequest();
         }
 
 
