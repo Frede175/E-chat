@@ -1,23 +1,25 @@
 package Acquaintence;
 
 import Business.Connection.PermissionEnum;
+import Business.Connection.PermissionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface ILoginUser {
 
-    public String getSub();
+    String getSub();
 
-    public String getName();
+    String getName();
 
-    public ArrayList<String> getRoles();
+    ArrayList<String> getRoles();
 
-    public ArrayList<PermissionEnum> getUserPermissions();
+    ArrayList<PermissionEnum> getUserPermissions();
 
-    public ArrayList<PermissionEnum> getAdminPermissions();
+    ArrayList<PermissionEnum> getUserPermissionsFromType(PermissionType type);
 
-    public void setName(String name);
+    ArrayList<PermissionEnum> getAdminPermissions();
 
-    public HashMap<String, String> toMap();
+    void setName(String name);
+
 }

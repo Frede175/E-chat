@@ -175,7 +175,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void logout() {
-        // TODO Gets an server 400
         restConnect.logout(token);
         departments = null;
         currentDepartment = null;
