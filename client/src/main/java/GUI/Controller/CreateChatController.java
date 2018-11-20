@@ -12,26 +12,21 @@ public class CreateChatController {
 
 
     public TextField nameTextField;
-    public ChoiceBox choiceBox;
+    public ChoiceBox<IDepartment> choiceBox;
     public Button CreateChatBtnId;
 
     public void initialize(){
 
-        choiceBox.getItems().addAll(1, 2, 3, 4, 5);
+        choiceBox.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
 
     }
 
 
     public void createChat(ActionEvent actionEvent){
-        GUI.GUI.getInstance().getBusiness().createChat(nameTextField.getText(), 1);
+        GUI.GUI.getInstance().getBusiness().createChat(nameTextField.getText(), choiceBox.getValue().getId());
 
         Stage stage = (Stage) CreateChatBtnId.getScene().getWindow();
         stage.close();
-
-    }
-
-
-    private void getChoice(ChoiceBox<IDepartment> choiceBox){
 
     }
 }
