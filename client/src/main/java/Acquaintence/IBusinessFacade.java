@@ -19,6 +19,10 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IDepartment>> getDepartments();
     IChat getCurrentChat();
     void createUser(String username, String password);
+
+    // new
+    void createChat(String chatname, int departmentId);
+
     ILoginUser getLoginUser();
     void logout();
 }
