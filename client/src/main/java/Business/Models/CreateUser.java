@@ -1,7 +1,12 @@
 package Business.Models;
 
 import Acquaintence.ICreateUser;
-import Acquaintence.IRole;
+
+
+import Acquaintence.IToMap;
+
+
+import java.util.HashMap;
 
 public class CreateUser implements ICreateUser {
     private String userName;
@@ -26,6 +31,7 @@ public class CreateUser implements ICreateUser {
     }
 
     @Override
+
     public String getRole() {
         return role;
     }

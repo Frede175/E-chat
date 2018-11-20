@@ -23,17 +23,16 @@ public class UserListController {
     private ListView<String> userList;
 
     private RequestResponse<List<? extends IUser>> response;
+    private ObservableList<String> names;
 
     public void initialize() {
-        ArrayList<String> stringList = new ArrayList<>();
-
+        names = FXCollections.observableArrayList();
         response = GUI.getInstance().getBusiness().getUsers();
         if (response.getConnectionState() == ConnectionState.SUCCESS) {
             for (IUser user : response.getResponse()) {
-                stringList.add(user.getName());
+                names.add(user.getName());
             }
         }
-        ObservableList<String> names = FXCollections.observableArrayList(stringList);
         userList.setItems(names);
         userList.setCellFactory(ComboBoxListCell.forListView(names));
         userList.getSelectionModel().selectFirst();
@@ -44,7 +43,6 @@ public class UserListController {
             public void handle(MouseEvent event) {
                 IUser temp = null;
                 for(IUser user : response.getResponse()) {
-                    //TODO fix sub/id
                     if(user.getName().equals(userList.getSelectionModel().getSelectedItem())) {
                         temp = user;
                     }

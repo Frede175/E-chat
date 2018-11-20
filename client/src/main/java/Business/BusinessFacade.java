@@ -16,7 +16,10 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BusinessFacade implements IBusinessFacade {
 
@@ -65,6 +68,12 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void addUserToDepartment(User user, Department department) {
+        restConnect.post(PathEnum.AddUserToDeparment, department.getId(), user.getId(), token);
+    }
+
+
+    @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, loginUser.getSub(), null, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
@@ -74,9 +83,8 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<Chat> createDirectMessage(String name, IUser otherUser) {
         Chat chat = new Chat(name);
-        RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, currentDepartment.getId(), chat, token);
-        addUserToSpecificChat(otherUser.getId(), response.getResponse());
-
+        RequestResponse<Chat> response = restConnect.post(PathEnum.CreateDirectMessage, otherUser.getId(), chat, token);
+        chats.add(response.getResponse());
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
@@ -90,24 +98,35 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void setCurrentChat(int chatId) {
-        if(currentChat.getId() != chatId) {
-            for (Chat tempchat : chats) {
-                if(tempchat.getId() == chatId) {
-                    currentChat = tempchat;
-                    if(currentChat.getMessages().isEmpty()) {
-                        getMessages();
+        if(currentChat != null) {
+            if(currentChat.getId() != chatId) {
+                for (Chat tempchat : chats) {
+                    if(tempchat.getId() == chatId) {
+                        currentChat = tempchat;
+                        if(currentChat.getMessages().isEmpty()) {
+                            getMessages();
+                        }
+                        EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
+                        break;
                     }
-                    EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
-                    break;
                 }
+            } else {
+                System.out.println("currentchat var den samme");
             }
+        } else if (chats != null) {
+            currentChat = chats.get(0);
+            if(currentChat.getMessages().isEmpty()) {
+                getMessages();
+            }
+            EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
         }
+
     }
 
     @Override
     public void createUser(String username, String password, IRole role) {
-        CreateUser usertosend = new CreateUser(username, password, role.getName());
-        restConnect.post(PathEnum.CreateUser, null, usertosend, token);
+        CreateUser userToSend = new CreateUser(username, password, role.getName());
+        restConnect.post(PathEnum.CreateUser, null, userToSend, token);
     }
 
     @Override
@@ -116,19 +135,38 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+
     public RequestResponse<List<? extends IRole>> getRoles() {
         // TODO Maybe dont make a request everytime
         return restConnect.get(PathEnum.GetRoles, null, null, token);
     }
 
+    public void addRoleToUser(String userId, String role) {
+        restConnect.put(PathEnum.AddRoleToUser, userId, role, token);
+    }
+
     public RequestResponse<List<? extends IChat>> getChats() {
-        System.out.println("getsub: " + loginUser + " currentdep: " + currentDepartment);
-        RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
-        if(response.getResponse() != null &&!response.getResponse().isEmpty()) {
-            currentChat = response.getResponse().get(0);
-            chats = response.getResponse();
+        RequestResponse<List<Chat>> departmentChats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
+        RequestResponse<List<Chat>> privateChats = restConnect.get(PathEnum.GetDirectMessages, loginUser.getSub(), currentDepartment.toMap(), token);
+        if(departmentChats.getResponse().isEmpty() || privateChats.getResponse().isEmpty()) {
+            if(!departmentChats.getResponse().isEmpty()) {
+                currentChat = departmentChats.getResponse().get(0);
+                chats = departmentChats.getResponse();
+                return new RequestResponse<>(departmentChats.getResponse(), departmentChats.getConnectionState());
+            }
+            if(!privateChats.getResponse().isEmpty()) {
+                currentChat = privateChats.getResponse().get(0);
+                chats = privateChats.getResponse();
+                return new RequestResponse<>(privateChats.getResponse(), privateChats.getConnectionState());
+            }
+        } else {
+            List<Chat> allChats = Stream.concat(privateChats.getResponse().stream(), privateChats.getResponse().stream()).collect(Collectors.toList());
+            currentChat = allChats.get(0);
+            chats = allChats;
+            return new RequestResponse<>(allChats, ConnectionState.SUCCESS);
         }
-        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+
+        return new RequestResponse<>(departmentChats.getResponse(), departmentChats.getConnectionState());
     }
 
     @Override
@@ -145,8 +183,9 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, loginUser.getSub(),null,token);
         if(response.getResponse() != null && !response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
+            System.out.println("Current department = " + currentDepartment.getName());
             departments = response.getResponse();
-        }*
+        }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
