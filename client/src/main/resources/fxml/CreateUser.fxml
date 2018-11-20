@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ListSelectionView?>
 
-<VBox alignment="TOP_CENTER" fx:id="root" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.CreateUserController">
+<VBox fx:id="root" alignment="TOP_CENTER" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.CreateUserController">
    <children>
       <Label text="Create User">
          <font>
@@ -33,7 +37,12 @@
             <Insets top="20.0" />
          </VBox.margin>
       </ComboBox>
-      <Button fx:id="createButtonid" mnemonicParsing="false" onAction="#createUser" text="CreateUser">
+      <ListSelectionView fx:id="departmentsLSV" maxWidth="600.0" prefWidth="600.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </ListSelectionView>
+      <Button fx:id="createButtonid" mnemonicParsing="false" onAction="#createUser" text="Create">
          <VBox.margin>
             <Insets bottom="20.0" top="20.0" />
          </VBox.margin></Button>

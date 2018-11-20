@@ -103,7 +103,8 @@ namespace Server.Controllers
                 {
                     await _userManager.AddToRoleAsync(newUser, model.Role);
                     foreach (var department in model.DepartmentIds) {
-                        await _departmentService.AddUsersToDepartmentAsync(department, user);
+                        _logger.LogDebug(department.ToString());
+                        await _departmentService.AddUsersToDepartmentAsync(department, newUser);
                     }
 
                     return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, new User(newUser));

@@ -15,7 +15,7 @@ public class CreateUserController {
 
     public TextField PasswordTextField;
     public TextField UsernameTextField;
-    public ListSelectionView<IDepartment> departments;
+    public ListSelectionView<IDepartment> departmentsLSV;
     public VBox root;
     public ComboBox<IRole> roleCB;
 
@@ -24,14 +24,12 @@ public class CreateUserController {
         if(!roleCB.getItems().isEmpty()) {
             roleCB.getSelectionModel().select(0 );
         }
-        departments = new ListSelectionView<>();
-        departments.getSourceItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
-        root.getChildren().add(departments);
+        departmentsLSV.getSourceItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
     }
 
     public void createUser(ActionEvent actionEvent) {
         ArrayList<Integer> departmentIds = new ArrayList<>();
-        for(IDepartment dep : departments.getTargetItems()) {
+        for(IDepartment dep : departmentsLSV.getTargetItems()) {
             departmentIds.add(dep.getId());
         }
         GUI.GUI.getInstance().getBusiness().createUser(UsernameTextField.getText(), PasswordTextField.getText(), roleCB.getSelectionModel().getSelectedItem(), departmentIds);
