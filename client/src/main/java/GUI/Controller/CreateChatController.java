@@ -18,6 +18,9 @@ public class CreateChatController {
     public void initialize(){
 
         choiceBox.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+        if(!choiceBox.getItems().isEmpty()){
+            choiceBox.getSelectionModel().select(0);
+        }
 
     }
 
