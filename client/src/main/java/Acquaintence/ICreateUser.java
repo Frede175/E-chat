@@ -3,5 +3,5 @@ package Acquaintence;
 public interface ICreateUser {
     String getUserName();
     String getPassword();
-    IRole getRole();
+    String getRole();
 }

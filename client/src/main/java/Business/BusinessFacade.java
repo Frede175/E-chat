@@ -106,7 +106,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void createUser(String username, String password, IRole role) {
-        CreateUser usertosend = new CreateUser(username, password, (Role) role);
+        CreateUser usertosend = new CreateUser(username, password, role.getName());
         restConnect.post(PathEnum.CreateUser, null, usertosend, token);
     }
 
@@ -122,8 +122,9 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     public RequestResponse<List<? extends IChat>> getChats() {
+        System.out.println("getsub: " + loginUser + " currentdep: " + currentDepartment);
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
-        if(!response.getResponse().isEmpty()) {
+        if(response.getResponse() != null &&!response.getResponse().isEmpty()) {
             currentChat = response.getResponse().get(0);
             chats = response.getResponse();
         }
@@ -142,10 +143,10 @@ public class BusinessFacade implements IBusinessFacade {
 
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, loginUser.getSub(),null,token);
-        if(!response.getResponse().isEmpty()) {
+        if(response.getResponse() != null && !response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
             departments = response.getResponse();
-        }
+        }*
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
