@@ -14,7 +14,7 @@ public class CreateChatController {
 
     public void initialize(){
 
-        choiceBox.getItems().addAll(IDepartment);
+        choiceBox.getItems().addAll(1, 2, 3, 4, 5);
 
     }
 
