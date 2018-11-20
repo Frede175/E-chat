@@ -21,38 +21,41 @@ public class ChatListController {
 
 
     @FXML
-    public ListView<String> chatList;
+    public ListView<IChat> chatList;
 
-    private ObservableList<String> names;
+    private ObservableList<IChat> names;
+
 
     public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatListEvent.class, this::changeChatList);
         names = FXCollections.observableArrayList();
         getChats();
-        chatList.getSelectionModel().selectFirst();
-    }
-
-    public void getChats() {
-        RequestResponse<List<? extends IChat>> response = GUI.GUI.getInstance().getBusiness().getChats();
-        if (response.getConnectionState() == ConnectionState.SUCCESS) {
-            for (IChat chat : response.getResponse()) {
-                names.add(chat.getName());
-            }
-        }
         chatList.setItems(names);
         chatList.setCellFactory(ComboBoxListCell.forListView(names));
         chatList.getSelectionModel().selectFirst();
         chatList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                GUI.GUI.getInstance().getBusiness().setCurrentChat(response.getResponse().get(chatList.getSelectionModel().getSelectedIndex()).getId());
+                GUI.GUI.getInstance().getBusiness().setCurrentChat(chatList.getSelectionModel().getSelectedItem().getId());
             }
         });
     }
 
+    public void getChats() {
+        RequestResponse<List<? extends IChat>>response = GUI.GUI.getInstance().getBusiness().getChats();
+        if (response.getConnectionState() == ConnectionState.SUCCESS) {
+            for (IChat chat : response.getResponse()) {
+                names.add(chat);
+            }
+        }
+
+
+
+    }
+
     // The event listener method for change chat
     private void changeChatList(ChangeChatListEvent changeChatListEvent) {
-        names.add(changeChatListEvent.getChat().getName());
+        names.add(changeChatListEvent.getChat());
     }
 
 }

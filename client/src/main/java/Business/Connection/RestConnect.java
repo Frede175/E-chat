@@ -221,6 +221,7 @@ public class RestConnect {
             request.setEntity(postingString);
 
             request.addHeader("Content-type", "application/json");
+
             HttpResponse response = null;
 
             response = client.execute(request);

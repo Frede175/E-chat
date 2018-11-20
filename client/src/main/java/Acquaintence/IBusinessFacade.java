@@ -23,5 +23,6 @@ public interface IBusinessFacade {
     IChat getCurrentChat();
     User createUser(String username, String password);
     ILoginUser getLoginUser();
+    void addRoleToUser(String userId, String role);
     void logout();
 }

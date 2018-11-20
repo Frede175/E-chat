@@ -43,7 +43,6 @@ public class UserListController {
             public void handle(MouseEvent event) {
                 IUser temp = null;
                 for(IUser user : response.getResponse()) {
-                    //TODO fix sub/id
                     if(user.getName().equals(userList.getSelectionModel().getSelectedItem())) {
                         temp = user;
                     }

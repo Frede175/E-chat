@@ -58,4 +58,9 @@ public class Chat implements IChat {
     public void addMessages(List<MessageIn> messages) {
         this.messages.addAll(messages);
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
