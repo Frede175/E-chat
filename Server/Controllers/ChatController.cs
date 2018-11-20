@@ -25,19 +25,22 @@ namespace Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHubContext<ChatHub> _chatHub;
 
+        private readonly IHubState<ChatHub> _chatHubState;
+
         private readonly ILogger<ChatController> _logger;
 
 
         public ChatController(IChatService chatService, 
                               UserManager<ApplicationUser> userManager, 
                               ILogger<ChatController> logger, 
-                              IHubContext<ChatHub> chathub)
+                              IHubContext<ChatHub> chathub,
+                              IHubState<ChatHub> chatHubState)
         {
             _userManager = userManager;
             _chatService = chatService;
             _logger = logger;
             _chatHub = chathub;
-
+            _chatHubState = chatHubState;
         }
 
         [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
@@ -74,14 +77,17 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.CreateChat)]
         public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
             {
                 DepartmentId = departmentId,
                 Name = chat.Name,
                 IsGroupChat = true
-            }, _userManager.GetUserId(HttpContext.User));
+            }, userId);
             if (result != null)
             {
+                await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
+                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", result);
                 return CreatedAtRoute(nameof(GetChat),new {chatId = result.Id} , new Chat(result));
             }
 
@@ -110,6 +116,10 @@ namespace Server.Controllers
 
             if (result != null)
             {
+                //Add hub connections to group
+                await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
+                await _chatHubState.AddUserToGroupAsync(_chatHub, currentUserId, result.Id.ToString());
+                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", result);
                 return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
@@ -127,6 +137,8 @@ namespace Server.Controllers
 
             if (result)
             {
+                await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Leave", chatId, new User(user));
+                await _chatHubState.RemoveUserFromGroupAsync(_chatHub, user.Id, chatId.ToString());
                 return new OkResult();
             }
 
@@ -139,11 +151,13 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
         public async Task<ActionResult> AddUserToChat(int chatId, [FromBody] string userId)
         {
-            _logger.LogDebug("User ID: " + userId);
             var result = (await _chatService.AddUsersToChatAsync(chatId, userId));
+            var user = await _userManager.FindByIdAsync(userId);
 
             if (result)
             {
+                await _chatHubState.AddUserToGroupAsync(_chatHub, userId, chatId.ToString());
+                await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Add", chatId, new User(user));
                 return new OkResult();
             }
 
@@ -155,12 +169,15 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/chat/remove/{chatId}
         [HttpPost("remove/{chatId}")]
         [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromChat)]
-        public async Task<ActionResult> RemoveUserFromChat(int chatId, string userId)
+        public async Task<ActionResult> RemoveUserFromChat(int chatId, [FromBody] string userId)
         {
             var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
+            var user = await _userManager.FindByIdAsync(userId);
 
             if (result)
             {
+                await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Remove", chatId, new User(user));
+                await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 return new OkResult();
             }
 

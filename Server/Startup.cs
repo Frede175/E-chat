@@ -122,6 +122,7 @@ namespace Server
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IChatService, ChatService>();
             services.AddSingleton<IAuthorizationHandler, PermissionsAuthorizationHandler>();
+            services.AddSingleton<IHubState<ChatHub>, HubState<ChatHub>>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options => 
             {
