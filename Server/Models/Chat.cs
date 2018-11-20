@@ -7,13 +7,17 @@ namespace Server.Models
 
         public string Name { get; set; }
 
+        public bool IsGroupChat { get; set; }
+
         public Chat(){
 
         }
 
-        public Chat(DbModels.Chat chat){
+        public Chat(DbModels.Chat chat)
+        {
             Id = chat.Id;
             Name = chat.Name;
+            IsGroupChat = chat.IsGroupChat;
         }
     }
 }

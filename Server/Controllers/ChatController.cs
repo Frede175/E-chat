@@ -87,7 +87,7 @@ namespace Server.Controllers
             if (result != null)
             {
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
-                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", result);
+                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", new Chat(result));
                 return CreatedAtRoute(nameof(GetChat),new {chatId = result.Id} , new Chat(result));
             }
 
@@ -119,7 +119,7 @@ namespace Server.Controllers
                 //Add hub connections to group
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
                 await _chatHubState.AddUserToGroupAsync(_chatHub, currentUserId, result.Id.ToString());
-                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", result);
+                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", new Chat(result));
                 return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
