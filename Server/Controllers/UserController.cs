@@ -103,7 +103,6 @@ namespace Server.Controllers
                 {
                     await _userManager.AddToRoleAsync(newUser, model.Role);
                     foreach (var department in model.DepartmentIds) {
-                        _logger.LogDebug(department.ToString());
                         await _departmentService.AddUsersToDepartmentAsync(department, newUser);
                     }
 
