@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,8 +125,8 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void createUser(String username, String password, IRole role) {
-        CreateUser userToSend = new CreateUser(username, password, role.getName());
+    public void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds) {
+        CreateUser userToSend = new CreateUser(username, password, role.getName(), departmentsIds);
         restConnect.post(PathEnum.CreateUser, null, userToSend, token);
     }
 
@@ -187,6 +188,11 @@ public class BusinessFacade implements IBusinessFacade {
             departments = response.getResponse();
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public RequestResponse<List<? extends IDepartment>> getAllDepartments() {
+        return restConnect.get(PathEnum.GetAllDepartments, null, null, token );
     }
 
     @Override

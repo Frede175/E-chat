@@ -6,17 +6,20 @@ import Acquaintence.ICreateUser;
 import Acquaintence.IToMap;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CreateUser implements ICreateUser {
     private String userName;
     private String password;
     private String role;
+    private ArrayList<Integer> departmentIds;
 
-    public CreateUser(String username, String password, String role) {
+    public CreateUser(String username, String password, String role, ArrayList<Integer> departmentIds) {
         this.userName = username;
         this.password = password;
         this.role = role;
+        this.departmentIds = departmentIds;
     }
 
 
@@ -30,9 +33,15 @@ public class CreateUser implements ICreateUser {
         return password;
     }
 
-    @Override
 
+
+    @Override
     public String getRole() {
         return role;
+    }
+
+    @Override
+    public ArrayList<Integer> getDepartmentIds() {
+        return departmentIds;
     }
 }
