@@ -21,4 +21,9 @@ public class User implements IUser {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
