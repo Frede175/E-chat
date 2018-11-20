@@ -28,16 +28,20 @@ namespace Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDepartmentService _departmentService;
 
+        private readonly RoleManager<IdentityRole> _roleManager;
+
         private readonly ILogger<UserController> _logger;
 
         public UserController(IDepartmentService departmentService,
                                UserManager<ApplicationUser> userManager,
                                IChatService chatService,
+                               RoleManager<IdentityRole> roleManager,
                                ILogger<UserController> logger)
         {
             _departmentService = departmentService;
             _userManager = userManager;
             _chatService = chatService;
+            _roleManager = roleManager;
             _logger = logger;
         }
 
@@ -84,10 +88,10 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.CreateUser)]
         public async Task<ActionResult> CreateUser(CreateUser model)
         {
+            var role = await _roleManager.FindByNameAsync(model.Role);
             var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null)
+            if (user == null && role != null)
             {
-
                 var newUser = new ApplicationUser()
                 {
                     UserName = model.UserName
@@ -97,6 +101,11 @@ namespace Server.Controllers
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(newUser, model.Role);
+                    foreach (var department in model.DepartmentIds) {
+                        await _departmentService.AddUsersToDepartmentAsync(department, user);
+                    }
+
                     return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, new User(newUser));
                 }
             }
@@ -128,7 +137,7 @@ namespace Server.Controllers
         // PUT https://localhost:5001/api/User/{userId}
         [HttpPut("{userId}")]
         [RequiresPermissionAttribute(permissions: Permission.AddAdditionalRole)]
-        public async Task<ActionResult> AddAdditionalRole(string userId, string role)
+        public async Task<ActionResult> AddAdditionalRole(string userId, [FromBody] string role)
         {
 
             var user = await _userManager.FindByIdAsync(userId);
