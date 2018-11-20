@@ -131,6 +131,12 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void createUserRole(ArrayList<String> permissions, String name) {
+        //TODO not tested, could change route and param
+        restConnect.post(PathEnum.CreateUserRole, name, permissions, token);
+    }
+
+    @Override
     public ILoginUser getLoginUser() {
         return loginUser;
     }
@@ -173,6 +179,13 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public Chat getCurrentChat() {
         return currentChat;
+    }
+
+    @Override
+    public RequestResponse<List<? extends String>> getAllPermissions() {
+        //TODO not tested, route could be something or param could be something
+        RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
     @Override

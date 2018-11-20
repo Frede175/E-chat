@@ -23,6 +23,7 @@ public class AdminPageController {
 
     public void load(PermissionType type) {
         title.setText(type.toString());
+        //TODO Could be made a function for better clarity
         for (PermissionEnum perm : GUI.GUI.getInstance().getBusiness().getLoginUser().getUserPermissionsFromType(type)) {
             switch (perm) {
                 case CreateDepartment:
@@ -64,6 +65,12 @@ public class AdminPageController {
                     }
                     break;
                 case CreateUserRole:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateUserRole.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case AddPermissionToRole:
                     break;

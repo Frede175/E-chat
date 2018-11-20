@@ -24,8 +24,11 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IDepartment>> getDepartments();
     RequestResponse<List<? extends IDepartment>> getAllDepartments();
     IChat getCurrentChat();
+    RequestResponse<List<? extends String>> getAllPermissions();
+
 
     void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
+    void createUserRole(ArrayList<String> permissions, String name);
 
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
