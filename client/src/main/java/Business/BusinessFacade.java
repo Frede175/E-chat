@@ -132,8 +132,8 @@ public class BusinessFacade implements IBusinessFacade {
 
     //new
     public void createChat(String chatname, int departmentId){
-        Chat chattosend = new Chat(chatname);
-        RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, departmentId, chattosend, token);
+        Chat chatToSend = new Chat(chatname);
+        RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, departmentId, chatToSend, token);
         chats.add(response.getResponse());
     }
 
