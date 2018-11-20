@@ -1,5 +1,6 @@
 package GUI.Controller;
 
+import Acquaintence.IRole;
 import Acquaintence.IUser;
 import Business.Connection.RequestResponse;
 import GUI.GUI;
@@ -10,11 +11,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class AddRoleToUserController {
 
     @FXML
-    ComboBox<String> selectUser;
+    ComboBox<IUser> selectUser;
 
     @FXML
     ComboBox<String> selectRole;
@@ -27,25 +29,21 @@ public class AddRoleToUserController {
 
     public void initialize() {
         for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
-            if(!selectUser.getItems().contains(user.getName())) {
-                selectUser.getItems().add(user.getName());
-            }
+            selectUser.getItems().add(user);
         }
         if(!selectUser.getItems().isEmpty()) {
             selectUser.getSelectionModel().select(0);
-            selectedUser = selectUser.getItems().get(0);
+            selectedUser = selectUser.getItems().get(0).getName();
         }
-        selectUser.valueProperty().addListener(new ChangeListener<String>() {
+        selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                selectedUser = t1;
+            public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
+                selectedUser = t1.getId();
             }
         });
 
-        for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
-            if(!selectRole.getItems().contains(user.getName())) {
-                selectRole.getItems().add(user.getName());
-            }
+        for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
+            selectRole.getItems().add(role.getName());
         }
         if(!selectRole.getItems().isEmpty()) {
             selectRole.getSelectionModel().select(0);
