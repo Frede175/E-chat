@@ -31,10 +31,11 @@ public enum PathEnum {
     GetDirectMessages("/api/chat/private/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
     GetAllDepartments("/api/department/", ConnectionType.GET, new TypeToken<List<Department>>() {}.getType()),
     //TODO fix path
-    GetAllPermissions("", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
+    GetAllPermissions("/api/permissions", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
     //TODO fix path
-    CreateUserRole("", ConnectionType.POST, null),
-    AddRoleToUser("/api/user/", ConnectionType.PUT, null);
+    CreateUserRole("/api/role/", ConnectionType.POST, null),
+    AddRoleToUser("/api/user/", ConnectionType.PUT, null),
+    DeleteUserRole("/api/role/delete/", ConnectionType.DELETE, null);
 
 
     private PathEnum(String path, ConnectionType type, Type resultType) {

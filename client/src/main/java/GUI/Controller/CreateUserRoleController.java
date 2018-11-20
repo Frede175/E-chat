@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import org.controlsfx.control.ListSelectionView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CreateUserRoleController {
     @FXML
@@ -25,11 +26,11 @@ public class CreateUserRoleController {
     }
 
     public void createRole(ActionEvent actionEvent) {
-        ArrayList<String> permissionsForRole = new ArrayList<>();
+        List<String> permissionsForRole = new ArrayList<>();
         for(String permission : roleListLSV.getTargetItems()) {
             permissionsForRole.add(permission);
         }
-        GUI.GUI.getInstance().getBusiness();
+        GUI.GUI.getInstance().getBusiness().createUserRole(permissionsForRole, roleName.getText());
     }
 
 }
