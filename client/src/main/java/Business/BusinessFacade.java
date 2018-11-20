@@ -101,20 +101,24 @@ public class BusinessFacade implements IBusinessFacade {
                     break;
                 }
             }
-        } else {
-            System.out.println("currentchat var den samme");
         }
     }
 
     @Override
-    public void createUser(String username, String password) {
-        CreateUser usertosend = new CreateUser(username, password);
+    public void createUser(String username, String password, IRole role) {
+        CreateUser usertosend = new CreateUser(username, password, (Role) role);
         restConnect.post(PathEnum.CreateUser, null, usertosend, token);
     }
 
     @Override
     public ILoginUser getLoginUser() {
         return loginUser;
+    }
+
+    @Override
+    public RequestResponse<List<? extends IRole>> getRoles() {
+        // TODO Maybe dont make a request everytime
+        return restConnect.get(PathEnum.GetRoles, null, null, token);
     }
 
     public RequestResponse<List<? extends IChat>> getChats() {

@@ -28,6 +28,11 @@
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin></PasswordField>
+      <ComboBox fx:id="roleCB" prefWidth="300.0" promptText="Role">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </ComboBox>
       <Button fx:id="createButtonid" mnemonicParsing="false" onAction="#createUser" text="CreateUser">
          <VBox.margin>
             <Insets bottom="20.0" top="20.0" />
