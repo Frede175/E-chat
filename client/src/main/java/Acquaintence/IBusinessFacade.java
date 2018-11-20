@@ -2,9 +2,11 @@ package Acquaintence;
 
 import Business.Connection.RequestResponse;
 import Business.Models.Chat;
+import Business.Models.Role;
 import Business.Models.Department;
 import Business.Models.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IBusinessFacade {
@@ -20,10 +22,15 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IMessageIn>> getMessages();
     RequestResponse<List<? extends IUser>> getUsersInChat();
     RequestResponse<List<? extends IDepartment>> getDepartments();
+    RequestResponse<List<? extends IDepartment>> getAllDepartments();
     IChat getCurrentChat();
     void createChat(String chatname, int departmentId);
-    User createUser(String username, String password);
+    void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
+
     ILoginUser getLoginUser();
+    RequestResponse<List<? extends IRole>> getRoles();
+
     void addRoleToUser(String userId, String role);
+
     void logout();
 }

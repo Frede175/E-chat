@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,10 +125,9 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public User createUser(String username, String password) {
-        CreateUser userToSend = new CreateUser(username, password);
-        RequestResponse<User> response = restConnect.post(PathEnum.CreateUser, null, userToSend, token);
-        return response.getResponse();
+    public void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds) {
+        CreateUser userToSend = new CreateUser(username, password, role.getName(), departmentsIds);
+        restConnect.post(PathEnum.CreateUser, null, userToSend, token);
     }
 
     //new
@@ -143,6 +143,12 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+
+    public RequestResponse<List<? extends IRole>> getRoles() {
+        // TODO Maybe dont make a request everytime
+        return restConnect.get(PathEnum.GetRoles, null, null, token);
+    }
+
     public void addRoleToUser(String userId, String role) {
         restConnect.put(PathEnum.AddRoleToUser, userId, role, token);
     }
@@ -183,16 +189,17 @@ public class BusinessFacade implements IBusinessFacade {
 
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
         RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, loginUser.getSub(),null,token);
-        //TODO Could be changed to != null so it doesnt give null-pointer
-        if(!response.getResponse().isEmpty()) {
+        if(response.getResponse() != null && !response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
             System.out.println("Current department = " + currentDepartment.getName());
-            //TODO Delete this, fam
-            //addUserToDepartment(createUser("Jeff15", "AdminAdmin123*"), currentDepartment);
-            //addRoleToUser("65cd5d76-d244-4a67-90bb-bf55c4b827a6", "admin");
             departments = response.getResponse();
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public RequestResponse<List<? extends IDepartment>> getAllDepartments() {
+        return restConnect.get(PathEnum.GetAllDepartments, null, null, token );
     }
 
     @Override

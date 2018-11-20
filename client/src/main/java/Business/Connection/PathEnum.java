@@ -25,10 +25,11 @@ public enum PathEnum {
     GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<LoginUser>() {}.getType()),
     GetUsersInChat("/api/chat/users/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
     GetUsers("/api/user/contacts/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
-    AddUserToDeparment("/api/Department/", ConnectionType.POST, null),
-    LogOut("/connect/logout/", ConnectionType.POST, null),
+    AddUserToDeparment("/api/department/", ConnectionType.POST, null),
+    GetRoles("/api/Role/", ConnectionType.GET, new TypeToken<List<Role>>() {}.getType()),
     CreateDirectMessage("/api/chat/private/", ConnectionType.POST, new TypeToken<Chat>() {}.getType()),
     GetDirectMessages("/api/chat/private/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
+    GetAllDepartments("/api/department/", ConnectionType.GET, new TypeToken<List<Department>>() {}.getType()),
     AddRoleToUser("/api/user/", ConnectionType.PUT, null);
 
 
