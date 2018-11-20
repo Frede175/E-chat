@@ -37,6 +37,12 @@ public class AdminPageController {
                 case UpdateDepartment:
                     break;
                 case CreateChat:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateChat.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case LeaveChat:
                     break;

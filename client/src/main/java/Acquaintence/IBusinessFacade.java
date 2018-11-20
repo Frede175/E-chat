@@ -27,6 +27,7 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends String>> getAllPermissions();
 
     void deleteUserRole(String roleName);
+    void createChat(String chatname, int departmentId);
     void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
     void createUserRole(List<String> permissions, String name);
 

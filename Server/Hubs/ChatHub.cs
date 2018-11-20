@@ -9,6 +9,9 @@ using Server.Context;
 using Server.Service.Interfaces;
 using System.Linq;
 using Server.Models;
+using System.Collections.Generic;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace Server.Hubs
 {
@@ -19,11 +22,16 @@ namespace Server.Hubs
         private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ChatHub(IChatService chat, UserManager<ApplicationUser> userManager)
+        private readonly IHubState<ChatHub> _hubState;
+
+        private readonly ILogger<ChatHub> _logger;
+
+        public ChatHub(IChatService chat, UserManager<ApplicationUser> userManager, IHubState<ChatHub> hubState, ILogger<ChatHub> logger)
         {
             _chatService = chat;
             _userManager = userManager;
-
+            _hubState = hubState;
+            _logger = logger;
         }
 
 
@@ -39,9 +47,28 @@ namespace Server.Hubs
         }
 
 
+
+        public async Task AddUserToGroup(string userId, string group) {
+            if (_hubState.Connections.TryGetValue(userId, out var userConnections)) {
+                foreach (var connectionId in userConnections) {
+                    await Groups.AddToGroupAsync(connectionId, group);
+                }
+            }
+        }
+
+
+        
+
+
         public async override Task OnConnectedAsync()
         {
             var userId = _userManager.GetUserId(Context.User);
+
+            if (!_hubState.Connections.ContainsKey(userId)) {
+                _hubState.Connections.Add(userId, new List<string>());
+            }
+            _hubState.Connections[userId].Add(Context.ConnectionId);
+
             var chats = await _chatService.GetChatsAsync(userId);
             var chatIds = chats.Select(c => c.Id);
 
@@ -51,6 +78,18 @@ namespace Server.Hubs
             }
         }
 
+        
+        public override Task OnDisconnectedAsync(Exception exception) {
+            var userId = _userManager.GetUserId(Context.User);
+
+            _hubState.Connections[userId].Remove(Context.ConnectionId);
+
+            if (!_hubState.Connections[userId].Any()) {
+                _hubState.Connections.Remove(userId);
+            }
+
+            return Task.CompletedTask;
+        }
 
     }
 }
