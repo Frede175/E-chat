@@ -1,17 +1,25 @@
 package Business.Models;
 
 import Acquaintence.ICreateUser;
+
+
 import Acquaintence.IToMap;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CreateUser implements ICreateUser, IToMap {
+public class CreateUser implements ICreateUser {
     private String userName;
     private String password;
+    private String role;
+    private ArrayList<Integer> departmentIds;
 
-    public CreateUser(String username, String password) {
+    public CreateUser(String username, String password, String role, ArrayList<Integer> departmentIds) {
         this.userName = username;
         this.password = password;
+        this.role = role;
+        this.departmentIds = departmentIds;
     }
 
 
@@ -25,11 +33,15 @@ public class CreateUser implements ICreateUser, IToMap {
         return password;
     }
 
+
+
     @Override
-    public HashMap<String, String> toMap() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("UserName", String.valueOf(userName));
-        map.put("Password", String.valueOf(password));
-        return map;
+    public String getRole() {
+        return role;
+    }
+
+    @Override
+    public ArrayList<Integer> getDepartmentIds() {
+        return departmentIds;
     }
 }

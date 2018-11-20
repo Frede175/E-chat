@@ -36,4 +36,9 @@ public class Department implements IDepartment, IToMap {
         map.put("departmentId", String.valueOf(id));
         return map;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
