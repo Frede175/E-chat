@@ -176,6 +176,7 @@ public class RestConnect {
                     result.append(line);
                 }
                 Type type = path.getResultType();
+                System.out.println(result.toString());
                 T2 obj = gson.fromJson(result.toString(), type);
                 return new RequestResponse<>(obj, ConnectionState.SUCCESS);
             }
@@ -220,6 +221,7 @@ public class RestConnect {
             request.setEntity(postingString);
 
             request.addHeader("Content-type", "application/json");
+
             HttpResponse response = null;
 
             response = client.execute(request);

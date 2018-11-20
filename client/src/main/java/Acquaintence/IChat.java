@@ -8,4 +8,5 @@ public interface IChat {
     String getName();
     void setName(String name);
     Set<? extends IMessageIn> getMessages();
+    String toString();
 }
