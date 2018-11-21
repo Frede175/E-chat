@@ -200,5 +200,13 @@ namespace Server.Controllers
             return Ok((await _departmentService.GetUsersInDepartmentsAsync(departmentId)).Select(u => new User(u)).ToList());
         }
 
+        // GET: https://localhost:5001/api/department/available/{userId} 
+        [HttpGet("available/{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
+        public async Task<ActionResult<List<Department>>> GetAvailableDepartments(string userId) 
+        {
+            return (await _departmentService.GetAvailableDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
+        }
+
     }
 }

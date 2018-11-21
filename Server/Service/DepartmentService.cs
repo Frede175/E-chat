@@ -117,5 +117,10 @@ namespace Server.Service
         {
             return await _department.SingleOrDefaultAsync(d => d.Id.Equals(depId));
         }
+
+        public async Task<List<Department>> GetAvailableDepartmentsAsync(string userId)
+        {
+            return await _department.Where(d => !d.UserDepartments.Any(u => u.UserId == userId)).ToListAsync();
+        }
     }
 }
