@@ -137,6 +137,13 @@ public class BusinessFacade implements IBusinessFacade {
         chats.add(response.getResponse());
     }
 
+    public void createDepartment(String departmentName){
+        Department departmentToSend = new Department(departmentName);
+        //RequestResponse<Department> response =
+        restConnect.post(PathEnum.CreateDepartment, null, departmentToSend, token);
+        //departments.add(response.getResponse());
+    }
+
     @Override
     public void createUserRole(List<String> permissions, String roleName) {
         //TODO not tested, could change route and param

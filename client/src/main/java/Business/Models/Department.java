@@ -15,6 +15,10 @@ public class Department implements IDepartment, IToMap {
         this.name = name;
     }
 
+    public Department(String name){
+        this.name = name;
+    }
+
     @Override
     public int getId() {
         return id;
