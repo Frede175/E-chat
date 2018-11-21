@@ -10,6 +10,7 @@ public enum PathEnum {
 
 
     CreateDepartment("/api/department/", ConnectionType.POST, new TypeToken<Department>() {}.getType()),
+    UpdateDepartment("/api/department/", ConnectionType.PUT, null),
     GetDepartments("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
     CreateUser("/api/user/create/", ConnectionType.POST, new TypeToken<User>() {}.getType()),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
@@ -32,12 +33,14 @@ public enum PathEnum {
     GetAllPermissions("/api/permission/", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
     CreateUserRole("/api/role/", ConnectionType.POST, new TypeToken<Role>() {}.getType()),
     AddRoleToUser("/api/user/", ConnectionType.PUT, null),
+    GetAvailableChats("/api/chat/available/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
+    GetUser("/api/user/", ConnectionType.GET, new TypeToken<User>() {}.getType()),
+    GetChat("/api/chat/", ConnectionType.GET, new TypeToken<Chat>() {}.getType()),
     DeleteUserRole("/api/role/", ConnectionType.DELETE, null),
     GetRolesPermissions("/api/role/permission/", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
     RemovePermissionsFromRole("/api/role/removeperm/", ConnectionType.POST, null),
     AddPermissionsToRole("/api/role/addperm/", ConnectionType.POST, null),
     DeleteUser("/api/user/delete/", ConnectionType.DELETE, null);
-
 
 
 

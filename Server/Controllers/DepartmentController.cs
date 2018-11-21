@@ -112,9 +112,9 @@ namespace Server.Controllers
 
 
         //PUT: https://localhost:5001/api/Department/update/{departmentId}
-        [HttpPut("{departmendId}")]
+        [HttpPut("{depId}")]
         [RequiresPermissionAttribute(permissions: Permission.UpdateDepartment)]
-        public async Task<ActionResult> UpdateDepartment(int depId, string newName)
+        public async Task<ActionResult> UpdateDepartment(int depId, [FromBody] string newName)
         {
             var dep = await _departmentService.GetSpecificDepartment(depId);
             dep.Name = newName;

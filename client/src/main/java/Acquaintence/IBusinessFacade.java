@@ -31,10 +31,15 @@ public interface IBusinessFacade {
     ConnectionState createChat(String chatName, int departmentId);
     void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
     void createDepartment(String departmentname);
-    void deleteDepartment(int Id);
+    void deleteDepartment(int depId);
+    void updateDepartment(int depId, String name);
     void createUserRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
+    List<? extends IUser> getExistingUsers();
+    ConnectionState addUserToChat(int chatId, String userId);
+    List<? extends IChat> getAvailableChats(String userId);
+
     void addPermissionsToRole(String role, List<String> permissions);
     void deleteUser(String userId);
     List<IChat> getUsersChats(String userId);
