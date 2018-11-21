@@ -75,13 +75,43 @@ namespace Server.Controllers
             return NotFound();
         }
 
+/* TODO if remove chat is added
+        [HttpGet("user/{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(permissions: Permission.RemoveChat)]
+        public async Task<ActionResult<List<Chat>>> GetAllChats()
+        
+ */
+
+        // GET: https://localhost:5001/api/chat/user/{userId} 
+        [HttpGet("available/{userId}"), Produces("application/json")]
+        [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
+        public async Task<ActionResult<List<Chat>>> GetAvailableChats(string userId) 
+        {
+            return (await _chatService.GetAvailableChatsAsync(userId)).Select(d => new Chat(d)).ToList();
+        }
+
+
 
         // GET: https://localhost:5001/api/chat/user/{userId} 
         [HttpGet("user/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateChat, Permission.AddUserToChat, Permission.RemoveUserFromChat)]
-        public async Task<ActionResult<List<Chat>>> GetChats(string userId, int departmentId)
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
+        public async Task<ActionResult<List<Chat>>> GetChats(string userId)
         {
-            return (await _chatService.GetChatsAsync(userId, departmentId)).Select(d => new Chat(d)).ToList();
+            if (_userManager.GetUserId(HttpContext.User) != userId) {
+                 var result = await _authorizationService.AuthorizeAsync(HttpContext.User, 
+                            null, 
+                            new PermissionsAuthorizationRequirement(
+                                PermissionAttributeType.OR, 
+                                Permission.CreateChat, 
+                                Permission.AddUserToChat, 
+                                Permission.RemoveUserFromChat
+                            ));
+                if (!result.Succeeded) {
+                    return Unauthorized();
+                }
+            }
+
+            return (await _chatService.GetChatsAsync(userId)).Select(d => new Chat(d)).ToList();
         }
 
         // GET: https://localhost:5001/api/chat/private/{userId} 
