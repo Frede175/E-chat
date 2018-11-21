@@ -26,9 +26,6 @@ public class DeleteDepartmentController {
 
         GUI.GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
 
-        //Stage stage = (Stage) DeleteBtn.getScene().getWindow();
-        //stage.close();
-
     }
 
 
