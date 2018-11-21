@@ -45,7 +45,7 @@ namespace Server.Context
             await userManager.AddToRoleAsync(user, role.Name);
 
             //Create department:
-            var department = await departmentService.GetSpecificDepartment("Main");
+            var department = await departmentService.GetSpecificDepartmentAsync("Main");
             
             if (department == null) {
                 department = await departmentService.CreateDepartmentAsync(new Department() {
