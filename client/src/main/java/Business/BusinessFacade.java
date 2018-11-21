@@ -186,7 +186,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void createUserRole(List<String> permissions, String roleName) {
-        //TODO not tested, could change route and param
         restConnect.post(PathEnum.CreateUserRole, roleName, permissions, token);
     }
 
@@ -196,7 +195,6 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-
     public RequestResponse<List<? extends IRole>> getRoles() {
         // TODO Maybe dont make a request everytime
         return restConnect.get(PathEnum.GetRoles, null, null, token);
@@ -252,7 +250,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void removeUserFromChat(int chatId, String userId) {
-        //TODO check if still gives 400
         restConnect.post(PathEnum.RemoveUserFromChat, chatId, userId, token);
     }
 
@@ -287,7 +284,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<String>> getAllPermissions() {
-        //TODO not tested, route could be something or param could be something
         RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
