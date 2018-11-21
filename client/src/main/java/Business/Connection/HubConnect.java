@@ -49,6 +49,7 @@ public class HubConnect {
     private void add(int chatId, User user) {
         // TODO Check if the chat already exists, else get the chat via rest. If the chat exists add the user to the user list
         EventManager.getInstance().fireEvent(new AddChatEvent(this, chatId, user));
+        System.out.println("User " + user.getName() + " is added to " + chatId + " via hub");
     }
 
     private void remove(int chatId, User user) {

@@ -195,6 +195,17 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.put(PathEnum.AddRoleToUser, userId, role, token);
     }
 
+    @Override
+    public ConnectionState addUserToChat(int chatId, String userId) {
+        return restConnect.post(PathEnum.AddUserToChat, chatId, userId, token).getConnectionState();
+    }
+
+    @Override
+    public List<? extends IChat> getChatsInDepartments(String userId) {
+        // TODO wait for fred to finish server update
+        return null;
+    }
+
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> departmentChats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
         RequestResponse<List<Chat>> privateChats = restConnect.get(PathEnum.GetDirectMessages, loginUser.getSub(), currentDepartment.toMap(), token);

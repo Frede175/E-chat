@@ -34,6 +34,8 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IRole>> getRoles();
     List<? extends IUser> getExistingUsers();
     void addRoleToUser(String userId, String role);
+    ConnectionState addUserToChat(int chatId, String userId);
+    List<? extends IChat> getChatsInDepartments(String userId);
 
     void logout();
 }
