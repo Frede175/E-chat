@@ -23,7 +23,9 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IDepartment>> getDepartments();
     RequestResponse<List<? extends IDepartment>> getAllDepartments();
     IChat getCurrentChat();
-    RequestResponse<List<? extends String>> getAllPermissions();
+    RequestResponse<List<String>> getAllPermissions();
+    List<String> getRolesPermissions(String roleName);
+
     List<? extends IChat> getExistingChats();
     void deleteUserRole(String roleName);
     ConnectionState createChat(String chatName, int departmentId);
@@ -33,8 +35,10 @@ public interface IBusinessFacade {
     void createUserRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
+    void addPermissionsToRole(String role, List<String> permissions);
 
     void addRoleToUser(String userId, String role);
+    void removePermissionsFromRole(String role, List<String> permissions);
 
     void logout();
 }

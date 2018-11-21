@@ -22,4 +22,6 @@ public interface ILoginUser {
 
     void setName(String name);
 
+    public ArrayList<String> getPermissions();
+
 }
