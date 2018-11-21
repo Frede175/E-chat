@@ -32,7 +32,7 @@ public interface IBusinessFacade {
     void createUserRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
-
+    List<? extends IUser> getExistingUsers();
     void addRoleToUser(String userId, String role);
 
     void logout();

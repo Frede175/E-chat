@@ -2,9 +2,7 @@ package Business;
 
 
 import Acquaintence.*;
-import Acquaintence.Event.ChangeChatEvent;
-import Acquaintence.Event.MessageEvent;
-import Acquaintence.Event.NewChatEvent;
+import Acquaintence.Event.*;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
@@ -17,6 +15,7 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,19 +28,18 @@ public class BusinessFacade implements IBusinessFacade {
     private Department currentDepartment = null;
     private List<Chat> chats = null;
     private Chat currentChat = null;
+    private List<User> users = null;
     private LoginUser loginUser = null;
     private String token = null;
 
 
 
-    public BusinessFacade() {
+    public <T extends EventObject> BusinessFacade() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
         EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
+        EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
     }
 
-    private void getNewChat(NewChatEvent newChatEvent) {
-        chats.add((Chat)newChatEvent.getChat());
-    }
 
     /* Listener methods */
     private void getMessage(MessageEvent event) {
@@ -57,6 +55,28 @@ public class BusinessFacade implements IBusinessFacade {
         }
     }
 
+    private void addChat(AddChatEvent addChatEvent) {
+        boolean found = false;
+        for (Chat chat : chats) {
+            if(chat.getId() == addChatEvent.getChatId()) {
+                RequestResponse<User> user = restConnect.get(PathEnum.GetUser, addChatEvent.getUser().getId(), null, token);
+                users.add(user.getResponse());
+                EventManager.getInstance().fireEvent(new AddUserEvent(this, user.getResponse()));
+                found = true;
+                break;
+            }
+        }
+        if(!found) {
+            RequestResponse<Chat> chat = restConnect.get(PathEnum.GetChat, addChatEvent.getChatId(), null, token);
+            chats.add(chat.getResponse());
+            EventManager.getInstance().fireEvent(new NewChatEvent(this, chat.getResponse()));
+        }
+    }
+
+    private void getNewChat(NewChatEvent newChatEvent) {
+        chats.add((Chat)newChatEvent.getChat());
+    }
+
     @Override
     public ConnectionState login(String username, String password) {
         RequestResponse<String> temp = restConnect.login(username, password);
@@ -67,6 +87,7 @@ public class BusinessFacade implements IBusinessFacade {
             loginUser = data.getResponse();
             loginUser.initializePermissions();
             getDepartments();
+            getUsers();
             getChats();
         }
         return temp.getConnectionState();
@@ -81,6 +102,7 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, loginUser.getSub(), null, token);
+        users = response.getResponse();
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
@@ -88,6 +110,7 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<Chat> createDirectMessage(String name, IUser otherUser) {
         Chat chat = new Chat(name);
+        System.out.println("Name: " + name + " user: " + otherUser);
         RequestResponse<Chat> response = restConnect.post(PathEnum.CreateDirectMessage, otherUser.getId(), chat, token);
         chats.add(response.getResponse());
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
@@ -98,8 +121,6 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<String> response = restConnect.post(PathEnum.AddUserToChat, chat.getId(), userId, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
-
-
 
     @Override
     public void setCurrentChat(int chatId) {
@@ -143,9 +164,8 @@ public class BusinessFacade implements IBusinessFacade {
 
     public void createDepartment(String departmentName){
         Department departmentToSend = new Department(departmentName);
-        //RequestResponse<Department> response =
-        restConnect.post(PathEnum.CreateDepartment, null, departmentToSend, token);
-        //departments.add(response.getResponse());
+        RequestResponse<Department> response = restConnect.post(PathEnum.CreateDepartment, null, departmentToSend, token);
+        departments.add(response.getResponse());
     }
 
     @Override
@@ -164,6 +184,11 @@ public class BusinessFacade implements IBusinessFacade {
     public RequestResponse<List<? extends IRole>> getRoles() {
         // TODO Maybe dont make a request everytime
         return restConnect.get(PathEnum.GetRoles, null, null, token);
+    }
+
+    @Override
+    public List<? extends IUser> getExistingUsers() {
+        return users;
     }
 
     public void addRoleToUser(String userId, String role) {
@@ -273,6 +298,7 @@ public class BusinessFacade implements IBusinessFacade {
         currentDepartment = null;
         chats = null;
         currentChat = null;
+        users = null;
         loginUser = null;
         token = null;
         hubConnect.disconnect();

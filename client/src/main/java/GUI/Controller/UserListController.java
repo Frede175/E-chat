@@ -1,10 +1,12 @@
 package GUI.Controller;
 
 import Acquaintence.*;
+import Acquaintence.Event.AddUserEvent;
 import Acquaintence.Event.ChangeChatListEvent;
 import Business.Connection.RequestResponse;
 import Business.Models.User;
 import GUI.GUI;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,24 +17,20 @@ import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 
 public class UserListController {
 
     @FXML
-    private ListView<String> userList;
+    private ListView<IUser> userList;
 
-    private RequestResponse<List<? extends IUser>> response;
-    private ObservableList<String> names;
+    private ObservableList<IUser> names;
 
     public void initialize() {
+        EventManager.getInstance().registerListener(AddUserEvent.class, this::addedUser);
         names = FXCollections.observableArrayList();
-        response = GUI.getInstance().getBusiness().getUsers();
-        if (response.getConnectionState() == ConnectionState.SUCCESS) {
-            for (IUser user : response.getResponse()) {
-                names.add(user.getName());
-            }
-        }
+        names.addAll(GUI.getInstance().getBusiness().getExistingUsers());
         userList.setItems(names);
         userList.setCellFactory(ComboBoxListCell.forListView(names));
         userList.getSelectionModel().selectFirst();
@@ -42,15 +40,21 @@ public class UserListController {
             @Override
             public void handle(MouseEvent event) {
                 IUser temp = null;
-                for(IUser user : response.getResponse()) {
-                    if(user.getName().equals(userList.getSelectionModel().getSelectedItem())) {
+                for(IUser user : names) {
+                    if(user.getName().equals(userList.getSelectionModel().getSelectedItem().getName())) {
                         temp = user;
                     }
                 }
 
-                RequestResponse<? extends IChat> response = GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem(), temp);
-                EventManager.getInstance().fireEvent(new ChangeChatListEvent(this, response.getResponse()));
+                RequestResponse<? extends IChat> response = GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem().getName(), temp);
+                //EventManager.getInstance().fireEvent(new ChangeChatListEvent(this, response.getResponse()));
             }
+        });
+    }
+
+    private void addedUser(AddUserEvent addUserEvent) {
+        Platform.runLater(() -> {
+            names.addAll(addUserEvent.getUser());
         });
     }
 }
