@@ -10,12 +10,15 @@ import Business.Models.User;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
+import javafx.application.Platform;
+import org.controlsfx.control.Notifications;
 
 public class HubConnect {
 
     private HubConnection chatConnection;
 
     public void connect(String token) {
+
         chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
                 .withAccessTokenProvider(Single.just(token))
                 .build();
@@ -70,6 +73,12 @@ public class HubConnect {
 
     private void receive(MessageIn message) {
         EventManager.getInstance().fireEvent(new MessageEvent(this, message));
+        Platform.runLater(() -> {
+            Notifications.create()
+                    .title(message.getUser().getName())
+                    .text(message.getContent())
+                    .showInformation();
+        });
     }
 
 
