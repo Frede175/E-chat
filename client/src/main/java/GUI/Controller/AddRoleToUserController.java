@@ -32,10 +32,6 @@ public class AddRoleToUserController {
         for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
             selectUser.getItems().add(user);
         }
-        if(!selectUser.getItems().isEmpty()) {
-            selectUser.getSelectionModel().select(0);
-            selectedUser = selectUser.getItems().get(0).getName();
-        }
         selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
             public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
@@ -46,10 +42,7 @@ public class AddRoleToUserController {
         for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
             selectRole.getItems().add(role.getName());
         }
-        if(!selectRole.getItems().isEmpty()) {
-            selectRole.getSelectionModel().select(0);
-            selectedRole = selectRole.getItems().get(0);
-        }
+
         selectRole.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {

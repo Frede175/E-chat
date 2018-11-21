@@ -85,6 +85,12 @@ public class AdminPageController {
                 case AddPermissionToRole:
                     break;
                 case RemovePermissionFromRole:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemovePermissionFromRole.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case DeleteRole:
                     try {

@@ -60,6 +60,11 @@ public class LoginUser implements ILoginUser, IToMap {
     }
 
     @Override
+    public ArrayList<String> getPermissions() {
+        return permissions;
+    }
+
+    @Override
     public ArrayList<PermissionEnum> getUserPermissionsFromType(PermissionType type) {
         ArrayList<PermissionEnum> permissions = new ArrayList();
         for (PermissionEnum perm : adminPermissions) {
