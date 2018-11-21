@@ -45,6 +45,20 @@ namespace Server.Controllers
             return NotFound();
         }
 
+        // GET: https://localhost:5001/api/Role/permission/{name}
+        [HttpGet("permission/{name}")]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUserRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
+        public async Task<ActionResult<IEnumerable<string>>> GetRolePermissions(string name) 
+        {
+            var role = await _roleManager.FindByNameAsync(name);
+            if (role != null)
+            {
+                var perms = (await _roleManager.GetClaimsAsync(role)).Where(c => c.Type == UserClaimTypes.Permission).Select(c => c.Value);
+                return Ok(perms);
+            } 
+            return NotFound();
+        }
+
 
         // GET: https://localhost:5001/api/Role/
         [HttpGet]

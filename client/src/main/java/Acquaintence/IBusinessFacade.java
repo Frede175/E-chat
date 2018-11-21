@@ -2,7 +2,6 @@ package Acquaintence;
 
 import Business.Connection.RequestResponse;
 import Business.Models.Chat;
-import Business.Models.Role;
 import Business.Models.Department;
 import Business.Models.User;
 
@@ -27,9 +26,9 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends String>> getAllPermissions();
     List<String> getRolesPermissions(String roleName);
 
-
+    List<? extends IChat> getExistingChats();
     void deleteUserRole(String roleName);
-    void createChat(String chatname, int departmentId);
+    ConnectionState createChat(String chatName, int departmentId);
     void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
     void createDepartment(String departmentname);
     void createUserRole(List<String> permissions, String name);
