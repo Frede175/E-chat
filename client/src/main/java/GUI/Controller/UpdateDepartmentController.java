@@ -4,14 +4,14 @@ import Acquaintence.IDepartment;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-
-public class DeleteDepartmentController {
+public class UpdateDepartmentController {
 
     public ChoiceBox<IDepartment> choiceBox;
-    public Button DeleteBtn;
-
+    public TextField txTField;
+    public Button renameBtn;
 
     public void initialize(){
 
@@ -22,11 +22,9 @@ public class DeleteDepartmentController {
 
     }
 
-    public void delete(ActionEvent actionEvent){
 
-        GUI.GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
-
+    public void rename(ActionEvent actionEvent){
+        GUI.GUI.getInstance().getBusiness().updateDepartment(choiceBox.getValue().getId(), txTField.getText());
     }
-
 
 }
