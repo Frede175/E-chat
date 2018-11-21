@@ -39,7 +39,7 @@ namespace Server.Service
 
         public async Task<List<Department>> GetDepartmentsAsync()
         {
-            return await _department.Cast<Department>().ToListAsync();
+            return await _department.ToListAsync();
         }
 
         public async Task<List<ApplicationUser>> GetUsersInDepartmentsAsync(params int[] ids) {
@@ -48,7 +48,7 @@ namespace Server.Service
 
         public async Task<List<Department>> GetDepartmentsAsync(string userId)
         {
-            return await _department.Cast<Department>().Where(d => d.UserDepartments.Any(u => u.UserId == userId)).ToListAsync();
+            return await _department.Where(d => d.UserDepartments.Any(u => u.UserId == userId)).ToListAsync();
         }
 
         public async Task<bool> AddUsersToDepartmentAsync(int departmentId, params ApplicationUser[] users)
@@ -110,12 +110,12 @@ namespace Server.Service
 
         public async Task<Department> GetSpecificDepartmentAsync(string name)
         {
-            return await _department.Cast<Department>().SingleOrDefaultAsync(d => string.Equals(d.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            return await _department.SingleOrDefaultAsync(d => string.Equals(d.Name, name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public async Task<Department> GetSpecificDepartmentAsync(int depId)
         {
-            return await _department.Cast<Department>().SingleOrDefaultAsync(d => d.Id.Equals(depId));
+            return await _department.SingleOrDefaultAsync(d => d.Id.Equals(depId));
         }
     }
 }
