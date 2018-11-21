@@ -59,9 +59,6 @@ public class BusinessFacade implements IBusinessFacade {
         boolean found = false;
         for (Chat chat : chats) {
             if(chat.getId() == addChatEvent.getChatId()) {
-                RequestResponse<User> user = restConnect.get(PathEnum.GetUser, addChatEvent.getUser().getId(), null, token);
-                users.add(user.getResponse());
-                EventManager.getInstance().fireEvent(new AddUserEvent(this, user.getResponse()));
                 found = true;
                 break;
             }
@@ -69,7 +66,11 @@ public class BusinessFacade implements IBusinessFacade {
         if(!found) {
             RequestResponse<Chat> chat = restConnect.get(PathEnum.GetChat, addChatEvent.getChatId(), null, token);
             chats.add(chat.getResponse());
-            EventManager.getInstance().fireEvent(new NewChatEvent(this, chat.getResponse()));
+            if(users.contains(addChatEvent.getUser())) {
+                RequestResponse<User> user = restConnect.get(PathEnum.GetUser, addChatEvent.getUser().getId(), null, token);
+                users.add(user.getResponse());
+                EventManager.getInstance().fireEvent(new AddUserEvent(this, user.getResponse()));
+            }
         }
     }
 
@@ -213,7 +214,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public List<? extends IChat> getAvailableChats(String userId) {
-        // TODO wait for fred to finish server update
         RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetAvailableChats, userId, null, token);
         return response.getResponse();
     }

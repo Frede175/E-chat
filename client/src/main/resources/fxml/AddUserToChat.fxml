@@ -28,7 +28,7 @@
             <Insets top="20.0" />
          </VBox.margin>
       </ComboBox>
-      <Button fx:id="addUser" mnemonicParsing="false" text="Add">
+      <Button fx:id="addUser" onAction="#addUser" mnemonicParsing="false" text="Add">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>

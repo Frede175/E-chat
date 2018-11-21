@@ -47,7 +47,6 @@ public class UserListController {
                 }
 
                 RequestResponse<? extends IChat> response = GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem().getName(), temp);
-                //EventManager.getInstance().fireEvent(new ChangeChatListEvent(this, response.getResponse()));
             }
         });
     }

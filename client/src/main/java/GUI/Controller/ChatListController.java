@@ -1,6 +1,7 @@
 package GUI.Controller;
 
 
+import Acquaintence.Event.AddChatEvent;
 import Acquaintence.Event.ChangeChatListEvent;
 import Acquaintence.Event.NewChatEvent;
 import Acquaintence.EventManager;
@@ -14,6 +15,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.MouseEvent;
 
+import java.util.EventObject;
+
 
 public class ChatListController {
 
@@ -24,9 +27,10 @@ public class ChatListController {
     private ObservableList<IChat> names;
 
 
-    public void initialize() {
+    public <T extends EventObject> void initialize() {
         EventManager.getInstance().registerListener(ChangeChatListEvent.class, this::changeChatList);
         EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
+        EventManager.getInstance().registerListener(AddChatEvent.class, this::getAddChat);
         names = FXCollections.observableArrayList();
         names.addAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
         chatList.setItems(names);
@@ -37,6 +41,12 @@ public class ChatListController {
             public void handle(MouseEvent event) {
                 GUI.GUI.getInstance().getBusiness().setCurrentChat(chatList.getSelectionModel().getSelectedItem().getId());
             }
+        });
+    }
+
+    private void getAddChat(AddChatEvent addChatEvent) {
+        Platform.runLater(() -> {
+            names.setAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
         });
     }
 
