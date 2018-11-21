@@ -23,11 +23,18 @@ namespace Server.Controllers
 
         private readonly ILogger<DepartmentController> _logger;
 
-        public DepartmentController(IDepartmentService departmentService, UserManager<ApplicationUser> userManager, ILogger<DepartmentController> logger)
+        private readonly IAuthorizationService _authorizationService;
+
+
+        public DepartmentController(IDepartmentService departmentService, 
+            UserManager<ApplicationUser> userManager, 
+            ILogger<DepartmentController> logger,
+            IAuthorizationService authorizationService)
         {
             _departmentService = departmentService;
             _userManager = userManager;
             _logger = logger;
+            _authorizationService = authorizationService;
 
         }
 
@@ -57,9 +64,31 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department/{id} 
         [HttpGet("user/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
+        [Authorize]
         public async Task<ActionResult<ICollection<Department>>> GetUserDepartments(string userId)
         {
+                        var basic = await _authorizationService.AuthorizeAsync(HttpContext.User, null, 
+                                new PermissionsAuthorizationRequirement(PermissionAttributeType.AND, Permission.BasicPermissions));
+
+            if (_userManager.GetUserId(HttpContext.User) != userId) {
+                 var result = await _authorizationService.AuthorizeAsync(HttpContext.User, 
+                            null, 
+                            new PermissionsAuthorizationRequirement(
+                                PermissionAttributeType.OR, 
+                                Permission.RemoveUserFromDepartment
+                            ));
+                if (!result.Succeeded) 
+                {
+                    return Unauthorized();
+                }
+            } else 
+            {
+                if (!basic.Succeeded) 
+                {
+                    return Unauthorized();
+                }
+            }
+
             return (await _departmentService.GetDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
         }
 
@@ -141,7 +170,13 @@ namespace Server.Controllers
             return BadRequest();
         }
 
-
+        // GET: https://localhost:5001/api/department/users/{departmentId}
+        [HttpGet("users/{departmentId}")]
+        [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromDepartment)]
+        public async Task<ActionResult<List<User>>> GetUsersInDepartment(int departmentId)
+        {
+            return Ok((await _departmentService.GetUsersInDepartmentsAsync(departmentId)).Select(u => new User(u)).ToList());
+        }
 
     }
 }
