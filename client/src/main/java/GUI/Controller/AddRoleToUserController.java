@@ -28,6 +28,7 @@ public class AddRoleToUserController {
     private String selectedRole;
 
     public void initialize() {
+        //TODO Make labels or something for clarity
         for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
             selectUser.getItems().add(user);
         }

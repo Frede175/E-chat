@@ -30,7 +30,10 @@ public enum PathEnum {
     CreateDirectMessage("/api/chat/private/", ConnectionType.POST, new TypeToken<Chat>() {}.getType()),
     GetDirectMessages("/api/chat/private/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
     GetAllDepartments("/api/department/", ConnectionType.GET, new TypeToken<List<Department>>() {}.getType()),
-    AddRoleToUser("/api/user/", ConnectionType.PUT, null);
+    GetAllPermissions("/api/permission/", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
+    CreateUserRole("/api/role/", ConnectionType.POST, new TypeToken<Role>() {}.getType()),
+    AddRoleToUser("/api/user/", ConnectionType.PUT, null),
+    DeleteUserRole("/api/role/", ConnectionType.DELETE, null);
 
 
     private PathEnum(String path, ConnectionType type, Type resultType) {
