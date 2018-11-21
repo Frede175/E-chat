@@ -10,9 +10,7 @@ public enum PathEnum {
 
 
     CreateDepartment("/api/department/", ConnectionType.POST, new TypeToken<Department>() {}.getType()),
-    // TODO Der kommer helt sikkert til at mangle noget.
     UpdateDepartment("/api/department/", ConnectionType.PUT, null),
-
     GetDepartments("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
     CreateUser("/api/user/create/", ConnectionType.POST, new TypeToken<User>() {}.getType()),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
