@@ -38,5 +38,6 @@ namespace Server.Service.Interfaces
 
         Task<Chat> CreatePrivateChat(Chat chat, string userId, string userId2);
         Task<List<Chat>> GetPrivateChatsAsync(string userId);
+        Task<List<Chat>> GetAvailableChatsAsync(string userId);
     }
 }

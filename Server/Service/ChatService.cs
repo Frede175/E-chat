@@ -17,6 +17,8 @@ namespace Server.Service
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        private readonly DbSet<UserDepartment> _userDepartment;
+
         private readonly DbSet<UserChat> _userChat;
 
 
@@ -27,6 +29,7 @@ namespace Server.Service
             _context = context;
             _userChat = context.Set<UserChat>();
             _userManager = userManager;
+            _userDepartment = context.Set<UserDepartment>();
 
         }
 
@@ -200,6 +203,13 @@ namespace Server.Service
         public async Task<ICollection<Chat>> GetChatsAsync(string userId)
         {
             return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
+        }
+
+        public async Task<List<Chat>> GetAvailableChatsAsync(string userId)
+        {
+            var departmentIds = await _userDepartment.Where(u => u.UserId == userId).Select(d => d.DepartmentId).ToListAsync();
+
+            return await _chats.Cast<Chat>().Where(c => c.DepartmentId.HasValue && departmentIds.Contains(c.DepartmentId.Value) && !c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
         public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId, int page, int pageSize)
