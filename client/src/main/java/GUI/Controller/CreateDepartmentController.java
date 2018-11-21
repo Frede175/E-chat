@@ -13,7 +13,7 @@ public class CreateDepartmentController {
     public Button CreateBtn;
 
     public void createDep(ActionEvent actionEvent){
-        GUI.GUI.getInstance().getBusiness().createDepartment(DepartmentName.getText(), 0);
+        GUI.GUI.getInstance().getBusiness().createDepartment(DepartmentName.getText());
 
         Stage stage = (Stage) CreateBtn.getScene().getWindow();
         stage.close();

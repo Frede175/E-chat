@@ -29,7 +29,7 @@ public interface IBusinessFacade {
     void deleteUserRole(String roleName);
     void createChat(String chatname, int departmentId);
     void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
-    void createDepartment(String departmentname, int Id);
+    void createDepartment(String departmentname);
     void createUserRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
