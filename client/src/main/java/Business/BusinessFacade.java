@@ -115,11 +115,6 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void addUserToDepartment(User user, Department department) {
-        restConnect.post(PathEnum.AddUserToDeparment, department.getId(), user.getId(), token);
-    }
-
-    @Override
     public List<String> getRolesPermissions(String roleName) {
         RequestResponse<List<String>> response = restConnect.get(PathEnum.GetRolesPermissions, roleName, null, token);
         List<String> permissions = response.getResponse();
@@ -193,6 +188,11 @@ public class BusinessFacade implements IBusinessFacade {
 
     public void updateDepartment(int depId, String name){
         restConnect.put(PathEnum.UpdateDepartment, depId, name, token);
+    }
+
+    @Override
+    public void addUserToDepartment(int depId, String userId) {
+        restConnect.post(PathEnum.AddUserToDeparment, depId, userId, token);
     }
 
     public void deleteDepartment(int depId){
