@@ -24,11 +24,9 @@ public class RemoveUserFromChatController {
         }
         selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
-            public void changed(ObservableValue<? extends IUser> observableValue, IUser s, IUser t1) {
-                selectedUser = t1;
-                for(IChat chat : GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId())) {
-                    selectChat.getItems().add(chat);
-                }
+            public void changed(ObservableValue<? extends IUser> observable, IUser oldValue, IUser newValue) {
+                selectedUser = newValue;
+                selectChat.getItems().setAll(GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId()));
             }
         });
 

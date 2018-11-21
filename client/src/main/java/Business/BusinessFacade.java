@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,7 +39,10 @@ public class BusinessFacade implements IBusinessFacade {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
         EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
         EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
+        EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
+        EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
     }
+
 
 
     /* Listener methods */
@@ -53,6 +57,22 @@ public class BusinessFacade implements IBusinessFacade {
                 break;
             }
         }
+    }
+
+    private void leaveChatEvent(LeaveChatEvent leaveChatEvent) {
+        if(leaveChatEvent.getUser().getId().equals(loginUser.getSub())) {
+            chats.removeIf(chat -> chat.getId() == leaveChatEvent.getChatId());
+        }
+        users.clear();
+        users.addAll((List<User>)getUsers().getResponse());
+    }
+
+    private void removeUserFromChat(RemoveUserFromChatEvent removeUserFromChatEvent) {
+        if(removeUserFromChatEvent.getUser().getId().equals(loginUser.getSub())) {
+            chats.removeIf(chat -> chat.getId() == removeUserFromChatEvent.getChatId());
+        }
+        users.clear();
+        users.addAll((List<User>)getUsers().getResponse());
     }
 
     private void addChat(AddChatEvent addChatEvent) {
