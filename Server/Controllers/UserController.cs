@@ -78,7 +78,7 @@ namespace Server.Controllers
         {
             var deps = await _departmentService.GetDepartmentsAsync(userId);
 
-            var users = await _departmentService.GetUsersInDepartments(deps.Select(d => d.Id).ToArray());
+            var users = await _departmentService.GetUsersInDepartmentsAsync(deps.Select(d => d.Id).ToArray());
 
             return users.Select(a => new User(a)).ToList();
         }

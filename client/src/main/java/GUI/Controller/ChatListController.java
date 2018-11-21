@@ -1,9 +1,7 @@
 package GUI.Controller;
 
 
-import Acquaintence.Event.AddChatEvent;
-import Acquaintence.Event.ChangeChatListEvent;
-import Acquaintence.Event.NewChatEvent;
+import Acquaintence.Event.*;
 import Acquaintence.EventManager;
 import Acquaintence.IChat;
 import javafx.application.Platform;
@@ -31,6 +29,8 @@ public class ChatListController {
         EventManager.getInstance().registerListener(ChangeChatListEvent.class, this::changeChatList);
         EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
         EventManager.getInstance().registerListener(AddChatEvent.class, this::getAddChat);
+        EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
+        EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
         names = FXCollections.observableArrayList();
         names.addAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
         chatList.setItems(names);
@@ -41,6 +41,18 @@ public class ChatListController {
             public void handle(MouseEvent event) {
                 GUI.GUI.getInstance().getBusiness().setCurrentChat(chatList.getSelectionModel().getSelectedItem().getId());
             }
+        });
+    }
+
+    private void leaveChatEvent(LeaveChatEvent leaveChatEvent) {
+        Platform.runLater(() -> {
+            names.setAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
+        });
+    }
+
+    private void removeUserFromChat(RemoveUserFromChatEvent removeUserFromChatEvent) {
+        Platform.runLater(() -> {
+            names.setAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
         });
     }
 

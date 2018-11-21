@@ -24,6 +24,10 @@ namespace Server.Service
             _context = context;
         }
 
+        public ApplicationDbContext GetContext() {
+            return _context;
+        }
+
 
         public async Task<Department> CreateDepartmentAsync(Department department)
         {
@@ -38,7 +42,7 @@ namespace Server.Service
             return await _department.Cast<Department>().ToListAsync();
         }
 
-        public async Task<List<ApplicationUser>> GetUsersInDepartments(params int[] ids) {
+        public async Task<List<ApplicationUser>> GetUsersInDepartmentsAsync(params int[] ids) {
             return await _userDepartment.Cast<UserDepartment>().Where(i => ids.Contains(i.DepartmentId)).Select(d => d.ApplicationUser).ToListAsync();
         }
 
@@ -62,7 +66,7 @@ namespace Server.Service
             return false;
         }
 
-        public async Task<bool> RemoveDepartmentASync(int id)
+        public async Task<bool> RemoveDepartmentAsync(int id)
         {
             
             var department = await _department.FindAsync(id);
@@ -82,7 +86,7 @@ namespace Server.Service
             {
                 foreach (var user in users)
                 {
-                    _userDepartment.Remove(new UserDepartment(){UserId = user.Id, DepartmentId = department.Id});
+                    _userDepartment.Remove(new UserDepartment() {UserId = user.Id, DepartmentId = department.Id});
                 }
                 var result = await _context.SaveChangesAsync();
                 if (result == users.Count()) return true;
@@ -104,12 +108,12 @@ namespace Server.Service
             return false;
         }
 
-        public async Task<Department> GetSpecificDepartment(string name)
+        public async Task<Department> GetSpecificDepartmentAsync(string name)
         {
             return await _department.Cast<Department>().SingleOrDefaultAsync(d => string.Equals(d.Name, name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public async Task<Department> GetSpecificDepartment(int depId)
+        public async Task<Department> GetSpecificDepartmentAsync(int depId)
         {
             return await _department.Cast<Department>().SingleOrDefaultAsync(d => d.Id.Equals(depId));
         }
