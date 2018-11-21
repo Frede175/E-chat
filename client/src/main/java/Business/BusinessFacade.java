@@ -244,6 +244,11 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public RequestResponse<List<IDepartment>> getAvailableDepartments(String userId) {
+        return restConnect.get(PathEnum.GetAvailableDepartments, userId, null, token);
+    }
+
+    @Override
     public void addPermissionsToRole(String role, List<String> permissions) {
         restConnect.post(PathEnum.AddPermissionsToRole, role, permissions, token);
     }
