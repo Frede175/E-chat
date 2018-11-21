@@ -36,7 +36,7 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateDepartment, Permission.UpdateDepartment, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment, Permission.DeleteDepartment)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartment(int departmentId)
         {
-            var department = await _departmentService.GetSpecificDepartment(departmentId);
+            var department = await _departmentService.GetSpecificDepartmentAsync(departmentId);
             if (department == null) {
                 return NotFound();
             }
@@ -65,7 +65,7 @@ namespace Server.Controllers
 
         [HttpPost]
         [RequiresPermissionAttribute(permissions: Permission.CreateDepartment)]
-        public async Task<IActionResult> CreateDepartment(Department department)
+        public async Task<IActionResult> CreateDepartment([FromBody] Department department)
         {
             var d = new DbModels.Department()
             {
@@ -76,7 +76,7 @@ namespace Server.Controllers
             {
                 return CreatedAtAction(nameof(GetDepartments), new { departmentId = result.Id }, new Department(result));
             }
-            return new BadRequestResult();
+            return BadRequest();
         }
 
         // POST: https://localhost:5001/api/Department/{departmentId}
@@ -84,48 +84,61 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToDepartment)]
         public async Task<IActionResult> AddUserToDepartment(int departmentId, [FromBody] string userId)
         {
-            _logger.LogDebug($"Department ID is: {departmentId} and user Id is: {userId}");   
             var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
             if (result)
             {
-                return new OkResult();
+                return Ok();
             }
-            return new BadRequestResult();
+            return BadRequest();
+
+        }
+
+        // POST: https://localhost:5001/api/Department/remove/{departmentId}
+        [HttpPost("remove/{departmentId}")]
+        [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromDepartment)]
+        public async Task<IActionResult> RemoveUserFromDepartment(int departmentId, [FromBody] string userId)
+        {
+            var result = await _departmentService.RemoveUsersFromDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
+            if (result)
+            {
+                return Ok();
+            }
+            return BadRequest();
 
         }
 
 
-        // DELETE: https://localhost:5001/api/Department/remove/{departmentId}
+        // DELETE: https://localhost:5001/api/Department/{departmentId}
         [HttpDelete("{departmentId}")]
         [RequiresPermissionAttribute(permissions: Permission.DeleteDepartment)]
         public async Task<ActionResult> RemoveDepartment(int departmentId)
         {
-            var result = await _departmentService.RemoveDepartmentASync(departmentId);
+            var result = await _departmentService.RemoveDepartmentAsync(departmentId);
             if (result)
             {
-                return new OkResult();
+                return Ok();
             }
-            return new BadRequestResult();
+            return BadRequest();
         }
 
 
 
 
-        //PUT: https://localhost:5001/api/Department/update/{departmentId}
+        //PUT: https://localhost:5001/api/Department/{depId}
         [HttpPut("{depId}")]
         [RequiresPermissionAttribute(permissions: Permission.UpdateDepartment)]
         public async Task<ActionResult> UpdateDepartment(int depId, [FromBody] string newName)
         {
-            var dep = await _departmentService.GetSpecificDepartment(depId);
+            var dep = await _departmentService.GetSpecificDepartmentAsync(depId);
             dep.Name = newName;
 
             var result = await _departmentService.UpdateDepartmentAsync(dep);
 
             if (result)
             {
-                return new OkResult();
+                return Ok();
             }
-            return new BadRequestResult();
+            return BadRequest();
         }
 
 

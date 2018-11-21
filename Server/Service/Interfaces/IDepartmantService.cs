@@ -9,7 +9,7 @@ namespace Server.Service.Interfaces
     {
         Task<Department> CreateDepartmentAsync(Department department);
 
-        Task<bool> RemoveDepartmentASync(int id);
+        Task<bool> RemoveDepartmentAsync(int id);
 
         Task<bool> UpdateDepartmentAsync(Department department);
 
@@ -21,11 +21,11 @@ namespace Server.Service.Interfaces
 
         Task<List<Department>> GetDepartmentsAsync(string userId);
 
-        Task<Department> GetSpecificDepartment(string name);
+        Task<Department> GetSpecificDepartmentAsync(string name);
 
-        Task<Department> GetSpecificDepartment(int depId);
+        Task<Department> GetSpecificDepartmentAsync(int depId);
 
-        Task<List<ApplicationUser>> GetUsersInDepartments(params int[] ids);
+        Task<List<ApplicationUser>> GetUsersInDepartmentsAsync(params int[] ids);
 
     }
 }
