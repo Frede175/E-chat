@@ -202,7 +202,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/department/available/{userId} 
         [HttpGet("available/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
+        [RequiresPermissionAttribute(permissions: Permission.AddUserToDepartment)]
         public async Task<ActionResult<List<Department>>> GetAvailableDepartments(string userId) 
         {
             return (await _departmentService.GetAvailableDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
