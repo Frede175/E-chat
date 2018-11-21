@@ -42,7 +42,11 @@ namespace Server.Context
                 .HasOne(u => u.Department)
                 .WithMany(u => u.UserDepartments)
                 .HasForeignKey(u => u.DepartmentId);
-            
+
+            builder.Entity<Chat>()
+                .HasOne(c => c.Department)
+                .WithMany(d => d.Chats)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
 

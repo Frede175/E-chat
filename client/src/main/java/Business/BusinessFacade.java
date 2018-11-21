@@ -168,6 +168,10 @@ public class BusinessFacade implements IBusinessFacade {
         departments.add(response.getResponse());
     }
 
+    public void deleteDepartment(int departmentId){
+        restConnect.delete(PathEnum.DeleteDepartment, departmentId, token);
+    }
+
     @Override
     public void createUserRole(List<String> permissions, String roleName) {
         //TODO not tested, could change route and param

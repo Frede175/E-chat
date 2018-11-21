@@ -2,14 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.CreateDepartmentController">
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.DeleteDepartmentController">
    <children>
-      <Label text="Create Department">
+      <Label text="Delete Department">
          <font>
             <Font size="23.0" />
          </font>
@@ -17,12 +18,12 @@
             <Insets top="20.0" />
          </VBox.margin>
       </Label>
-      <TextField fx:id="DepartmentName" alignment="CENTER" promptText="Department name">
+      <ChoiceBox fx:id="choiceBox" prefWidth="300.0">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
-      </TextField>
-      <Button fx:id="CreateBtn" mnemonicParsing="false" onAction="#createDep" text="Create">
+      </ChoiceBox>
+      <Button fx:id="DeleteBtn" mnemonicParsing="false" onAction="#delete" text="Delete">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
