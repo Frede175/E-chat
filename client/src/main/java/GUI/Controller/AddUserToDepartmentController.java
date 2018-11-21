@@ -2,6 +2,9 @@ package GUI.Controller;
 
 import Acquaintence.IDepartment;
 import Acquaintence.IUser;
+import GUI.GUI;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -15,20 +18,20 @@ public class AddUserToDepartmentController {
 
     public void initialize(){
 
-        choiceBoxDepartment.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
-        if(!choiceBoxDepartment.getItems().isEmpty()){
-            choiceBoxDepartment.getSelectionModel().select(0);
-        }
-
-        choiceBoxUser.getItems().addAll(GUI.GUI.getInstance().getBusiness().getUsers().getResponse());
+        choiceBoxUser.getItems().addAll(GUI.getInstance().getBusiness().getUsers().getResponse());
         if(!choiceBoxUser.getItems().isEmpty()){
             choiceBoxUser.getSelectionModel().select(0);
         }
+        choiceBoxUser.valueProperty().addListener(new ChangeListener<IUser>() {
+            @Override
+            public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
+                choiceBoxDepartment.getItems().addAll(GUI.getInstance().getBusiness().getAvailableDepartments(t1.getId()).getResponse());
+            }
+        });
     }
 
     public void addToDepartmentBtn(ActionEvent actionEvent){
-
-        GUI.GUI.getInstance().getBusiness().addUserToDepartment(choiceBoxDepartment.getValue().getId(), choiceBoxUser.getValue().getId());
+        GUI.getInstance().getBusiness().addUserToDepartment(choiceBoxDepartment.getValue().getId(), choiceBoxUser.getValue().getId());
     }
 
 }

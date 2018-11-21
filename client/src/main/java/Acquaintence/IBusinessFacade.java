@@ -48,6 +48,7 @@ public interface IBusinessFacade {
     void addRoleToUser(String userId, String role);
     void removePermissionsFromRole(String role, List<String> permissions);
     void removeUserFromDepartment(String userId, int departmentId);
+    RequestResponse<List<IDepartment>> getAvailableDepartments(String userId);
     RequestResponse<List<IDepartment>> getUsersDepartments(int departmentId);
     RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
 
