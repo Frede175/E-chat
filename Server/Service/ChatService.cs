@@ -202,6 +202,13 @@ namespace Server.Service
             return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
+        public async Task<ICollection<Chat>> GetAvailableChatsAsync(string userId)
+        {
+            var departmentIds = _userManager.Users.FirstOrDefault(u => u.Id == userId).UserDepartments.Select(d => d.DepartmentId).ToList();
+
+            return await _chats.Cast<Chat>().Where(c => c.DepartmentId.HasValue && departmentIds.Contains(c.DepartmentId.Value) && !c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
+        }
+
         public async Task<ICollection<Message>> RetrieveMessagesAsync(int chatId, int page, int pageSize)
         {
             var chat = await _chats.FindAsync(chatId);
