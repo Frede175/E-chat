@@ -22,7 +22,7 @@ public class AddUserToChatController {
         usersCB.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
             public void changed(ObservableValue<? extends IUser> observable, IUser oldValue, IUser newValue) {
-                chatsCB.getItems().setAll(GUI.getInstance().getBusiness().getChatsInDepartments(newValue.getId()));
+                chatsCB.getItems().setAll(GUI.getInstance().getBusiness().(newValue.getId()));
             }
         });
     }

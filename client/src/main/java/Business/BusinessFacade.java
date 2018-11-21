@@ -212,9 +212,10 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public List<? extends IChat> getChatsInDepartments(String userId) {
+    public List<? extends IChat> getAvailableChats(String userId) {
         // TODO wait for fred to finish server update
-        return null;
+        RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetAvailableChats, userId, null, token);
+        return response.getResponse();
     }
 
     public void removePermissionsFromRole(String role, List<String> permissions) {
