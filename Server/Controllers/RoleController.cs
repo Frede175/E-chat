@@ -45,6 +45,20 @@ namespace Server.Controllers
             return NotFound();
         }
 
+        // GET: https://localhost:5001/api/Role/permission/{name}
+        [HttpGet("permission/{name}")]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUserRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
+        public async Task<ActionResult<IEnumerable<string>>> GetRolePermissions(string name) 
+        {
+            var role = await _roleManager.FindByNameAsync(name);
+            if (role != null)
+            {
+                var perms = (await _roleManager.GetClaimsAsync(role)).Where(c => c.Type == UserClaimTypes.Permission).Select(c => c.Value);
+                return Ok(perms);
+            } 
+            return NotFound();
+        }
+
 
         // GET: https://localhost:5001/api/Role/
         [HttpGet]
@@ -59,7 +73,7 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/Role/{role}
         [HttpPost("{role}")]
         [RequiresPermissionAttribute(permissions: Permission.CreateUserRole)]
-        public async Task<ActionResult> CreateUserRole(string role, List<string> addedPermissions)
+        public async Task<ActionResult> CreateUserRole(string role, [FromBody] List<string> addedPermissions)
         {
             var newRole = await _roleManager.FindByNameAsync(role);
             string[] permissions = Enum.GetNames(typeof(Permission));
