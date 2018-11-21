@@ -28,5 +28,7 @@ namespace Server.Service.Interfaces
 
         Task<List<ApplicationUser>> GetUsersInDepartmentsAsync(params int[] ids);
 
+        Task<List<Department>> GetAvailableDepartmentsAsync(string userId);
+
     }
 }
