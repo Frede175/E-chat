@@ -11,7 +11,7 @@ namespace Server.Security
 
         public PermissionAttributeType Type {get;set;}
 
-        public PermissionsAuthorizationRequirement(PermissionAttributeType type, IEnumerable<Permission> requiredPermissions)
+        public PermissionsAuthorizationRequirement(PermissionAttributeType type, params Permission[] requiredPermissions)
         {
             Type = type;
             RequiredPermissions = requiredPermissions;
