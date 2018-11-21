@@ -32,7 +32,9 @@ public class ChatListController {
         EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
         EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
         names = FXCollections.observableArrayList();
-        names.addAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
+        if(GUI.GUI.getInstance().getBusiness().getExistingChats() != null) {
+            names.addAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
+        }
         chatList.setItems(names);
         chatList.setCellFactory(ComboBoxListCell.forListView(names));
         chatList.getSelectionModel().selectFirst();
