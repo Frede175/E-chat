@@ -36,13 +36,15 @@ namespace Server.Controllers
                               UserManager<ApplicationUser> userManager, 
                               ILogger<ChatController> logger, 
                               IHubContext<ChatHub> chathub,
-                              IHubState<ChatHub> chatHubState)
+                              IHubState<ChatHub> chatHubState,
+                              IAuthorizationService authorizationService)
         {
             _userManager = userManager;
             _chatService = chatService;
             _logger = logger;
             _chatHub = chathub;
             _chatHubState = chatHubState;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
