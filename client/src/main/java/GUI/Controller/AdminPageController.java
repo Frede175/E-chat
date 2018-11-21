@@ -61,6 +61,12 @@ public class AdminPageController {
                 case AddUserToChat:
                     break;
                 case RemoveUserFromChat:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveUserFromChat.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case CreateUser:
                     try {

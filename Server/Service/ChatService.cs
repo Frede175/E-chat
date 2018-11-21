@@ -168,12 +168,12 @@ namespace Server.Service
             {
                 foreach (string userId in userIds)
                 {
-                    if (chat.UserChats.Any(u => u.UserId == userId))
+                    UserChat userChat;
+                    if ((userChat = chat.UserChats.SingleOrDefault(u => u.UserId == userId)) != null)
                     {
-                        _userChat.Remove(new UserChat() { UserId = userId, ChatId = chat.Id });
+                        _userChat.Remove(userChat);
                     }
                 }
-                _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
                 if (result == userIds.Count())
                 {
