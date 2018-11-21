@@ -20,6 +20,7 @@ public class ChatHeaderController {
 
     @FXML
     private Label chatNameL;
+    PopOver popover = new PopOver();
 
     public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeName);
@@ -38,10 +39,8 @@ public class ChatHeaderController {
     private void changeName(ChangeChatEvent event) {
         chatNameL.setText(event.getChat().getName());
     }
-    
-    public void usersInChatBtn(ActionEvent actionEvent) throws IOException {
 
-        PopOver popover = new PopOver();
+    public void usersInChatBtn(ActionEvent actionEvent) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/UsersInChat.fxml"));
 
