@@ -186,7 +186,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void createUserRole(List<String> permissions, String roleName) {
-        //TODO not tested, could change route and param
         restConnect.post(PathEnum.CreateUserRole, roleName, permissions, token);
     }
 
@@ -196,7 +195,6 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-
     public RequestResponse<List<? extends IRole>> getRoles() {
         // TODO Maybe dont make a request everytime
         return restConnect.get(PathEnum.GetRoles, null, null, token);
@@ -236,6 +234,25 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.delete(PathEnum.DeleteUser, userId, token);
     }
 
+    @Override
+    public List<IChat> getUsersChats(String userId) {
+        RequestResponse<List<Department>> departments = restConnect.get(PathEnum.GetDepartments, userId, null, token);
+        List<IChat> usersChats = new ArrayList<>();
+        for(Department department : departments.getResponse()) {
+            RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, userId, department.toMap(), token);
+            if(response.getResponse() != null ) {
+                usersChats.addAll(response.getResponse());
+            }
+        }
+        return usersChats;
+
+    }
+
+    @Override
+    public void removeUserFromChat(int chatId, String userId) {
+        restConnect.post(PathEnum.RemoveUserFromChat, chatId, userId, token);
+    }
+
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> departmentChats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
         RequestResponse<List<Chat>> privateChats = restConnect.get(PathEnum.GetDirectMessages, loginUser.getSub(), currentDepartment.toMap(), token);
@@ -267,7 +284,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<String>> getAllPermissions() {
-        //TODO not tested, route could be something or param could be something
         RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }

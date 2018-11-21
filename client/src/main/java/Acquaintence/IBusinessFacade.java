@@ -42,7 +42,9 @@ public interface IBusinessFacade {
 
     void addPermissionsToRole(String role, List<String> permissions);
     void deleteUser(String userId);
+    List<IChat> getUsersChats(String userId);
 
+    void removeUserFromChat(int chatId, String userId);
     void addRoleToUser(String userId, String role);
     void removePermissionsFromRole(String role, List<String> permissions);
 
