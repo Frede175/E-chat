@@ -1,12 +1,11 @@
 package GUI.Controller;
 
 
-import Acquaintence.ConnectionState;
 import Acquaintence.Event.ChangeChatListEvent;
 import Acquaintence.Event.NewChatEvent;
 import Acquaintence.EventManager;
 import Acquaintence.IChat;
-import Business.Connection.RequestResponse;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -14,9 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.MouseEvent;
-
-import java.util.EventObject;
-import java.util.List;
 
 
 public class ChatListController {
@@ -50,6 +46,8 @@ public class ChatListController {
     }
 
     private void getNewChat(NewChatEvent newChatEvent) {
-        names.add(newChatEvent.getChat());
+        Platform.runLater(() -> {
+            names.add(newChatEvent.getChat());
+        });
     }
 }
