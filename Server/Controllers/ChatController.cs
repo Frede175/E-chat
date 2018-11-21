@@ -83,7 +83,7 @@ namespace Server.Controllers
  */
 
         // GET: https://localhost:5001/api/chat/user/{userId} 
-        [HttpGet("user/{userId}"), Produces("application/json")]
+        [HttpGet("available/{userId}"), Produces("application/json")]
         [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
         public async Task<ActionResult<List<Chat>>> GetAvailableChats(string userId) 
         {
