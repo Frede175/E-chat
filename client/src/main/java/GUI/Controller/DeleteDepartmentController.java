@@ -22,7 +22,7 @@ public class DeleteDepartmentController {
 
     }
 
-    public void Delete(ActionEvent actionEvent){
+    public void delete(ActionEvent actionEvent){
 
         GUI.GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
 
