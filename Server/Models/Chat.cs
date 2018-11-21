@@ -9,6 +9,8 @@ namespace Server.Models
 
         public bool IsGroupChat { get; set; }
 
+        public int? DepartmentId { get; set;}
+        
         public Chat(){
 
         }
@@ -18,6 +20,7 @@ namespace Server.Models
             Id = chat.Id;
             Name = chat.Name;
             IsGroupChat = chat.IsGroupChat;
+            DepartmentId = chat.DepartmentId;
         }
     }
 }
