@@ -178,8 +178,13 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void removePermissionsFromUser(String role, List<String> permissions) {
-        restConnect.post(PathEnum.RemovePermissionsFromUser, role, permissions, token);
+    public void removePermissionsFromRole(String role, List<String> permissions) {
+        restConnect.post(PathEnum.RemovePermissionsFromRole, role, permissions, token);
+    }
+
+    @Override
+    public void addPermissionsToRole(String role, List<String> permissions) {
+        restConnect.post(PathEnum.addPermissionsToRole, role, permissions, token);
     }
 
     public RequestResponse<List<? extends IChat>> getChats() {
@@ -212,7 +217,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public RequestResponse<List<? extends String>> getAllPermissions() {
+    public RequestResponse<List<String>> getAllPermissions() {
         //TODO not tested, route could be something or param could be something
         RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());

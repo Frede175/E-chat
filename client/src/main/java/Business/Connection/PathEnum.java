@@ -34,8 +34,10 @@ public enum PathEnum {
     CreateUserRole("/api/role/", ConnectionType.POST, new TypeToken<Role>() {}.getType()),
     AddRoleToUser("/api/user/", ConnectionType.PUT, null),
     DeleteUserRole("/api/role/", ConnectionType.DELETE, null),
-    GetRolesPermissions("/api/", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
-    RemovePermissionsFromUser("/api/role/removeperm/", ConnectionType.POST, null);
+    GetRolesPermissions("/api/role/permission/", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
+    RemovePermissionsFromRole("/api/role/removeperm/", ConnectionType.POST, null),
+    addPermissionsToRole("/api/role/addperm/", ConnectionType.POST, null);
+
 
 
 
