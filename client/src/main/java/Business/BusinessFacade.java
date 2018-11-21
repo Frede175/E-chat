@@ -254,8 +254,8 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public RequestResponse<List<IDepartment>> getUsersDepartments(String userId){
-        return restConnect.get(PathEnum.GetDepartments, userId, null, token);
+    public RequestResponse<List<IDepartment>> getUsersDepartments(int departmentId){
+        return restConnect.get(PathEnum.GetDepartments, departmentId, null, token);
     }
 
     @Override
