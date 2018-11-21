@@ -94,10 +94,10 @@ public class BusinessFacade implements IBusinessFacade {
         return temp.getConnectionState();
     }
 
-    @Override
+    /*@Override
     public void addUserToDepartment(User user, Department department) {
         restConnect.post(PathEnum.AddUserToDeparment, department.getId(), user.getId(), token);
-    }
+    }*/
 
     @Override
     public List<String> getRolesPermissions(String rolename) {
@@ -178,6 +178,11 @@ public class BusinessFacade implements IBusinessFacade {
 
     public void updateDepartment(int depId, String name){
         restConnect.put(PathEnum.UpdateDepartment, depId, name, token);
+    }
+
+    @Override
+    public void addUserToDepartment(int depId, String userId) {
+        restConnect.post(PathEnum.AddUserToDeparment, depId, userId, token);
     }
 
     public void deleteDepartment(int depId){

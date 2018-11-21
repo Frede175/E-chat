@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface IBusinessFacade {
     ConnectionState login(String username, String password);
-    void addUserToDepartment(User user, Department department);
     RequestResponse<List<? extends IChat>> getChats();
     RequestResponse<List<? extends  IUser>> getUsers();
     RequestResponse<Chat> createDirectMessage(String name, IUser user);
@@ -33,8 +32,7 @@ public interface IBusinessFacade {
     void createDepartment(String departmentname);
     void deleteDepartment(int depId);
     void updateDepartment(int depId, String name);
-    // new
-    void addUserToDepartment(int depId, int userId);
+    void addUserToDepartment(int depId, String userId);
     void createUserRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();

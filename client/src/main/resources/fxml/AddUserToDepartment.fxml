@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddUserToDepartmentController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddUserToDepartmentController">
    <children>
       <Label text="Add user to department">
          <font>
@@ -18,12 +17,12 @@
             <Insets top="20.0" />
          </padding>
       </Label>
-      <ChoiceBox fx:id="choiceboxUser" prefWidth="300.0">
+      <ChoiceBox fx:id="choiceBoxUser" prefWidth="300.0">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
       </ChoiceBox>
-      <ChoiceBox fx:id="choiceboxDepartment" prefWidth="300.0">
+      <ChoiceBox fx:id="choiceBoxDepartment" prefWidth="300.0">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
