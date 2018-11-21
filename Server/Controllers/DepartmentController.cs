@@ -96,7 +96,7 @@ namespace Server.Controllers
 
 
         // DELETE: https://localhost:5001/api/Department/remove/{departmentId}
-        [HttpDelete("remove/{departmentId}")]
+        [HttpDelete("{departmentId}")]
         [RequiresPermissionAttribute(permissions: Permission.DeleteDepartment)]
         public async Task<ActionResult> RemoveDepartment(int departmentId)
         {
@@ -112,7 +112,7 @@ namespace Server.Controllers
 
 
         //PUT: https://localhost:5001/api/Department/update/{departmentId}
-        [HttpPut("update/{departmendId}")]
+        [HttpPut("{departmendId}")]
         [RequiresPermissionAttribute(permissions: Permission.UpdateDepartment)]
         public async Task<ActionResult> UpdateDepartment(int depId, string newName)
         {

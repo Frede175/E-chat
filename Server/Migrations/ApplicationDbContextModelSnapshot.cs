@@ -471,7 +471,8 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.DbModels.Department", "Department")
                         .WithMany("Chats")
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Server.DbModels.Message", b =>
