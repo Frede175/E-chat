@@ -94,9 +94,12 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/chat/user/{userId} 
         [HttpGet("user/{userId}"), Produces("application/json")]
-        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
+        [Authorize]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId)
         {
+            var basic = await _authorizationService.AuthorizeAsync(HttpContext.User, null, 
+                                new PermissionsAuthorizationRequirement(PermissionAttributeType.AND, Permission.BasicPermissions));
+
             if (_userManager.GetUserId(HttpContext.User) != userId) {
                  var result = await _authorizationService.AuthorizeAsync(HttpContext.User, 
                             null, 
@@ -106,7 +109,14 @@ namespace Server.Controllers
                                 Permission.AddUserToChat, 
                                 Permission.RemoveUserFromChat
                             ));
-                if (!result.Succeeded) {
+                if (!result.Succeeded) 
+                {
+                    return Unauthorized();
+                }
+            } else 
+            {
+                if (!basic.Succeeded) 
+                {
                     return Unauthorized();
                 }
             }
