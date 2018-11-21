@@ -4,6 +4,7 @@ package Business;
 import Acquaintence.*;
 import Acquaintence.Event.ChangeChatEvent;
 import Acquaintence.Event.MessageEvent;
+import Acquaintence.Event.NewChatEvent;
 import Business.Connection.HubConnect;
 import Business.Connection.PathEnum;
 import Business.Connection.RequestResponse;
@@ -15,9 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,6 +36,11 @@ public class BusinessFacade implements IBusinessFacade {
 
     public BusinessFacade() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
+        EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
+    }
+
+    private void getNewChat(NewChatEvent newChatEvent) {
+        chats.add((Chat)newChatEvent.getChat());
     }
 
     /* Listener methods */
@@ -130,11 +134,11 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.post(PathEnum.CreateUser, null, userToSend, token);
     }
 
-    //new
-    public void createChat(String chatname, int departmentId){
-        Chat chatToSend = new Chat(chatname);
+    @Override
+    public ConnectionState createChat(String chatName, int departmentId){
+        Chat chatToSend = new Chat(chatName);
         RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, departmentId, chatToSend, token);
-        chats.add(response.getResponse());
+        return response.getConnectionState();
     }
 
     public void createDepartment(String departmentName){
@@ -200,6 +204,11 @@ public class BusinessFacade implements IBusinessFacade {
         //TODO not tested, route could be something or param could be something
         RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public List<? extends IChat> getExistingChats() {
+        return chats;
     }
 
     @Override
