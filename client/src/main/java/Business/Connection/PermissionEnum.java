@@ -31,7 +31,6 @@ public enum PermissionEnum {
 
 
     // RoleController
-
     CreateUserRole(PermissionType.ROLE),
     AddPermissionToRole(PermissionType.ROLE),
     RemovePermissionFromRole(PermissionType.ROLE),

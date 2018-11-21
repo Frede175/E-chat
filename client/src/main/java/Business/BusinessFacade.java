@@ -145,6 +145,12 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void createUserRole(List<String> permissions, String roleName) {
+        //TODO not tested, could change route and param
+        restConnect.post(PathEnum.CreateUserRole, roleName, permissions, token);
+    }
+
+    @Override
     public ILoginUser getLoginUser() {
         return loginUser;
     }
@@ -187,6 +193,18 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public Chat getCurrentChat() {
         return currentChat;
+    }
+
+    @Override
+    public RequestResponse<List<? extends String>> getAllPermissions() {
+        //TODO not tested, route could be something or param could be something
+        RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public void deleteUserRole(String roleName) {
+        restConnect.delete(PathEnum.DeleteUserRole, roleName, token);
     }
 
     @Override
