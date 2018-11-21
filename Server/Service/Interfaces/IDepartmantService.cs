@@ -7,6 +7,7 @@ namespace Server.Service.Interfaces
 {
     public interface IDepartmentService
     {
+        ApplicationDbContext GetContext();
         Task<Department> CreateDepartmentAsync(Department department);
 
         Task<bool> RemoveDepartmentAsync(int id);

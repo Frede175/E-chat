@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Server.Context;
+using Server.Hubs;
 using Server.Models;
 using Server.Security;
 using Server.Service.Interfaces;
@@ -19,6 +21,13 @@ namespace Server.Controllers
     {
 
         private readonly IDepartmentService _departmentService;
+
+        private readonly IChatService _chatService;
+
+        private readonly IHubState<ChatHub> _chatHubState;
+
+        private readonly IHubContext<ChatHub> _chatHub;
+
         private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly ILogger<DepartmentController> _logger;
@@ -27,11 +36,17 @@ namespace Server.Controllers
 
 
         public DepartmentController(IDepartmentService departmentService, 
+            IHubContext<ChatHub> chatHub,
+            IHubState<ChatHub> chatHubState,
+            IChatService chatService,
             UserManager<ApplicationUser> userManager, 
             ILogger<DepartmentController> logger,
             IAuthorizationService authorizationService)
         {
             _departmentService = departmentService;
+            _chatHub = chatHub;
+            _chatHubState = chatHubState;
+            _chatService = chatService;
             _userManager = userManager;
             _logger = logger;
             _authorizationService = authorizationService;
@@ -130,10 +145,17 @@ namespace Server.Controllers
             var result = await _departmentService.RemoveUsersFromDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
             if (result)
             {
+                var chatIds = (await _chatService.GetChatsAsync(userId, departmentId)).Select(c => c.Id);
+                var user = await _userManager.FindByIdAsync(userId);
+
+                foreach (var chatId in chatIds) {
+                    await _chatService.RemoveUsersFromChatAsync(chatId, userId);
+                    await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Remove", chatId, new User(user));
+                    await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
+                }
                 return Ok();
             }
             return BadRequest();
-
         }
 
 

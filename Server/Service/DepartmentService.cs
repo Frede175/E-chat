@@ -24,6 +24,10 @@ namespace Server.Service
             _context = context;
         }
 
+        public ApplicationDbContext GetContext() {
+            return _context;
+        }
+
 
         public async Task<Department> CreateDepartmentAsync(Department department)
         {
