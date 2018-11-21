@@ -26,6 +26,12 @@ public class AdminPageController {
         for (PermissionEnum perm : GUI.GUI.getInstance().getBusiness().getLoginUser().getUserPermissionsFromType(type)) {
             switch (perm) {
                 case CreateDepartment:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateDepartment.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case AddUserToDepartment:
                     break;

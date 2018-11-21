@@ -137,6 +137,13 @@ public class BusinessFacade implements IBusinessFacade {
         chats.add(response.getResponse());
     }
 
+    public void createDepartment(String departmentName, int id){
+        Department departmentToSend = new Department(id, departmentName);
+        //RequestResponse<Department> response =
+        restConnect.post(PathEnum.CreateDepartment, null, departmentToSend, token);
+        //departments.add(response.getResponse());
+    }
+
     @Override
     public ILoginUser getLoginUser() {
         return loginUser;
