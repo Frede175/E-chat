@@ -98,6 +98,13 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.post(PathEnum.AddUserToDeparment, department.getId(), user.getId(), token);
     }
 
+    @Override
+    public List<String> getRolesPermissions(String rolename) {
+        RequestResponse<List<String>> response = restConnect.get(PathEnum.GetRolesPermissions, rolename, null, token);
+        List<String> permissions = response.getResponse();
+        return permissions;
+    }
+
 
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
@@ -210,6 +217,15 @@ public class BusinessFacade implements IBusinessFacade {
         return null;
     }
 
+    public void removePermissionsFromRole(String role, List<String> permissions) {
+        restConnect.post(PathEnum.RemovePermissionsFromRole, role, permissions, token);
+    }
+
+    @Override
+    public void addPermissionsToRole(String role, List<String> permissions) {
+        restConnect.post(PathEnum.addPermissionsToRole, role, permissions, token);
+    }
+
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> departmentChats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), currentDepartment.toMap(), token);
         RequestResponse<List<Chat>> privateChats = restConnect.get(PathEnum.GetDirectMessages, loginUser.getSub(), currentDepartment.toMap(), token);
@@ -240,7 +256,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public RequestResponse<List<? extends String>> getAllPermissions() {
+    public RequestResponse<List<String>> getAllPermissions() {
         //TODO not tested, route could be something or param could be something
         RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
