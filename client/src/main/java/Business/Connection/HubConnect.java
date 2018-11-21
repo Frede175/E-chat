@@ -1,8 +1,6 @@
 package Business.Connection;
 
-import Acquaintence.Event.AddChatEvent;
-import Acquaintence.Event.MessageEvent;
-import Acquaintence.Event.NewChatEvent;
+import Acquaintence.Event.*;
 import Acquaintence.EventManager;
 import Business.BusinessFacade;
 import Business.Models.Chat;
@@ -42,22 +40,24 @@ public class HubConnect {
     }
 
     private void newChat(Chat chat) {
-        // TODO Add the chat to the business and maybe throw event, just like when u create a chat via rest
         EventManager.getInstance().fireEvent(new NewChatEvent(this, chat));
     }
 
     private void add(int chatId, User user) {
-        // TODO Check if the chat already exists, else get the chat via rest. If the chat exists add the user to the user list
         EventManager.getInstance().fireEvent(new AddChatEvent(this, chatId, user));
-        System.out.println("User " + user.getName() + " is added to " + chatId + " via hub");
+        sendMessage(user.getName() + " has been added to the chat!", chatId);
     }
 
     private void remove(int chatId, User user) {
         // TODO Check if the user is the logged in, if it is remove the chat. Else remove the user from the chats user list
+        EventManager.getInstance().fireEvent(new RemoveUserFromChatEvent(this, chatId, user));
+        sendMessage(user.getName() + " has been removed from the chat!", chatId);
     }
 
     private void leave(int chatId, User user) {
         // TODO Check if the user is the logged in, if it is remove the chat. Else remove the user from the chats user list
+        EventManager.getInstance().fireEvent(new LeaveChatEvent(this, chatId, user));
+        sendMessage(user.getName() + " has left the chat!", chatId);
     }
 
     public void disconnect() {

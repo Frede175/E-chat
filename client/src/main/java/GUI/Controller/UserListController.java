@@ -3,6 +3,8 @@ package GUI.Controller;
 import Acquaintence.*;
 import Acquaintence.Event.AddUserEvent;
 import Acquaintence.Event.ChangeChatListEvent;
+import Acquaintence.Event.LeaveChatEvent;
+import Acquaintence.Event.RemoveUserFromChatEvent;
 import Business.Connection.RequestResponse;
 import Business.Models.User;
 import GUI.GUI;
@@ -29,6 +31,8 @@ public class UserListController {
 
     public void initialize() {
         EventManager.getInstance().registerListener(AddUserEvent.class, this::addedUser);
+        EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
+        EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
         names = FXCollections.observableArrayList();
         names.addAll(GUI.getInstance().getBusiness().getExistingUsers());
         userList.setItems(names);
@@ -48,6 +52,18 @@ public class UserListController {
 
                 RequestResponse<? extends IChat> response = GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem().getName(), temp);
             }
+        });
+    }
+
+    private void leaveChatEvent(LeaveChatEvent leaveChatEvent) {
+        Platform.runLater(() -> {
+            names.setAll(GUI.getInstance().getBusiness().getExistingUsers());
+        });
+    }
+
+    private void removeUserFromChat(RemoveUserFromChatEvent removeUserFromChatEvent) {
+        Platform.runLater(() -> {
+            names.setAll(GUI.getInstance().getBusiness().getExistingUsers());
         });
     }
 
