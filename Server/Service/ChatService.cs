@@ -45,17 +45,26 @@ namespace Server.Service
         public async Task<bool> AddUsersToChatAsync(int chatId, params string[] userIds)
         {
             var chat = await _chats.FindAsync(chatId);
+            var users = _userManager.Users.Include(u => u.UserDepartments).Where(u => userIds.Contains(u.Id));
+            int count = 0;
             if (chat != null)
             {
-                foreach (string userId in userIds)
+                foreach (var user in users)
                 {
-                    _userChat.Add(new UserChat() { UserId = userId, ChatId = chat.Id });
+                    if (user.UserDepartments.Any(u => u.DepartmentId == chat.DepartmentId)) {
+                        _userChat.Add(new UserChat() { UserId = user.Id, ChatId = chat.Id });
+                        count++;
+                    }
+                    
                 }
-                var result = await _context.SaveChangesAsync();
-                if (result == 1)
-                {
-                    return true;
+                if (count != 0) {
+                    var result = await _context.SaveChangesAsync();
+                    if (result == count)
+                    {
+                        return true;
+                    }
                 }
+                
             }
 
             return false;
@@ -153,7 +162,7 @@ namespace Server.Service
         /// <param name="users">Users.</param>
         public async Task<bool> RemoveUsersFromChatAsync(int chatId, params string[] userIds)
         {
-            var chat = await _chats.FindAsync(chatId);
+            var chat = await _chats.Include(r => r.UserChats).FirstOrDefaultAsync(c => c.Id == chatId);
 
             if (chat != null)
             {
@@ -166,7 +175,7 @@ namespace Server.Service
                 }
                 _chats.Update(chat);
                 var result = await _context.SaveChangesAsync();
-                if (result == 1)
+                if (result == userIds.Count())
                 {
                     return true;
                 }
