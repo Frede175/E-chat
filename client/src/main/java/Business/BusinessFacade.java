@@ -74,8 +74,8 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public List<String> getUsersPermissions() {
-        List<String> permissions = loginUser.getPermissions();
+    public List<String> getRolesPermissions(String rolename) {
+        List<String> permissions = restConnect.get(PathEnum.Get);
         return permissions;
     }
 

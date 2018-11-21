@@ -59,7 +59,7 @@ namespace Server.Controllers
         // POST: https://localhost:5001/api/Role/{role}
         [HttpPost("{role}")]
         [RequiresPermissionAttribute(permissions: Permission.CreateUserRole)]
-        public async Task<ActionResult> CreateUserRole(string role, List<string> addedPermissions)
+        public async Task<ActionResult> CreateUserRole(string role, [FromBody] List<string> addedPermissions)
         {
             var newRole = await _roleManager.FindByNameAsync(role);
             string[] permissions = Enum.GetNames(typeof(Permission));

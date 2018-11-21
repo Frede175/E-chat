@@ -13,7 +13,7 @@ import org.controlsfx.control.ListSelectionView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemovePermssionFromRoleController {
+public class RemovePermissionFromRoleController {
     
     @FXML
     public ComboBox selectRole;
@@ -32,15 +32,18 @@ public class RemovePermssionFromRoleController {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 selectedRole = t1;
+                //TODO Fix så den tager den en roles permissions
+                permissionLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getRolesPermissions(selectedRole));
             }
         });
 
-        permissionLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getUsersPermissions());
+
     }
 
     public void removeSelected(ActionEvent actionEvent) {
         List<String> permissions = new ArrayList<>();
         for(String permission : permissionLSV.getTargetItems()) {
+            System.out.println("Adding " + permission);
             permissions.add(permission);
         }
         if(selectedRole != null && permissions != null) {

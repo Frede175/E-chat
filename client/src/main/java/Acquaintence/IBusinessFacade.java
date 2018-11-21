@@ -25,7 +25,7 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IDepartment>> getAllDepartments();
     IChat getCurrentChat();
     RequestResponse<List<? extends String>> getAllPermissions();
-    List<String> getUsersPermissions();
+    List<String> getRolesPermissions(String roleName);
 
 
     void deleteUserRole(String roleName);
