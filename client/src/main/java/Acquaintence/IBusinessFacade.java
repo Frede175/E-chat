@@ -33,6 +33,8 @@ public interface IBusinessFacade {
     void createDepartment(String departmentname);
     void deleteDepartment(int depId);
     void updateDepartment(int depId, String name);
+    // new
+    void addUserToDepartment(int depId, int userId);
     void createUserRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
