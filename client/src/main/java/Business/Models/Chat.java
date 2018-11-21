@@ -12,6 +12,7 @@ public class Chat implements IChat {
     private int id;
     private String name;
     private Set<MessageIn> messages;
+    private boolean isGroupChat;
 
     public Chat() {
         messages = new TreeSet<>();
@@ -23,10 +24,11 @@ public class Chat implements IChat {
     }
 
 
-    public Chat(int id, String name) {
+    public Chat(int id, String name, boolean isGroupChat) {
         this.id = id;
         this.name = name;
         messages = new TreeSet<>();
+        this.isGroupChat = isGroupChat;
     }
 
     @Override
@@ -49,6 +51,10 @@ public class Chat implements IChat {
         return messages;
     }
 
+    @Override
+    public boolean isGroupChat() {
+        return isGroupChat;
+    }
 
     public void addMessage(MessageIn message) {
         messages.add(message);

@@ -29,23 +29,44 @@ namespace Server.Controllers
 
         private readonly ILogger<ChatController> _logger;
 
+        private readonly IAuthorizationService _authorizationService;
+
 
         public ChatController(IChatService chatService, 
                               UserManager<ApplicationUser> userManager, 
                               ILogger<ChatController> logger, 
                               IHubContext<ChatHub> chathub,
-                              IHubState<ChatHub> chatHubState)
+                              IHubState<ChatHub> chatHubState,
+                              IAuthorizationService authorizationService)
         {
             _userManager = userManager;
             _chatService = chatService;
             _logger = logger;
             _chatHub = chathub;
             _chatHubState = chatHubState;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateChat, Permission.AddUserToChat, Permission.RemoveUserFromChat)]
+        [Authorize]
         public async Task<ActionResult> GetChat(int chatId) {
+
+            var inChats = await _chatService.GetChatsAsync(_userManager.GetUserId(HttpContext.User));
+
+            if (!inChats.Any(c => c.Id == chatId)) {
+                var result = await _authorizationService.AuthorizeAsync(HttpContext.User, 
+                            null, 
+                            new PermissionsAuthorizationRequirement(
+                                PermissionAttributeType.OR, 
+                                Permission.CreateChat, 
+                                Permission.AddUserToChat, 
+                                Permission.RemoveUserFromChat
+                            ));
+                if (!result.Succeeded) {
+                    return Unauthorized();
+                }
+            }
+
             var chat = await _chatService.GetSpecificChat(chatId);
 
             if (chat != null) {
@@ -152,10 +173,10 @@ namespace Server.Controllers
         public async Task<ActionResult> AddUserToChat(int chatId, [FromBody] string userId)
         {
             var result = (await _chatService.AddUsersToChatAsync(chatId, userId));
-            var user = await _userManager.FindByIdAsync(userId);
 
             if (result)
             {
+                var user = await _userManager.FindByIdAsync(userId);
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, chatId.ToString());
                 await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Add", chatId, new User(user));
                 return new OkResult();
@@ -172,10 +193,10 @@ namespace Server.Controllers
         public async Task<ActionResult> RemoveUserFromChat(int chatId, [FromBody] string userId)
         {
             var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
-            var user = await _userManager.FindByIdAsync(userId);
 
             if (result)
             {
+                var user = await _userManager.FindByIdAsync(userId);
                 await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Remove", chatId, new User(user));
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 return new OkResult();
