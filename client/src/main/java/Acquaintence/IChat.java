@@ -8,5 +8,6 @@ public interface IChat {
     String getName();
     void setName(String name);
     Set<? extends IMessageIn> getMessages();
+    boolean isGroupChat();
     String toString();
 }

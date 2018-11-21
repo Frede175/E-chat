@@ -3,6 +3,7 @@ package GUI.Controller;
 
 import Acquaintence.ConnectionState;
 import Acquaintence.Event.ChangeChatListEvent;
+import Acquaintence.Event.NewChatEvent;
 import Acquaintence.EventManager;
 import Acquaintence.IChat;
 import Business.Connection.RequestResponse;
@@ -14,6 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.MouseEvent;
 
+import java.util.EventObject;
 import java.util.List;
 
 
@@ -28,8 +30,9 @@ public class ChatListController {
 
     public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatListEvent.class, this::changeChatList);
+        EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
         names = FXCollections.observableArrayList();
-        getChats();
+        names.addAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
         chatList.setItems(names);
         chatList.setCellFactory(ComboBoxListCell.forListView(names));
         chatList.getSelectionModel().selectFirst();
@@ -41,21 +44,12 @@ public class ChatListController {
         });
     }
 
-    public void getChats() {
-        RequestResponse<List<? extends IChat>>response = GUI.GUI.getInstance().getBusiness().getChats();
-        if (response.getConnectionState() == ConnectionState.SUCCESS) {
-            for (IChat chat : response.getResponse()) {
-                names.add(chat);
-            }
-        }
-
-
-
-    }
-
     // The event listener method for change chat
     private void changeChatList(ChangeChatListEvent changeChatListEvent) {
         names.add(changeChatListEvent.getChat());
     }
 
+    private void getNewChat(NewChatEvent newChatEvent) {
+        names.add(newChatEvent.getChat());
+    }
 }
