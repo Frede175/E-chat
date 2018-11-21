@@ -159,8 +159,8 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.put(PathEnum.UpdateDepartment, depId, name, token);
     }
 
-    public void deleteDepartment(int departmentId){
-        restConnect.delete(PathEnum.DeleteDepartment, departmentId, token);
+    public void deleteDepartment(int depId){
+        restConnect.delete(PathEnum.DeleteDepartment, depId, token);
     }
 
     @Override

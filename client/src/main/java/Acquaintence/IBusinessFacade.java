@@ -31,8 +31,8 @@ public interface IBusinessFacade {
     ConnectionState createChat(String chatName, int departmentId);
     void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
     void createDepartment(String departmentname);
-    void deleteDepartment(int Id);
-    void updateDepartment(int Id, String name);
+    void deleteDepartment(int depId);
+    void updateDepartment(int depId, String name);
     void createUserRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
