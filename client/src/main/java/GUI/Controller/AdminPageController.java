@@ -71,6 +71,12 @@ public class AdminPageController {
                     }
                     break;
                 case DeleteUser:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteUser.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case AddAdditionalRole:
                     try {

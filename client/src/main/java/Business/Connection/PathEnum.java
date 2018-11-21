@@ -14,7 +14,6 @@ public enum PathEnum {
     CreateUser("/api/user/create/", ConnectionType.POST, new TypeToken<User>() {}.getType()),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
     GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
-    DeleteUser("/api/departments/", ConnectionType.DELETE, null),
     CreateChatroom("/api/chat/", ConnectionType.POST, Chat.class),
     GetChats("/api/chat/user/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
     DeleteChatRoom("/api/chat/", ConnectionType.DELETE, null),
@@ -36,7 +35,9 @@ public enum PathEnum {
     DeleteUserRole("/api/role/", ConnectionType.DELETE, null),
     GetRolesPermissions("/api/role/permission/", ConnectionType.GET, new TypeToken<List<String>>() {}.getType()),
     RemovePermissionsFromRole("/api/role/removeperm/", ConnectionType.POST, null),
-    addPermissionsToRole("/api/role/addperm/", ConnectionType.POST, null);
+    AddPermissionsToRole("/api/role/addperm/", ConnectionType.POST, null),
+    DeleteUser("/api/user/delete/", ConnectionType.DELETE, null);
+
 
 
 

@@ -36,6 +36,7 @@ public interface IBusinessFacade {
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
     void addPermissionsToRole(String role, List<String> permissions);
+    void deleteUser(String userId);
 
     void addRoleToUser(String userId, String role);
     void removePermissionsFromRole(String role, List<String> permissions);

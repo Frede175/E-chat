@@ -188,7 +188,12 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void addPermissionsToRole(String role, List<String> permissions) {
-        restConnect.post(PathEnum.addPermissionsToRole, role, permissions, token);
+        restConnect.post(PathEnum.AddPermissionsToRole, role, permissions, token);
+    }
+
+    @Override
+    public void deleteUser(String userId) {
+        restConnect.delete(PathEnum.DeleteUser, userId, token);
     }
 
     public RequestResponse<List<? extends IChat>> getChats() {
