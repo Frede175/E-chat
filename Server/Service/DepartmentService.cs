@@ -64,6 +64,7 @@ namespace Server.Service
 
         public async Task<bool> RemoveDepartmentASync(int id)
         {
+            
             var department = await _department.FindAsync(id);
             if (department != null)
             {

@@ -39,6 +39,12 @@ public class AdminPageController {
                 case RemoveUserFromDepartment:
                     break;
                 case DeleteDepartment:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteDepartment.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case UpdateDepartment:
                     break;
