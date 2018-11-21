@@ -225,6 +225,11 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void removeUserFromDepartment(String userId, int departmentId) {
+        restConnect.post(PathEnum.RemoveUserFromDepartment, departmentId, userId, token);
+    }
+
+    @Override
     public void addPermissionsToRole(String role, List<String> permissions) {
         restConnect.post(PathEnum.AddPermissionsToRole, role, permissions, token);
     }
@@ -235,8 +240,18 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public RequestResponse<List<IDepartment>> getUsersDepartments(String userId){
+        return restConnect.get(PathEnum.GetDepartments, userId, null, token);
+    }
+
+    @Override
+    public RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId) {
+        return restConnect.get(PathEnum.GetAllUsersInDepartment, departmentId, null, token);
+    }
+
+    @Override
     public List<IChat> getUsersChats(String userId) {
-        RequestResponse<List<Department>> departments = restConnect.get(PathEnum.GetDepartments, userId, null, token);
+        RequestResponse<List<Department>> departments = getUsersDepartments(userId);
         List<IChat> usersChats = new ArrayList<>();
         for(Department department : departments.getResponse()) {
             RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, userId, department.toMap(), token);

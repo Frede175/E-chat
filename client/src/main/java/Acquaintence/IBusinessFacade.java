@@ -47,6 +47,9 @@ public interface IBusinessFacade {
     void removeUserFromChat(int chatId, String userId);
     void addRoleToUser(String userId, String role);
     void removePermissionsFromRole(String role, List<String> permissions);
+    void removeUserFromDepartment(String userId, int departmentId);
+    RequestResponse<List<IDepartment>> getUsersDepartments(String userId);
+    RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
 
     void logout();
 }
