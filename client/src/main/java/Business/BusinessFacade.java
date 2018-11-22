@@ -25,11 +25,11 @@ public class BusinessFacade implements IBusinessFacade {
 
     private HubConnect hubConnect = new HubConnect();
     private RestConnect restConnect = new RestConnect();
-    private List<Department> departments = null;
+    private List<Department> departments = new ArrayList();
     private Department currentDepartment = null;
-    private List<Chat> chats = null;
+    private List<Chat> chats = new ArrayList();
     private Chat currentChat = null;
-    private List<User> users = null;
+    private List<User> users = new ArrayList();
     private LoginUser loginUser = null;
     private String token = null;
 
@@ -63,6 +63,12 @@ public class BusinessFacade implements IBusinessFacade {
         if(leaveChatEvent.getUser().getId().equals(loginUser.getSub())) {
             chats.removeIf(chat -> chat.getId() == leaveChatEvent.getChatId());
         }
+        if(!chats.isEmpty() && currentChat.getId() == leaveChatEvent.getChatId()) {
+            setCurrentChat(chats.get(0).getId());
+        } else {
+            currentChat = null;
+            EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
+        }
         users.clear();
         users.addAll((List<User>)getUsers().getResponse());
     }
@@ -70,6 +76,12 @@ public class BusinessFacade implements IBusinessFacade {
     private void removeUserFromChat(RemoveUserFromChatEvent removeUserFromChatEvent) {
         if(removeUserFromChatEvent.getUser().getId().equals(loginUser.getSub())) {
             chats.removeIf(chat -> chat.getId() == removeUserFromChatEvent.getChatId());
+        }
+        if(!chats.isEmpty() && currentChat.getId() == removeUserFromChatEvent.getChatId()) {
+            setCurrentChat(chats.get(0).getId());
+        } else {
+            currentChat = null;
+            EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
         }
         users.clear();
         users.addAll((List<User>)getUsers().getResponse());
@@ -291,7 +303,7 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<List<Chat>> chats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), null, token);
         if(chats.getResponse() != null && !chats.getResponse().isEmpty()) {
             this.chats = chats.getResponse();
-            currentChat = this.chats.get(0);
+            setCurrentChat(this.chats.get(0).getId());
         }
         return new RequestResponse<>(chats.getResponse(), chats.getConnectionState());
     }

@@ -65,9 +65,15 @@ public class MessageViewController {
     // The event listener method for change chat
     private void changeChat(ChangeChatEvent changeChatEvent) {
         IChat chat = changeChatEvent.getChat();
-        if(chat.getMessages() != null){
-            List<? extends IMessageIn> mes = new ArrayList<>(chat.getMessages());
-            messages.setAll(mes);
+        if(chat != null && chat.getMessages() != null){
+            Platform.runLater(() -> {
+                List<? extends IMessageIn> mes = new ArrayList<>(chat.getMessages());
+                messages.setAll(mes);
+            });
+        } else {
+            Platform.runLater(() -> {
+                messages.clear();
+            });
         }
 
     }

@@ -13,7 +13,7 @@
             <Insets bottom="10.0" top="10.0" />
          </HBox.margin>
       </TextField>
-      <Button mnemonicParsing="false" onAction="#sendMessage" text="Send">
+      <Button mnemonicParsing="false" fx:id="sendBtn" onAction="#sendMessage" text="Send">
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin>
