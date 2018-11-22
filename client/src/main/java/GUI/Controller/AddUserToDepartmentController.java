@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.stage.Stage;
 
 public class AddUserToDepartmentController {
 
@@ -32,6 +33,8 @@ public class AddUserToDepartmentController {
 
     public void addToDepartmentBtn(ActionEvent actionEvent){
         GUI.getInstance().getBusiness().addUserToDepartment(choiceBoxDepartment.getValue().getId(), choiceBoxUser.getValue().getId());
+        Stage stage = (Stage) addBtn.getScene().getWindow();
+        stage.close();
     }
 
 }

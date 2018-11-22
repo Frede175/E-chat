@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -50,5 +51,7 @@ public class RemoveUserFromChatController {
 
     public void removeUserFromChat(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().removeUserFromChat(selectedChat.getId(), selectedUser.getId());
+        Stage stage = (Stage) selectUser.getScene().getWindow();
+        stage.close();
     }
 }

@@ -9,9 +9,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 import org.controlsfx.control.ListSelectionView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class AddPermissionsToRoleController {
@@ -37,25 +39,26 @@ public class AddPermissionsToRoleController {
                 List<String> rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole);
                 List<String> allPermissions = response1.getResponse();
                 List<String> notCurrentPermissions = new ArrayList<>();
-                for(String role : allPermissions) {
-                    if(!rolesPermissions.contains(role)) {
-                        notCurrentPermissions.add(role);
+                for(Iterator<String> iterator = allPermissions.iterator(); iterator.hasNext();) {
+                    String perm = iterator.next();
+                    if(!rolesPermissions.contains(perm)) {
+                        notCurrentPermissions.add(perm);
+                        iterator.remove();
                     }
                 }
-
-                permissionLSV.getSourceItems().addAll(notCurrentPermissions);
+                permissionLSV.getSourceItems().setAll(notCurrentPermissions);
+                permissionLSV.getTargetItems().setAll(allPermissions);
             }
         });
     }
 
     public void addSelected(ActionEvent actionEvent) {
         List<String> permissions = new ArrayList<>();
-        for(String permission : permissionLSV.getTargetItems()) {
-            System.out.println("Adding " + permission);
-            permissions.add(permission);
-        }
-        if(selectedRole != null && permissions != null) {
+        permissions.addAll(permissionLSV.getTargetItems());
+        if(selectedRole != null) {
             GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole, permissions);
+            Stage stage = (Stage) selectRole.getScene().getWindow();
+            stage.close();
         }
     }
 }

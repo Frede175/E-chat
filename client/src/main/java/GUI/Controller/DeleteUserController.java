@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 
 public class DeleteUserController {
 
@@ -30,5 +31,7 @@ public class DeleteUserController {
 
     public void deleteUser(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().deleteUser(selectedUser.getId());
+        Stage stage = (Stage) selectUser.getScene().getWindow();
+        stage.close();
     }
 }

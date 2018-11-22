@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -53,5 +54,7 @@ public class AddRoleToUserController {
 
     public void addSelected(javafx.event.ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().addRoleToUser(selectedUser, selectedRole);
+        Stage stage = (Stage) addRoleToUser.getScene().getWindow();
+        stage.close();
     }
 }

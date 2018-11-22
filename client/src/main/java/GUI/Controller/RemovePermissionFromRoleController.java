@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 import org.controlsfx.control.ListSelectionView;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class RemovePermissionFromRoleController {
         if(selectedRole != null && permissions != null) {
             GUI.getInstance().getBusiness().removePermissionsFromRole(selectedRole, permissions);
         }
-
+        Stage stage = (Stage) selectRole.getScene().getWindow();
+        stage.close();
     }
 }

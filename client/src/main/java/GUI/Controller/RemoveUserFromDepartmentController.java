@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 
 public class RemoveUserFromDepartmentController {
     @FXML
@@ -44,5 +45,7 @@ public class RemoveUserFromDepartmentController {
 
     public void removeUserFromDepartment(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().removeUserFromDepartment(selectedUser.getId(), selectedDepartment.getId());
+        Stage stage = (Stage) selectUser.getScene().getWindow();
+        stage.close();
     }
 }

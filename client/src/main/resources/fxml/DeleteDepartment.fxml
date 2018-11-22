@@ -23,7 +23,7 @@
             <Insets top="20.0" />
          </VBox.margin>
       </ChoiceBox>
-      <Button fx:id="DeleteBtn" mnemonicParsing="false" onAction="#delete" text="Delete">
+      <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#delete" text="Delete">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>

@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.controlsfx.control.ListSelectionView;
 
 import java.util.ArrayList;
@@ -33,5 +34,7 @@ public class CreateUserController {
             departmentIds.add(dep.getId());
         }
         GUI.GUI.getInstance().getBusiness().createUser(UsernameTextField.getText(), PasswordTextField.getText(), roleCB.getSelectionModel().getSelectedItem(), departmentIds);
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.close();
     }
 }
