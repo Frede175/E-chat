@@ -19,7 +19,7 @@ import java.util.List;
 public class AddPermissionsToRoleController {
 
     @FXML
-    public ComboBox selectRole;
+    public ComboBox<String> selectRole;
 
     @FXML
     public ListSelectionView<String> permissionLSV;

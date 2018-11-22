@@ -289,7 +289,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> chats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), null, token);
-        if(!chats.getResponse().isEmpty()) {
+        if(chats.getResponse() != null && !chats.getResponse().isEmpty()) {
             this.chats = chats.getResponse();
             currentChat = this.chats.get(0);
         }
