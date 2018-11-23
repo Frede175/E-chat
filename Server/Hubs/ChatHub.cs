@@ -12,6 +12,7 @@ using Server.Models;
 using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Logging;
+using Server.Security;
 
 namespace Server.Hubs
 {
@@ -35,6 +36,7 @@ namespace Server.Hubs
         }
 
 
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task SendMessage(MessageIn message)
         {
             var userId = _userManager.GetUserId(Context.User);
@@ -62,10 +64,12 @@ namespace Server.Hubs
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, chatId.ToString());
             }
+
+            await base.OnConnectedAsync();
         }
 
         
-        public override Task OnDisconnectedAsync(Exception exception) {
+        public async override Task OnDisconnectedAsync(Exception exception) {
             var userId = _userManager.GetUserId(Context.User);
 
             _hubState.Connections[userId].Remove(Context.ConnectionId);
@@ -74,8 +78,9 @@ namespace Server.Hubs
                 _hubState.Connections.Remove(userId);
             }
 
-            return Task.CompletedTask;
+            await base.OnDisconnectedAsync(exception);
         }
+        
 
     }
 }
