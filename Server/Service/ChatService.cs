@@ -234,14 +234,25 @@ namespace Server.Service
         /// <param name="message">Message.</param>
         public async Task<Message> SendMessageAsync(int chatId, string userId, string content)
         {
+            
+            if (string.IsNullOrEmpty(content)) return null;
+
             var chat = await _chats.FindAsync(chatId);
-            if (!string.IsNullOrEmpty(content) && chat != null)
+
+            if (chat == null) return null;
+
+            var user = await _userManager.Users.Include(u => u.UserChats).SingleOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null) return null;
+
+            if (user.UserChats.Any(uc => uc.ChatId == chat.Id))
             {
                 var message = new Message()
                 {
                     Content = content,
                     TimeStamp = DateTime.UtcNow,
                     SenderId = userId,
+                    ApplicationUser = user,
                     ChatId = chat.Id
                 };
 
@@ -249,7 +260,6 @@ namespace Server.Service
                 var result = await _context.SaveChangesAsync();
                 if (result == 1)
                 {
-                    await _context.Entry(message).Reference(m => m.ApplicationUser).LoadAsync();
                     return message;
                 }
             }
