@@ -46,20 +46,6 @@ namespace Server.Hubs
 
         }
 
-
-
-        public async Task AddUserToGroup(string userId, string group) {
-            if (_hubState.Connections.TryGetValue(userId, out var userConnections)) {
-                foreach (var connectionId in userConnections) {
-                    await Groups.AddToGroupAsync(connectionId, group);
-                }
-            }
-        }
-
-
-        
-
-
         public async override Task OnConnectedAsync()
         {
             var userId = _userManager.GetUserId(Context.User);
