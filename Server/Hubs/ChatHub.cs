@@ -16,17 +16,17 @@ using Microsoft.Extensions.Logging;
 namespace Server.Hubs
 {
     [Authorize(AuthenticationSchemes = OpenIddictValidationDefaults.AuthenticationScheme)]
-    public class ChatHub : Hub
+    public class ChatHub : Hub<IChatHub>
     {
 
         private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private readonly IHubState<ChatHub> _hubState;
+        private readonly IHubState<ChatHub, IChatHub> _hubState;
 
         private readonly ILogger<ChatHub> _logger;
 
-        public ChatHub(IChatService chat, UserManager<ApplicationUser> userManager, IHubState<ChatHub> hubState, ILogger<ChatHub> logger)
+        public ChatHub(IChatService chat, UserManager<ApplicationUser> userManager, IHubState<ChatHub, IChatHub> hubState, ILogger<ChatHub> logger)
         {
             _chatService = chat;
             _userManager = userManager;
@@ -41,7 +41,7 @@ namespace Server.Hubs
 
             var returnMessage = await _chatService.SendMessageAsync(message.ChatId, userId, message.Content);
             if(returnMessage != null){
-                await Clients.Group(message.ChatId.ToString()).SendAsync("ReceiveMessage", new Message(returnMessage));
+                await Clients.Group(message.ChatId.ToString()).ReceiveMessage(new Message(returnMessage));
             }
 
         }

@@ -23,9 +23,9 @@ namespace Server.Controllers
     {
         private readonly IChatService _chatService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHubContext<ChatHub> _chatHub;
+        private readonly IHubContext<ChatHub, IChatHub> _chatHub;
 
-        private readonly IHubState<ChatHub> _chatHubState;
+        private readonly IHubState<ChatHub, IChatHub> _chatHubState;
 
         private readonly ILogger<ChatController> _logger;
 
@@ -35,8 +35,8 @@ namespace Server.Controllers
         public ChatController(IChatService chatService, 
                               UserManager<ApplicationUser> userManager, 
                               ILogger<ChatController> logger, 
-                              IHubContext<ChatHub> chathub,
-                              IHubState<ChatHub> chatHubState,
+                              IHubContext<ChatHub, IChatHub> chathub,
+                              IHubState<ChatHub, IChatHub> chatHubState,
                               IAuthorizationService authorizationService)
         {
             _userManager = userManager;
@@ -148,7 +148,7 @@ namespace Server.Controllers
             if (result != null)
             {
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
-                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", new Chat(result));
+                await _chatHub.Clients.Group(result.Id.ToString()).NewChat(new Chat(result));
                 return CreatedAtRoute(nameof(GetChat),new {chatId = result.Id} , new Chat(result));
             }
 
@@ -180,7 +180,7 @@ namespace Server.Controllers
                 //Add hub connections to group
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
                 await _chatHubState.AddUserToGroupAsync(_chatHub, currentUserId, result.Id.ToString());
-                await _chatHub.Clients.Group(result.Id.ToString()).SendAsync("NewChat", new Chat(result));
+                await _chatHub.Clients.Group(result.Id.ToString()).NewChat(new Chat(result));
                 return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
@@ -198,7 +198,7 @@ namespace Server.Controllers
 
             if (result)
             {
-                await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Leave", chatId, new User(user));
+                await _chatHub.Clients.Group(chatId.ToString()).Leave(chatId, new User(user));
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, user.Id, chatId.ToString());
                 return new OkResult();
             }
@@ -218,7 +218,7 @@ namespace Server.Controllers
             {
                 var user = await _userManager.FindByIdAsync(userId);
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, chatId.ToString());
-                await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Add", chatId, new User(user));
+                await _chatHub.Clients.Group(chatId.ToString()).Add(chatId, new User(user));
                 return new OkResult();
             }
 
@@ -237,7 +237,7 @@ namespace Server.Controllers
             if (result)
             {
                 var user = await _userManager.FindByIdAsync(userId);
-                await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Remove", chatId, new User(user));
+                await _chatHub.Clients.Group(chatId.ToString()).Remove(chatId, new User(user));
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 return new OkResult();
             }
