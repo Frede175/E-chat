@@ -224,48 +224,7 @@ namespace Server.Service
 
             return null;
         }
-
-
-        /// <summary>
-        /// Method for sending a message in a chat
-        /// </summary>
-        /// <returns>The message async.</returns>
-        /// <param name="chatId">Chat identifier.</param>
-        /// <param name="message">Message.</param>
-        public async Task<Message> SendMessageAsync(int chatId, string userId, string content)
-        {
-            
-            if (string.IsNullOrEmpty(content)) return null;
-
-            var chat = await _chats.FindAsync(chatId);
-
-            if (chat == null) return null;
-
-            var user = await _userManager.Users.Include(u => u.UserChats).SingleOrDefaultAsync(u => u.Id == userId);
-
-            if (user == null) return null;
-
-            if (user.UserChats.Any(uc => uc.ChatId == chat.Id))
-            {
-                var message = new Message()
-                {
-                    Content = content,
-                    TimeStamp = DateTime.UtcNow,
-                    SenderId = userId,
-                    ApplicationUser = user,
-                    ChatId = chat.Id
-                };
-
-                _messages.Add(message);
-                var result = await _context.SaveChangesAsync();
-                if (result == 1)
-                {
-                    return message;
-                }
-            }
-            return null;
-        }
-
+        
         public async Task<Chat> GetSpecificChat(int chatId)
         {
             return await _chats.FindAsync(chatId);

@@ -10,8 +10,6 @@ namespace Server.Service.Interfaces
     {
         Task<bool> ChatIsActiveAsync(int chatId);
 
-        Task<Message> SendMessageAsync(int chatId, string userId, string content);
-
         Task<Chat> CreateChatAsync(Chat chat, string userId);
 
         Task<bool> RemoveChatAsync(int chatId, ApplicationUser user);
