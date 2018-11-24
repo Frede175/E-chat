@@ -121,6 +121,7 @@ namespace Server
 
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IMessageService, MessageService>();
             services.AddSingleton<IAuthorizationHandler, PermissionsAuthorizationHandler>();
             services.AddSingleton(typeof(IHubState<,>), typeof(HubState<,>));
 
