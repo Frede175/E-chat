@@ -9,6 +9,8 @@ namespace Server.Service.Interfaces
         Task<Message> SendMessageAsync(int chatId, string userId, string content);
 
         Task<Message> SendUpdateMessageAsync(int chatId, ApplicationUser user, UpdateMessageType type);
+
+        Task<Message> SendUpdateMessageAsync(int chatId, string userId, UpdateMessageType type);
     }
 
 

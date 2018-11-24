@@ -108,5 +108,13 @@ namespace Server.Service
             
             return null;
         }
+
+        public async Task<Message> SendUpdateMessageAsync(int chatId, string userId, UpdateMessageType type) 
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            return await SendUpdateMessageAsync(chatId, user, type);
+        }
+        
     }
 }
