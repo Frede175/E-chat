@@ -20,19 +20,23 @@ namespace Server.Hubs
     public class ChatHub : Hub<IChatHub>
     {
 
+        private readonly IMessageService _messageService;
+
         private readonly IChatService _chatService;
+
         private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly IHubState<ChatHub, IChatHub> _hubState;
 
-        private readonly ILogger<ChatHub> _logger;
-
-        public ChatHub(IChatService chat, UserManager<ApplicationUser> userManager, IHubState<ChatHub, IChatHub> hubState, ILogger<ChatHub> logger)
+        public ChatHub(IMessageService messageService,
+            IChatService chatService, 
+            UserManager<ApplicationUser> userManager, 
+            IHubState<ChatHub, IChatHub> hubState)
         {
-            _chatService = chat;
+            _messageService = messageService;
+            _chatService = chatService;
             _userManager = userManager;
             _hubState = hubState;
-            _logger = logger;
         }
 
 
@@ -41,7 +45,7 @@ namespace Server.Hubs
         {
             var userId = _userManager.GetUserId(Context.User);
 
-            var returnMessage = await _chatService.SendMessageAsync(message.ChatId, userId, message.Content);
+            var returnMessage = await _messageService.SendMessageAsync(message.ChatId, userId, message.Content);
             if(returnMessage != null){
                 await Clients.Group(message.ChatId.ToString()).ReceiveMessage(new Message(returnMessage));
             }
