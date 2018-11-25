@@ -122,6 +122,9 @@ public class BusinessFacade implements IBusinessFacade {
             getDepartments();
             getUsers();
             getChats();
+            if(loginUser.getUserPermissions().isEmpty()) {
+                return ConnectionState.NO_BASIC_PERMISSIONS;
+            }
         }
         return temp.getConnectionState();
     }
@@ -136,7 +139,9 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, loginUser.getSub(), null, token);
-        users = response.getResponse();
+        if(response.getResponse() != null) {
+            users = (response.getResponse());
+        }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 

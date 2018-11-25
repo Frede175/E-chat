@@ -29,6 +29,10 @@ public class LoggedInUserController {
             }
 
         }
+        if(types.isEmpty()) {
+            adminMB.setDisable(true);
+            adminMB.setVisible(false);
+        }
         for (PermissionType type : types) {
             MenuItem mi = new MenuItem(type.toString());
             mi.setOnAction(event -> {
