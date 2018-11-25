@@ -302,7 +302,20 @@ public class BusinessFacade implements IBusinessFacade {
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> chats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), null, token);
         if(chats.getResponse() != null && !chats.getResponse().isEmpty()) {
-            this.chats = chats.getResponse();
+            for(Chat chat : chats.getResponse()) {
+                if(chat.isGroupChat()) {
+                    this.chats.add(chat);
+                } else {
+                    // Temporary polish fix
+                    RequestResponse<List<? extends IUser>> response = restConnect.get(PathEnum.GetUsersInChat, chat.getId(), null, token );;
+                    for (IUser user : response.getResponse()) {
+                        if(!user.getName().equals(loginUser.getName())) {
+                            chat.setName(user.getName());
+                            this.chats.add(chat);
+                        }
+                    }
+                }
+            }
             setCurrentChat(this.chats.get(0).getId());
         }
         return new RequestResponse<>(chats.getResponse(), chats.getConnectionState());
@@ -381,11 +394,11 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public void logout() {
         restConnect.logout(token);
-        departments = null;
+        departments.clear();
         currentDepartment = null;
-        chats = null;
+        chats.clear();
         currentChat = null;
-        users = null;
+        users.clear();
         loginUser = null;
         token = null;
         hubConnect.disconnect();
