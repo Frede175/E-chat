@@ -11,9 +11,12 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 
 import java.util.*;
 
@@ -44,8 +47,21 @@ public class MessageViewController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    setText(item.getTimeStamp() + " | " + item.getUser().getName() + " | " + item.getContent());
+                    setText(item.getUser().getName() + " | " + item.getContent());
                 }
+                setOnMouseEntered(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (empty || item == null){
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            Tooltip tt = new Tooltip("" + item.getTimeStamp());
+                            setTooltip(tt);
+                        }
+
+                    }
+                });
             }
         });
         // Scrolls to the newest message
