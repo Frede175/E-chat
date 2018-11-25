@@ -169,7 +169,7 @@ public class BusinessFacade implements IBusinessFacade {
                     }
                 }
             }
-        } else if (chats != null) {
+        } else if (chats != null && !chats.isEmpty()) {
             currentChat = chats.get(0);
             if(currentChat.getMessages().isEmpty()) {
                 getMessages();

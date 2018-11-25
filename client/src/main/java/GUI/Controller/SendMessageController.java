@@ -20,6 +20,7 @@ public class SendMessageController {
 
     public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeChat);
+
         if (GUI.getInstance().getBusiness().getCurrentChat() == null) {
             disable(true);
         }
