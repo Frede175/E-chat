@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Server.Hubs
 {
-    public interface IHubState<T> where T : Hub
+    public interface IHubState<T, T1> where T : Hub<T1> where T1 : class
     {
         Dictionary<string, List<string>> Connections {get;}
-        Task AddUserToGroupAsync(IHubContext<T> context, string userId, string group);
-        Task RemoveUserFromGroupAsync(IHubContext<T> context, string userId, string group);
+        Task AddUserToGroupAsync(IHubContext<T,T1> context, string userId, string group);
+        Task RemoveUserFromGroupAsync(IHubContext<T,T1> context, string userId, string group);
     }
 }

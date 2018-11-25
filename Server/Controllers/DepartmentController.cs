@@ -24,9 +24,9 @@ namespace Server.Controllers
 
         private readonly IChatService _chatService;
 
-        private readonly IHubState<ChatHub> _chatHubState;
+        private readonly IHubState<ChatHub, IChatHub> _chatHubState;
 
-        private readonly IHubContext<ChatHub> _chatHub;
+        private readonly IHubContext<ChatHub, IChatHub> _chatHub;
 
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -36,8 +36,8 @@ namespace Server.Controllers
 
 
         public DepartmentController(IDepartmentService departmentService, 
-            IHubContext<ChatHub> chatHub,
-            IHubState<ChatHub> chatHubState,
+            IHubContext<ChatHub, IChatHub> chatHub,
+            IHubState<ChatHub, IChatHub> chatHubState,
             IChatService chatService,
             UserManager<ApplicationUser> userManager, 
             ILogger<DepartmentController> logger,
@@ -150,7 +150,7 @@ namespace Server.Controllers
 
                 foreach (var chatId in chatIds) {
                     await _chatService.RemoveUsersFromChatAsync(chatId, userId);
-                    await _chatHub.Clients.Group(chatId.ToString()).SendAsync("Remove", chatId, new User(user));
+                    await _chatHub.Clients.Group(chatId.ToString()).Remove(chatId, new User(user));
                     await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 }
                 return Ok();

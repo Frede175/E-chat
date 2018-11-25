@@ -12,53 +12,45 @@ using Server.Models;
 using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Logging;
+using Server.Security;
 
 namespace Server.Hubs
 {
     [Authorize(AuthenticationSchemes = OpenIddictValidationDefaults.AuthenticationScheme)]
-    public class ChatHub : Hub
+    public class ChatHub : Hub<IChatHub>
     {
 
+        private readonly IMessageService _messageService;
+
         private readonly IChatService _chatService;
+
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private readonly IHubState<ChatHub> _hubState;
+        private readonly IHubState<ChatHub, IChatHub> _hubState;
 
-        private readonly ILogger<ChatHub> _logger;
-
-        public ChatHub(IChatService chat, UserManager<ApplicationUser> userManager, IHubState<ChatHub> hubState, ILogger<ChatHub> logger)
+        public ChatHub(IMessageService messageService,
+            IChatService chatService, 
+            UserManager<ApplicationUser> userManager, 
+            IHubState<ChatHub, IChatHub> hubState)
         {
-            _chatService = chat;
+            _messageService = messageService;
+            _chatService = chatService;
             _userManager = userManager;
             _hubState = hubState;
-            _logger = logger;
         }
 
 
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task SendMessage(MessageIn message)
         {
             var userId = _userManager.GetUserId(Context.User);
 
-            var returnMessage = await _chatService.SendMessageAsync(message.ChatId, userId, message.Content);
+            var returnMessage = await _messageService.SendMessageAsync(message.ChatId, userId, message.Content);
             if(returnMessage != null){
-                await Clients.Group(message.ChatId.ToString()).SendAsync("ReceiveMessage", new Message(returnMessage));
+                await Clients.Group(message.ChatId.ToString()).ReceiveMessage(new Message(returnMessage));
             }
 
         }
-
-
-
-        public async Task AddUserToGroup(string userId, string group) {
-            if (_hubState.Connections.TryGetValue(userId, out var userConnections)) {
-                foreach (var connectionId in userConnections) {
-                    await Groups.AddToGroupAsync(connectionId, group);
-                }
-            }
-        }
-
-
-        
-
 
         public async override Task OnConnectedAsync()
         {
@@ -76,10 +68,12 @@ namespace Server.Hubs
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, chatId.ToString());
             }
+
+            await base.OnConnectedAsync();
         }
 
         
-        public override Task OnDisconnectedAsync(Exception exception) {
+        public async override Task OnDisconnectedAsync(Exception exception) {
             var userId = _userManager.GetUserId(Context.User);
 
             _hubState.Connections[userId].Remove(Context.ConnectionId);
@@ -88,8 +82,9 @@ namespace Server.Hubs
                 _hubState.Connections.Remove(userId);
             }
 
-            return Task.CompletedTask;
+            await base.OnDisconnectedAsync(exception);
         }
+        
 
     }
 }
