@@ -48,19 +48,16 @@ public class HubConnect {
 
     private void add(int chatId, User user) {
         EventManager.getInstance().fireEvent(new AddChatEvent(this, chatId, user));
-        sendMessage(user.getName() + " has been added to the chat!", chatId);
     }
 
     private void remove(int chatId, User user) {
         // TODO Check if the user is the logged in, if it is remove the chat. Else remove the user from the chats user list
         EventManager.getInstance().fireEvent(new RemoveUserFromChatEvent(this, chatId, user));
-        sendMessage(user.getName() + " has been removed from the chat!", chatId);
     }
 
     private void leave(int chatId, User user) {
         // TODO Check if the user is the logged in, if it is remove the chat. Else remove the user from the chats user list
         EventManager.getInstance().fireEvent(new LeaveChatEvent(this, chatId, user));
-        sendMessage(user.getName() + " has left the chat!", chatId);
     }
 
     public void disconnect() {
