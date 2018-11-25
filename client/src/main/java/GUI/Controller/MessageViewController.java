@@ -49,18 +49,15 @@ public class MessageViewController {
                 } else {
                     setText(item.getUser().getName() + " | " + item.getContent());
                 }
-                setOnMouseEntered(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        if (empty || item == null){
-                            setText(null);
-                            setGraphic(null);
-                        } else {
-                            Tooltip tt = new Tooltip("" + item.getTimeStamp());
-                            setTooltip(tt);
-                        }
-
+                setOnMouseEntered(event -> {
+                    if (empty || item == null){
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        Tooltip tt = new Tooltip("" + item.getTimeStamp());
+                        setTooltip(tt);
                     }
+
                 });
             }
         });
