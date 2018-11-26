@@ -155,7 +155,7 @@ public class AdminPageController {
     public Separator createSeparator() {
         Separator sep = new Separator();
         sep.setOrientation(Orientation.HORIZONTAL);
-        sep.setMinWidth(1000);
+        sep.setMinWidth(980);
         sep.setHalignment(HPos.CENTER);
         return sep;
     }

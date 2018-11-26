@@ -23,7 +23,10 @@
                 <Insets top="20.0" />
             </VBox.margin>
         </ComboBox>
-        <ListSelectionView fx:id="permissionLSV" />
+        <ListSelectionView fx:id="permissionLSV" maxWidth="600.0" prefWidth="600.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin></ListSelectionView>
         <Button fx:id="addPermissionFromRole" mnemonicParsing="false" onAction="#addSelected" text="Add">
             <VBox.margin>
                 <Insets bottom="20.0" top="20.0" />

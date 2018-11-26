@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.DeleteDepartmentController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.DeleteDepartmentController">
    <children>
       <Label text="Delete Department">
          <font>
@@ -25,7 +24,7 @@
       </ChoiceBox>
       <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#delete" text="Delete">
          <VBox.margin>
-            <Insets top="20.0" />
+            <Insets bottom="20.0" top="20.0" />
          </VBox.margin>
       </Button>
    </children>

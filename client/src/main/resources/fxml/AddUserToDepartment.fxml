@@ -7,15 +7,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddUserToDepartmentController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddUserToDepartmentController">
    <children>
       <Label text="Add user to department">
          <font>
             <Font size="23.0" />
          </font>
-         <padding>
+         <VBox.margin>
             <Insets top="20.0" />
-         </padding>
+         </VBox.margin>
       </Label>
       <ChoiceBox fx:id="choiceBoxUser" prefWidth="300.0">
          <VBox.margin>
@@ -29,7 +29,7 @@
       </ChoiceBox>
       <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addToDepartmentBtn" text="Add">
          <VBox.margin>
-            <Insets top="20.0" />
+            <Insets bottom="20.0" top="20.0" />
          </VBox.margin>
       </Button>
    </children>

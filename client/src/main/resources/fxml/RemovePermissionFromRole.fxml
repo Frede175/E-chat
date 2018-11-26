@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ListSelectionView?>
 
-<VBox alignment="TOP_CENTER" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.RemovePermissionFromRoleController">
+<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.RemovePermissionFromRoleController">
     <children>
         <Label text="Remove permission(s) from role">
             <font>
@@ -23,7 +23,7 @@
                 <Insets top="20.0" />
             </VBox.margin>
         </ComboBox>
-      <ListSelectionView fx:id="permissionLSV" />
+      <ListSelectionView fx:id="permissionLSV" maxWidth="600.0" />
         <Button fx:id="removePermissionFromRole" mnemonicParsing="false" onAction="#removeSelected" text="Remove">
             <VBox.margin>
                 <Insets bottom="20.0" top="20.0" />
