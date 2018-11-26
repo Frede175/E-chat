@@ -76,12 +76,13 @@ public class HubConnect {
     private void receive(MessageIn message) {
         EventManager.getInstance().fireEvent(new MessageEvent(this, message));
         Platform.runLater(() -> {
-            if(businessFacade.getLoginUser() != null && businessFacade.getLoginUser().getSub().equals(message.getUser().getId()))
-            Notifications.create()
+            if(businessFacade.getLoginUser() != null && !businessFacade.getLoginUser().getSub().equals(message.getUser().getId())) {
+                Notifications.create()
                     .title(message.getUser().getName())
                     .text(message.getContent())
                     .graphic(img)
                     .show();
+            }
         });
     }
 
