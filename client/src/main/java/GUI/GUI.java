@@ -6,6 +6,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class GUI extends Application implements IGUI {
@@ -15,8 +17,6 @@ public class GUI extends Application implements IGUI {
     private static GUI gui;
 
     private Stage stage;
-
-    private PopUpWindow popUpWindow;
 
     /**
      * An instance of the IBusinessFacade.
@@ -31,13 +31,12 @@ public class GUI extends Application implements IGUI {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
         Scene scene = new Scene(root);
+        stage.setResizable(false);
         gui.stage = stage;
         stage.setScene(scene);
         stage.setTitle("E-Chat");
-        //stage.getIcons().add(new Image("Images/icon.png"));
+        stage.getIcons().add(new Image("img/E-chat.png"));
         stage.show();
-
-
     }
 
     /**

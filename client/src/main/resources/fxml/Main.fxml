@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
 <HBox prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MainController">
     <children>
@@ -15,7 +18,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
             
-                    <fx:include fx:id="chatBox" source="MessageView.fxml" />
+                    <fx:include fx:id="chatBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="MessageView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -25,7 +28,7 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <SplitPane dividerPositions="0.1304, 0.8528" minWidth="500.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="500.0">
+      <SplitPane dividerPositions="0.1304" minWidth="500.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="500.0">
         <items>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                 <children>
@@ -34,18 +37,24 @@
             </AnchorPane>
           <AnchorPane>
                <children>
-                   <fx:include fx:id="chatList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="ChatList.fxml" />
+
+                  <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                      <Tab closable="false" text="Chats">
+                        <content>
+                            <fx:include fx:id="chatList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="ChatList.fxml" />
+                        </content>
+                      </Tab>
+                      <Tab closable="false" text="Users">
+                        <content>
+                            <fx:include fx:id="userList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="UserList.fxml" />
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
                </children>
             </AnchorPane>
-            <AnchorPane>
-                <children>
-                    <fx:include fx:id="userList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="UserList.fxml" />
-                </children>
-            </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
         </items>
       </SplitPane>
-
     </children>
 </HBox>
-

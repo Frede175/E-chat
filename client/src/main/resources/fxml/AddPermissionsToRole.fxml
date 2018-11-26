@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ListSelectionView?>
 
-<VBox alignment="TOP_CENTER" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddPermissionsToRoleController">
+<VBox alignment="TOP_CENTER" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddPermissionsToRoleController">
     <children>
         <Label text="Add permission(s) to role">
             <font>
