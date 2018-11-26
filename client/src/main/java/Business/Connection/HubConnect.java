@@ -11,13 +11,20 @@ import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import io.reactivex.Single;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.controlsfx.control.Notifications;
 
 public class HubConnect {
 
     private HubConnection chatConnection;
+    private BusinessFacade businessFacade;
+    private ImageView img;
 
     public void connect(String token) {
+        img = new ImageView(new Image("img/E-chat.png"));
+        img.setFitHeight(40.0);
+        img.setFitWidth(40.0);
 
         chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
                 .withAccessTokenProvider(Single.just(token))
@@ -48,19 +55,14 @@ public class HubConnect {
 
     private void add(int chatId, User user) {
         EventManager.getInstance().fireEvent(new AddChatEvent(this, chatId, user));
-        sendMessage(user.getName() + " has been added to the chat!", chatId);
     }
 
     private void remove(int chatId, User user) {
-        // TODO Check if the user is the logged in, if it is remove the chat. Else remove the user from the chats user list
         EventManager.getInstance().fireEvent(new RemoveUserFromChatEvent(this, chatId, user));
-        sendMessage(user.getName() + " has been removed from the chat!", chatId);
     }
 
     private void leave(int chatId, User user) {
-        // TODO Check if the user is the logged in, if it is remove the chat. Else remove the user from the chats user list
         EventManager.getInstance().fireEvent(new LeaveChatEvent(this, chatId, user));
-        sendMessage(user.getName() + " has left the chat!", chatId);
     }
 
     public void disconnect() {
@@ -74,12 +76,18 @@ public class HubConnect {
     private void receive(MessageIn message) {
         EventManager.getInstance().fireEvent(new MessageEvent(this, message));
         Platform.runLater(() -> {
-            Notifications.create()
+            if(businessFacade.getLoginUser() != null && !businessFacade.getLoginUser().getSub().equals(message.getUser().getId())) {
+                Notifications.create()
                     .title(message.getUser().getName())
                     .text(message.getContent())
-                    .showInformation();
+                    .graphic(img)
+                    .show();
+            }
         });
     }
 
 
+    public void injectBusiness(BusinessFacade businessFacade) {
+        this.businessFacade = businessFacade;
+    }
 }

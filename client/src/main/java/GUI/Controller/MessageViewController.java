@@ -11,9 +11,12 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 
 import java.util.*;
 
@@ -44,8 +47,18 @@ public class MessageViewController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    setText(item.getTimeStamp() + " | " + item.getUser().getName() + " | " + item.getContent());
+                    setText(item.getUser().getName() + " | " + item.getContent());
                 }
+                setOnMouseEntered(event -> {
+                    if (empty || item == null){
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        Tooltip tt = new Tooltip("" + item.getTimeStamp());
+                        setTooltip(tt);
+                    }
+
+                });
             }
         });
         // Scrolls to the newest message
@@ -65,9 +78,15 @@ public class MessageViewController {
     // The event listener method for change chat
     private void changeChat(ChangeChatEvent changeChatEvent) {
         IChat chat = changeChatEvent.getChat();
-        if(chat.getMessages() != null){
-            List<? extends IMessageIn> mes = new ArrayList<>(chat.getMessages());
-            messages.setAll(mes);
+        if(chat != null && chat.getMessages() != null){
+            Platform.runLater(() -> {
+                List<? extends IMessageIn> mes = new ArrayList<>(chat.getMessages());
+                messages.setAll(mes);
+            });
+        } else {
+            Platform.runLater(() -> {
+                messages.clear();
+            });
         }
 
     }

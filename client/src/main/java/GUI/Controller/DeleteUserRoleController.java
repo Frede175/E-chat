@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 
 public class DeleteUserRoleController {
 
@@ -38,5 +39,7 @@ public class DeleteUserRoleController {
 
     public void deleteRole(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().deleteUserRole(selectedRole);
+        Stage stage = (Stage) deleteRole.getScene().getWindow();
+        stage.close();
     }
 }

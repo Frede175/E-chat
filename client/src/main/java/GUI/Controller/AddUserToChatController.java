@@ -8,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
 
 public class AddUserToChatController {
     @FXML
@@ -29,5 +30,7 @@ public class AddUserToChatController {
 
     public void addUser() {
         GUI.getInstance().getBusiness().addUserToChat(chatsCB.getSelectionModel().getSelectedItem().getId(), usersCB.getSelectionModel().getSelectedItem().getId());
+        Stage stage = (Stage) chatsCB.getScene().getWindow();
+        stage.close();
     }
 }

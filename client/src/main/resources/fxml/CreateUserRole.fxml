@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ListSelectionView?>
 
-<VBox fx:id="root" alignment="TOP_CENTER" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.CreateUserRoleController">
+<VBox fx:id="root" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.CreateUserRoleController">
     <TextField fx:id="roleName" maxWidth="300.0" promptText="Role name">
         <VBox.margin>
             <Insets top="20.0" />

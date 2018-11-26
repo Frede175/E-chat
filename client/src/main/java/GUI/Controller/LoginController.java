@@ -33,6 +33,15 @@ public class LoginController {
                     e.printStackTrace();
                 }
                 break;
+            case NO_BASIC_PERMISSIONS:
+                try {
+                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoggedInUser.fxml"));
+                    passwordTF.setText("");
+                    GUI.getInstance().getStage().setScene(new Scene(root));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
             case WRONG_LOGIN:
                 errorL.setText("Username or password is incorrect");
                 break;

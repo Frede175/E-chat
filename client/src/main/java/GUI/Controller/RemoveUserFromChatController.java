@@ -2,12 +2,16 @@ package GUI.Controller;
 
 import Acquaintence.IChat;
 import Acquaintence.IUser;
+import Business.Connection.RequestResponse;
 import GUI.GUI;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Stage;
+
+import java.util.List;
 
 public class RemoveUserFromChatController {
     @FXML
@@ -26,7 +30,12 @@ public class RemoveUserFromChatController {
             @Override
             public void changed(ObservableValue<? extends IUser> observable, IUser oldValue, IUser newValue) {
                 selectedUser = newValue;
-                selectChat.getItems().setAll(GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId()));
+                List<IChat> chats = GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId());
+                for (IChat chat : chats) {
+                    if(chat.isGroupChat()) {
+                        selectChat.getItems().add(chat);
+                    }
+                }
             }
         });
 
@@ -42,5 +51,7 @@ public class RemoveUserFromChatController {
 
     public void removeUserFromChat(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().removeUserFromChat(selectedChat.getId(), selectedUser.getId());
+        Stage stage = (Stage) selectUser.getScene().getWindow();
+        stage.close();
     }
 }

@@ -22,7 +22,9 @@ public class EventManager {
     }
 
     public void fireEvent(EventObject eventObject) {
-        eventListeners.get(eventObject.getClass()).forEach(a -> a.invoke(eventObject));
+        if(eventListeners.get(eventObject.getClass()) != null) {
+            eventListeners.get(eventObject.getClass()).forEach(a -> a.invoke(eventObject));
+        }
     }
 
     public static EventManager getInstance() {

@@ -25,6 +25,8 @@ public class UpdateDepartmentController {
 
     public void rename(ActionEvent actionEvent){
         GUI.GUI.getInstance().getBusiness().updateDepartment(choiceBox.getValue().getId(), txTField.getText());
+        Stage stage = (Stage) renameBtn.getScene().getWindow();
+        stage.close();
     }
 
 }

@@ -5,6 +5,7 @@ import Acquaintence.Event.ChangeChatEvent;
 import Acquaintence.EventManager;
 import Acquaintence.IChat;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
@@ -37,7 +39,15 @@ public class ChatHeaderController {
     private Button cHButton;
 
     private void changeName(ChangeChatEvent event) {
-        chatNameL.setText(event.getChat().getName());
+        if(event.getChat() != null) {
+            Platform.runLater(() -> {
+                chatNameL.setText(event.getChat().getName());
+            });
+        } else {
+            Platform.runLater(() -> {
+                chatNameL.setText("");
+            });
+        }
     }
 
     public void usersInChatBtn(ActionEvent actionEvent) throws IOException {

@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class DeleteDepartmentController {
 
     public ChoiceBox<IDepartment> choiceBox;
-    public Button DeleteBtn;
+    public Button deleteBtn;
 
 
     public void initialize(){
@@ -23,9 +23,9 @@ public class DeleteDepartmentController {
     }
 
     public void delete(ActionEvent actionEvent){
-
         GUI.GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
-
+        Stage stage = (Stage) deleteBtn.getScene().getWindow();
+        stage.close();
     }
 
 

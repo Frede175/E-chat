@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.UpdateDepartmentController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.UpdateDepartmentController">
    <children>
       <Label text="Update Department">
          <font>
@@ -26,14 +26,14 @@
             <Insets top="20.0" />
          </VBox.margin>
       </ChoiceBox>
-      <TextField fx:id="txTField" prefWidth="300.0">
+      <TextField fx:id="txTField" maxWidth="300.0">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
       </TextField>
       <Button fx:id="renameBtn" mnemonicParsing="false" onAction="#rename" text="Rename">
          <VBox.margin>
-            <Insets top="20.0" />
+            <Insets bottom="20.0" top="20.0" />
          </VBox.margin>
       </Button>
    </children>

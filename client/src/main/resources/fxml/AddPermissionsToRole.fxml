@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ListSelectionView?>
 
-<VBox alignment="TOP_CENTER" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddPermissionsToRoleController">
+<VBox alignment="TOP_CENTER" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.AddPermissionsToRoleController">
     <children>
         <Label text="Add permission(s) to role">
             <font>
@@ -23,7 +23,10 @@
                 <Insets top="20.0" />
             </VBox.margin>
         </ComboBox>
-        <ListSelectionView fx:id="permissionLSV" />
+        <ListSelectionView fx:id="permissionLSV" maxWidth="600.0" prefWidth="600.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin></ListSelectionView>
         <Button fx:id="addPermissionFromRole" mnemonicParsing="false" onAction="#addSelected" text="Add">
             <VBox.margin>
                 <Insets bottom="20.0" top="20.0" />
