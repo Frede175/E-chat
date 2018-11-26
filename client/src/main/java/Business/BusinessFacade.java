@@ -35,12 +35,13 @@ public class BusinessFacade implements IBusinessFacade {
 
 
 
-    public <T extends EventObject> BusinessFacade() {
+    public BusinessFacade() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
         EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
         EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
         EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
         EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
+        hubConnect.injectBusiness(this);
     }
 
 
