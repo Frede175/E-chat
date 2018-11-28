@@ -12,6 +12,7 @@ using OpenIddict.Abstractions;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
+using Server.Logging;
 
 namespace Server.Controllers
 {
@@ -50,7 +51,7 @@ namespace Server.Controllers
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
         {
-
+            _logger.LogInformation(LoggingEvents.CreateGroupChat, "Exchange started for {username}", oidcRequest.Username);
             if (oidcRequest.IsPasswordGrantType())
             {
                 var user = await _userManager.FindByNameAsync(oidcRequest.Username);

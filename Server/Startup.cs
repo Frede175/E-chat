@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Authorization;
 using Server.Security;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.HttpOverrides;
+using Server.Logging;
 
 namespace Server 
 {
@@ -124,6 +125,7 @@ namespace Server
             services.AddScoped<IMessageService, MessageService>();
             services.AddSingleton<IAuthorizationHandler, PermissionsAuthorizationHandler>();
             services.AddSingleton(typeof(IHubState<,>), typeof(HubState<,>));
+            services.AddSingleton<IDbLoggingHandler, DbLoggingHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options => 
             {
