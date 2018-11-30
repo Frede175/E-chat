@@ -20,7 +20,7 @@ namespace Server
         public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args)
-            .ConfigureLogging(logging =>
+            .ConfigureLogging((hostingConfig, logging) =>
             {
                 logging.AddDbLogging<ApplicationDbContext>();
             })

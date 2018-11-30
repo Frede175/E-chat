@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Logging;
 using Server.Security;
+using Server.Logging;
 
 namespace Server.Hubs
 {
@@ -28,15 +29,19 @@ namespace Server.Hubs
 
         private readonly IHubState<ChatHub, IChatHub> _hubState;
 
+        private readonly ILogger<ChatHub> _logger;
+
         public ChatHub(IMessageService messageService,
             IChatService chatService, 
             UserManager<ApplicationUser> userManager, 
-            IHubState<ChatHub, IChatHub> hubState)
+            IHubState<ChatHub, IChatHub> hubState,
+            ILogger<ChatHub> logger)
         {
             _messageService = messageService;
             _chatService = chatService;
             _userManager = userManager;
             _hubState = hubState;
+            _logger = logger;
         }
 
 
@@ -47,6 +52,8 @@ namespace Server.Hubs
 
             var returnMessage = await _messageService.SendMessageAsync(message.ChatId, userId, message.Content);
             if(returnMessage != null){
+                var userName = _userManager.GetUserName(Context.User);
+                _logger.LogInformation(LoggingEvents.SendMessage, $"{userName} send a message: {message.Content}. To chat {returnMessage.Chat.Name}.");
                 await Clients.Group(message.ChatId.ToString()).ReceiveMessage(new Message(returnMessage));
             }
 
@@ -55,6 +62,9 @@ namespace Server.Hubs
         public async override Task OnConnectedAsync()
         {
             var userId = _userManager.GetUserId(Context.User);
+            var userName = _userManager.GetUserName(Context.User);
+
+            _logger.LogInformation(LoggingEvents.ConnectedToHub, $"{userName} connected to ChatHub.");
 
             if (!_hubState.Connections.ContainsKey(userId)) {
                 _hubState.Connections.Add(userId, new List<string>());
@@ -75,6 +85,9 @@ namespace Server.Hubs
         
         public async override Task OnDisconnectedAsync(Exception exception) {
             var userId = _userManager.GetUserId(Context.User);
+            var userName = _userManager.GetUserName(Context.User);
+
+            _logger.LogInformation(LoggingEvents.DisconnectedFromHub, $"{userName} disconnected from ChatHub.");
 
             _hubState.Connections[userId].Remove(Context.ConnectionId);
 

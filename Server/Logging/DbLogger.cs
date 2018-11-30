@@ -1,21 +1,26 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Server.Logging
 {
     public class DbLogger : ILogger
     {
-        private readonly LogLevel _logLevel;
+        private readonly string _category;
 
-        private readonly IDbLoggingHandler _loggingHandler;
+        private readonly Func<string, LogLevel, bool> _filter;
 
-        public DbLogger(LogLevel logLevel, IDbLoggingHandler loggingHandler) {
-            _logLevel = logLevel;
-            _loggingHandler = loggingHandler;
+        private readonly IDbLoggingHandler _handler;
+
+        public DbLogger(IDbLoggingHandler handler, string category, Func<string, LogLevel, bool> filter) {
+            _category = category;
+            _filter = filter;
+            _handler = handler;
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -25,20 +30,18 @@ namespace Server.Logging
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            return logLevel >= _logLevel;
+            return _filter(_category, logLevel);
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            var message = new LogMessage() {
-                EventId = eventId,
-                LogLevel = logLevel,
-                Message = formatter(state, exception)
-            };
+            if (!IsEnabled(logLevel)) return;
 
-            _loggingHandler.AddToQueue(message);
+            var message = new LogMessage(eventId.Id, logLevel, formatter(state, exception), DateTime.UtcNow);
 
+            _handler.Add(message);
 
+            //_handler.Add(message);
         }
     }
 }
