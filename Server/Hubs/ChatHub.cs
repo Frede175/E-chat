@@ -53,7 +53,7 @@ namespace Server.Hubs
             var returnMessage = await _messageService.SendMessageAsync(message.ChatId, userId, message.Content);
             if(returnMessage != null){
                 var userName = _userManager.GetUserName(Context.User);
-                _logger.LogInformation(LoggingEvents.SendMessage, $"{userName} send a message: {message.Content}. To chat {returnMessage.Chat.Name}.");
+                _logger.LogInformation(LoggingEvents.SendMessage, $"{userName} sent a message: {message.Content}. To chat {returnMessage.Chat.Name}.");
                 await Clients.Group(message.ChatId.ToString()).ReceiveMessage(new Message(returnMessage));
             }
 

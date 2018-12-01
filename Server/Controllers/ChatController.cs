@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Server.Context;
 using Server.Hubs;
+using Server.Logging;
 using Server.Models;
 using Server.Security;
 using Server.Service.Interfaces;
@@ -54,8 +55,9 @@ namespace Server.Controllers
 
         [HttpGet("{chatId}", Name = "GetChat"), Produces("application/json")]
         [Authorize]
-        public async Task<ActionResult> GetChat(int chatId) {
-
+        public async Task<ActionResult> GetChat(int chatId) 
+        {
+            var username = _userManager.GetUserName(HttpContext.User);
             var inChats = await _chatService.GetChatsAsync(_userManager.GetUserId(HttpContext.User));
 
             if (!inChats.Any(c => c.Id == chatId)) {
@@ -68,15 +70,18 @@ namespace Server.Controllers
                                 Permission.RemoveUserFromChat
                             ));
                 if (!result.Succeeded) {
+                    _logger.LogWarning(LoggingEvents.Unauthorized, $"{username} unauthorized to get chat {chatId} that the user is not in.");
                     return Unauthorized();
                 }
             }
 
+            _logger.LogInformation(LoggingEvents.Get, $"{username} getting chat {chatId}.");
             var chat = await _chatService.GetSpecificChat(chatId);
 
             if (chat != null) {
                 return Ok(new Chat(chat));
             }
+            _logger.LogWarning(LoggingEvents.NotFound, $"Chat with id {chatId} not found.");
             return NotFound();
         }
 
@@ -92,6 +97,8 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
         public async Task<ActionResult<List<Chat>>> GetAvailableChats(string userId) 
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.Get, $"Getting available chats for {username}");
             return (await _chatService.GetAvailableChatsAsync(userId)).Select(d => new Chat(d)).ToList();
         }
 
@@ -105,6 +112,7 @@ namespace Server.Controllers
             var basic = await _authorizationService.AuthorizeAsync(HttpContext.User, null, 
                                 new PermissionsAuthorizationRequirement(PermissionAttributeType.AND, Permission.BasicPermissions));
 
+            var username = _userManager.GetUserName(HttpContext.User);
             if (_userManager.GetUserId(HttpContext.User) != userId) {
                  var result = await _authorizationService.AuthorizeAsync(HttpContext.User, 
                             null, 
@@ -114,18 +122,23 @@ namespace Server.Controllers
                                 Permission.AddUserToChat, 
                                 Permission.RemoveUserFromChat
                             ));
+                var user = await _userManager.FindByIdAsync(userId);
                 if (!result.Succeeded) 
                 {
+                    _logger.LogInformation(LoggingEvents.Unauthorized, $"User {username} is not authorized to get chats for user {user?.UserName}.");
                     return Unauthorized();
                 }
+                _logger.LogInformation(LoggingEvents.Get, $"User {username} getting chats for {user?.UserName}.");
             } else 
             {
                 if (!basic.Succeeded) 
                 {
+                    _logger.LogInformation(LoggingEvents.Unauthorized, $"User {username} does not have permission to get chats.");
                     return Unauthorized();
                 }
+                _logger.LogInformation(LoggingEvents.Get, $"Getting chats for {username}.");
             }
-
+            
             return (await _chatService.GetChatsAsync(userId)).Select(d => new Chat(d)).ToList();
         }
 
