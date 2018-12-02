@@ -70,18 +70,18 @@ namespace Server.Controllers
                                 Permission.RemoveUserFromChat
                             ));
                 if (!result.Succeeded) {
-                    _logger.LogWarning(LoggingEvents.Unauthorized, $"{username} unauthorized to get chat {chatId} that the user is not in.");
+                    _logger.LogWarning(LoggingEvents.Unauthorized, "{username} unauthorized to get chat {chatId} that the user is not in.", username, chatId);
                     return Unauthorized();
                 }
             }
 
-            _logger.LogInformation(LoggingEvents.Get, $"{username} getting chat {chatId}.");
+            _logger.LogInformation(LoggingEvents.GetItem, "{username} getting chat {chatId}.", username, chatId);
             var chat = await _chatService.GetSpecificChat(chatId);
 
             if (chat != null) {
                 return Ok(new Chat(chat));
             }
-            _logger.LogWarning(LoggingEvents.NotFound, $"Chat with id {chatId} not found.");
+            _logger.LogWarning(LoggingEvents.GetItemNotFound, "Chat with id {chatId} not found.", chatId);
             return NotFound();
         }
 
@@ -98,7 +98,7 @@ namespace Server.Controllers
         public async Task<ActionResult<List<Chat>>> GetAvailableChats(string userId) 
         {
             var username = _userManager.GetUserName(HttpContext.User);
-            _logger.LogInformation(LoggingEvents.Get, $"Getting available chats for {username}");
+            _logger.LogInformation(LoggingEvents.ListItems, "Getting available chats for {username}", username);
             return (await _chatService.GetAvailableChatsAsync(userId)).Select(d => new Chat(d)).ToList();
         }
 
@@ -109,10 +109,10 @@ namespace Server.Controllers
         [Authorize]
         public async Task<ActionResult<List<Chat>>> GetChats(string userId)
         {
-            var basic = await _authorizationService.AuthorizeAsync(HttpContext.User, null, 
-                                new PermissionsAuthorizationRequirement(PermissionAttributeType.AND, Permission.BasicPermissions));
-
+            
             var username = _userManager.GetUserName(HttpContext.User);
+
+            var otherUser = await _userManager.FindByIdAsync(userId);
             if (_userManager.GetUserId(HttpContext.User) != userId) {
                  var result = await _authorizationService.AuthorizeAsync(HttpContext.User, 
                             null, 
@@ -122,31 +122,38 @@ namespace Server.Controllers
                                 Permission.AddUserToChat, 
                                 Permission.RemoveUserFromChat
                             ));
-                var user = await _userManager.FindByIdAsync(userId);
+                
                 if (!result.Succeeded) 
                 {
-                    _logger.LogInformation(LoggingEvents.Unauthorized, $"User {username} is not authorized to get chats for user {user?.UserName}.");
+                    _logger.LogInformation(LoggingEvents.Unauthorized, "User {username} is not authorized to get chats for user {otherUsername}.", username, otherUser.UserName);
                     return Unauthorized();
                 }
-                _logger.LogInformation(LoggingEvents.Get, $"User {username} getting chats for {user?.UserName}.");
-            } else 
+                _logger.LogInformation(LoggingEvents.ListItems, "User {username} getting chats for {otherUserName}.", username, otherUser.UserName);
+            } 
+            else 
             {
+                var basic = await _authorizationService.AuthorizeAsync(HttpContext.User, null, 
+                                new PermissionsAuthorizationRequirement(PermissionAttributeType.AND, Permission.BasicPermissions));
+
                 if (!basic.Succeeded) 
                 {
-                    _logger.LogInformation(LoggingEvents.Unauthorized, $"User {username} does not have permission to get chats.");
+                    _logger.LogInformation(LoggingEvents.Unauthorized, "User {username} does not have permission to get chats.", username);
                     return Unauthorized();
                 }
-                _logger.LogInformation(LoggingEvents.Get, $"Getting chats for {username}.");
+                _logger.LogInformation(LoggingEvents.ListItems, "Getting chats for {username}.", username);
             }
             
             return (await _chatService.GetChatsAsync(userId)).Select(d => new Chat(d)).ToList();
         }
 
-        // GET: https://localhost:5001/api/chat/private/{userId} 
-        [HttpGet("private/{userId}"), Produces("application/json")]
+        // GET: https://localhost:5001/api/chat/private
+        [HttpGet("private"), Produces("application/json")]
         [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
-        public async Task<ActionResult<List<Chat>>> GetPrivateChats(string userId)
+        public async Task<ActionResult<List<Chat>>> GetPrivateChats()
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            var userId = _userManager.GetUserId(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting private chats.", username);
             return (await _chatService.GetPrivateChatsAsync(userId)).Select(d => new Chat(d)).ToList();
         }
 
@@ -157,6 +164,9 @@ namespace Server.Controllers
         public async Task<ActionResult> CreateChat(int departmentId, [FromBody] Chat chat)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} creating group chat.", username);
             var result = await _chatService.CreateChatAsync(new DbModels.Chat()
             {
                 DepartmentId = departmentId,
@@ -167,13 +177,16 @@ namespace Server.Controllers
             {
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
                 await _chatHub.Clients.Group(result.Id.ToString()).NewChat(new Chat(result));
+
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} created group chat {chatName} ({chatId}).", username, result.Name, result.Id);
                 
                 await SendUpdateMessage(result.Id, userId, UpdateMessageType.ADD);
 
+
                 return CreatedAtRoute(nameof(GetChat),new {chatId = result.Id} , new Chat(result));
             }
-
-            return new BadRequestResult();
+            _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to create group chat {chatName}.", username, chat.Name);
+            return BadRequest();
         }
 
         // POST: https://localhost:5001/api/chat/{departmentId}
@@ -182,11 +195,30 @@ namespace Server.Controllers
         public async Task<ActionResult> CreatePrivateChat(string userId, [FromBody] Chat chat)
         {
             var currentUserId = _userManager.GetUserId(HttpContext.User);
+            var currentUsername = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} creating private chat.", currentUsername);
+
+            if (currentUserId == userId) 
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemFail, "{username] tried to create a chat with himself.", currentUsername);
+                return BadRequest("Can't create a private with yourself.");
+            }
+
+            var otherUser = await _userManager.FindByIdAsync(userId);
+
+            if (otherUser == null)
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{username} failed to create private, the other user does not exist.", currentUsername);
+                return NotFound("Other user does not exists.");
+            }
+
             var existsResult = await _chatService.PrivateChatExists(userId, currentUserId);
 
-            if (existsResult == true || currentUserId == userId) 
+            if (existsResult == true) 
             {
-                return BadRequest();
+                _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to create private chat with {otherUsername}, since the chat allready exists.", currentUsername, otherUser.UserName);
+                return BadRequest($"A private chat allready exists between you and {otherUser.UserName}.");
             }
 
             var result = await _chatService.CreatePrivateChat(new DbModels.Chat()
@@ -202,9 +234,11 @@ namespace Server.Controllers
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
                 await _chatHubState.AddUserToGroupAsync(_chatHub, currentUserId, result.Id.ToString());
                 await _chatHub.Clients.Group(result.Id.ToString()).NewChat(new Chat(result));
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} created a private chat with {otherUsername}.", currentUsername, otherUser.UserName);
                 return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
+            _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to create a private chat with {otherUsername}.", currentUsername, otherUser.UserName);
             return BadRequest();
         }
 
@@ -222,10 +256,10 @@ namespace Server.Controllers
                 await _chatHub.Clients.Group(chatId.ToString()).Leave(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.LEAVE);
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, user.Id, chatId.ToString());
-                return new OkResult();
+                return Ok();
             }
 
-            return new BadRequestResult();
+            return BadRequest();
         }
 
 
@@ -242,10 +276,10 @@ namespace Server.Controllers
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, chatId.ToString());
                 await _chatHub.Clients.Group(chatId.ToString()).Add(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.ADD);
-                return new OkResult();
+                return Ok();
             }
 
-            return new BadRequestResult();
+            return BadRequest();
         }
 
 
@@ -255,33 +289,48 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromChat)]
         public async Task<ActionResult> RemoveUserFromChat(int chatId, [FromBody] string userId)
         {
-            var result = (await _chatService.RemoveUsersFromChatAsync(chatId, userId));
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removing user from chat.", username);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) 
+            {
+                _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} failed to remove a user from chat since the user does not exist.", username);
+                return NotFound("User");
+            }
+
+            
+            var result = await _chatService.RemoveUsersFromChatAsync(chatId, userId);
 
             if (result)
             {
-                var user = await _userManager.FindByIdAsync(userId);
                 await _chatHub.Clients.Group(chatId.ToString()).Remove(chatId, new User(user));
-                await SendUpdateMessage(chatId, user, UpdateMessageType.REMOVE);
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
-                return new OkResult();
+                await SendUpdateMessage(chatId, user, UpdateMessageType.REMOVE);
+
+                _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removed {other} from the chat.", username, user.UserName);
+                return Ok();
             }
 
-            return new BadRequestResult();
+            _logger.LogInformation(LoggingEvents.DeleteItemFail, "{username} failed to remove {other} from chat.", username, user.UserName);
+            return BadRequest();
         }
 
 
         // GET: https://localhost:5001/api/chat/users/{chatId}
         [HttpGet ("users/{chatId}")]
         [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
-        public async Task<List<User>> GetUsersInChat(int chatId)
+        public async Task<ActionResult> GetUsersInChat(int chatId)
         {
             var chat = await _chatService.GetSpecificChat(chatId);
             if (chat != null)
             {
                 var result = (await _chatService.GetUsersInChat(chatId)).Select(c => new User(c)).ToList();
-                return result;
+                return Ok(result);
             }
-            return null;
+            return NotFound();
         }
 
 #region helpers

@@ -53,7 +53,7 @@ namespace Server.Hubs
             var returnMessage = await _messageService.SendMessageAsync(message.ChatId, userId, message.Content);
             if(returnMessage != null){
                 var userName = _userManager.GetUserName(Context.User);
-                _logger.LogInformation(LoggingEvents.SendMessage, $"{userName} sent a message: {message.Content}. To chat {returnMessage.Chat.Name}.");
+                _logger.LogInformation(LoggingEvents.SendMessage, "{userName} sent a message: {content}. To chat {chatId}.", userName, returnMessage.Content, returnMessage.ChatId);
                 await Clients.Group(message.ChatId.ToString()).ReceiveMessage(new Message(returnMessage));
             }
 
@@ -64,7 +64,7 @@ namespace Server.Hubs
             var userId = _userManager.GetUserId(Context.User);
             var userName = _userManager.GetUserName(Context.User);
 
-            _logger.LogInformation(LoggingEvents.ConnectedToHub, $"{userName} connected to ChatHub.");
+            _logger.LogInformation(LoggingEvents.ConnectedToHub, "{userName} connected to ChatHub.", userName);
 
             if (!_hubState.Connections.ContainsKey(userId)) {
                 _hubState.Connections.Add(userId, new List<string>());
@@ -87,7 +87,7 @@ namespace Server.Hubs
             var userId = _userManager.GetUserId(Context.User);
             var userName = _userManager.GetUserName(Context.User);
 
-            _logger.LogInformation(LoggingEvents.DisconnectedFromHub, $"{userName} disconnected from ChatHub.");
+            _logger.LogInformation(LoggingEvents.DisconnectedFromHub, "{userName} disconnected from ChatHub.", userName);
 
             _hubState.Connections[userId].Remove(Context.ConnectionId);
 

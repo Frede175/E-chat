@@ -53,7 +53,7 @@ namespace Server.Controllers
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
         {
-            _logger.LogInformation(LoggingEvents.Get, "Exchange started for {username}", oidcRequest.Username);
+            _logger.LogInformation(LoggingEvents.AuthenticationStarted, "Exchange started for {username}", oidcRequest.Username);
             if (oidcRequest.IsPasswordGrantType())
             {
                 var user = await _userManager.FindByNameAsync(oidcRequest.Username);
