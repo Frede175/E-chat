@@ -268,17 +268,30 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
         public async Task<ActionResult> AddUserToChat(int chatId, [FromBody] string userId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding user to chat.", username);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{username} failed to add user to chat, since the user does not exist.", username);
+                return NotFound("User");
+            }
+
             var result = (await _chatService.AddUsersToChatAsync(chatId, userId));
 
             if (result)
             {
-                var user = await _userManager.FindByIdAsync(userId);
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, chatId.ToString());
                 await _chatHub.Clients.Group(chatId.ToString()).Add(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.ADD);
+
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} added {other} to chat.", username, user.UserName);
                 return Ok();
             }
-
+            _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to add {other} to chat.", username, user.UserName);
             return BadRequest();
         }
 
@@ -324,13 +337,17 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<ActionResult> GetUsersInChat(int chatId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting users in chat.", username);
             var chat = await _chatService.GetSpecificChat(chatId);
             if (chat != null)
             {
+                _logger.LogInformation(LoggingEvents.ListItems, "{username} got users in chat {name}.", username, chat.Name);
                 var result = (await _chatService.GetUsersInChat(chatId)).Select(c => new User(c)).ToList();
                 return Ok(result);
             }
-            return NotFound();
+            _logger.LogWarning(LoggingEvents.ListItemsNotFound, "{username} failed to get users in chat, since chat does not exist.", username);
+            return NotFound("Chat");
         }
 
 #region helpers
