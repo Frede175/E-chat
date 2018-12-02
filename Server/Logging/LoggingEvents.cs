@@ -20,9 +20,9 @@ namespace Server.Logging
         public const int UpdateRelativeItemNotFound = 1404;
         public const int InsertItemNotFound = 1005;
 
-        public const int InsertItemFail = 1501;
-
-        public const int DeleteItemFail = 1505;
+        public const int UpdateItemFail = 1502;
+        public const int DeleteItemFail = 1503;
+        public const int InsertItemFail = 1505;
 
 
         public const int SendMessage = 2000;

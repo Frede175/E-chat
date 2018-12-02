@@ -160,11 +160,26 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToDepartment)]
         public async Task<IActionResult> AddUserToDepartment(int departmentId, [FromBody] string userId)
         {
-            var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding user to department ({id}).", username, departmentId);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) 
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{usernamed} failed to add user to department ({id}), since the user does not exist.", username, departmentId);
+                return NotFound("User");
+            }
+
+
+            var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, user);
             if (result)
             {
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding {other} to department ({id}).", username, user.UserName, departmentId);
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.InsertItem, "{username} failed adding {other} to department ({id}).", username, user.UserName, departmentId);
             return BadRequest();
 
         }
@@ -174,19 +189,33 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromDepartment)]
         public async Task<IActionResult> RemoveUserFromDepartment(int departmentId, [FromBody] string userId)
         {
-            var result = await _departmentService.RemoveUsersFromDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} removing user from department ({id}).", username, departmentId);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{usernamed} failed to remove user from department ({id}), since the user does not exist.", username, departmentId);
+                return NotFound("User");
+            }
+
+            var result = await _departmentService.RemoveUsersFromDepartmentAsync(departmentId, user);
             if (result)
             {
                 var chatIds = (await _chatService.GetChatsAsync(userId, departmentId)).Select(c => c.Id);
-                var user = await _userManager.FindByIdAsync(userId);
 
                 foreach (var chatId in chatIds) {
                     await _chatService.RemoveUsersFromChatAsync(chatId, userId);
                     await _chatHub.Clients.Group(chatId.ToString()).Remove(chatId, new User(user));
                     await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 }
+
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} removing {other} from department ({id}).", username, user.UserName, departmentId);
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.InsertItem, "{username} failed removing {other} from department ({id}).", username, user.UserName, departmentId);
             return BadRequest();
         }
 
@@ -196,11 +225,16 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.DeleteDepartment)]
         public async Task<ActionResult> RemoveDepartment(int departmentId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removing department ({id}).", username, departmentId);
+
             var result = await _departmentService.RemoveDepartmentAsync(departmentId);
             if (result)
             {
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed to delete department ({id}).", username, departmentId);
             return BadRequest();
         }
 
@@ -212,7 +246,18 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.UpdateDepartment)]
         public async Task<ActionResult> UpdateDepartment(int depId, [FromBody] string newName)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.UpdateItem, "{username} updating department ({id}).", username, depId);
+
             var dep = await _departmentService.GetSpecificDepartmentAsync(depId);
+
+            if (dep == null)
+            {
+                _logger.LogWarning(LoggingEvents.UpdateItemNotFound, "{username} updating department ({id}) failed, since the department does not exist.", username, depId);
+                return NotFound("Department");
+            }
+
             dep.Name = newName;
 
             var result = await _departmentService.UpdateDepartmentAsync(dep);
@@ -221,6 +266,7 @@ namespace Server.Controllers
             {
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.UpdateItemFail, "{username} failed to update department ({id}).", username, depId);
             return BadRequest();
         }
 
@@ -229,6 +275,8 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<List<User>>> GetUsersInDepartment(int departmentId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting users in department ({id}).", username, departmentId);
             return Ok((await _departmentService.GetUsersInDepartmentsAsync(departmentId)).Select(u => new User(u)).ToList());
         }
 
@@ -237,6 +285,8 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToDepartment)]
         public async Task<ActionResult<List<Department>>> GetAvailableDepartments(string userId) 
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting available departments for user ({userid}).", username, userId);
             return (await _departmentService.GetAvailableDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
         }
 
