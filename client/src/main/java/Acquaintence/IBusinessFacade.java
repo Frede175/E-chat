@@ -52,5 +52,8 @@ public interface IBusinessFacade {
     RequestResponse<List<IDepartment>> getUsersDepartments(int departmentId);
     RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
 
+    void leaveChat(int chatId);
+    void deleteChat(int chatId);
+
     void logout();
 }

@@ -305,6 +305,17 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.post(PathEnum.RemoveUserFromChat, chatId, userId, token);
     }
 
+    //TODO currently working on it
+    @Override
+    public void leaveChat(int chatId){
+        restConnect.post(PathEnum.LeaveChat, chatId, null, token);
+    }
+
+    @Override
+    public void deleteChat(int chatId){
+        restConnect.post(PathEnum.DeleteChatRoom, chatId, null, token);
+    }
+
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> chats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), null, token);
         if(chats.getResponse() != null && !chats.getResponse().isEmpty()) {
