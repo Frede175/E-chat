@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Server.Context;
 using Server.Hubs;
+using Server.Logging;
 using Server.Models;
 using Server.Security;
 using Server.Service.Interfaces;
@@ -58,11 +59,16 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateDepartment, Permission.UpdateDepartment, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment, Permission.DeleteDepartment)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartment(int departmentId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.GetItem, "{username} getting department ({id}).", username, departmentId);
+
             var department = await _departmentService.GetSpecificDepartmentAsync(departmentId);
             if (department == null) {
-                return NotFound();
+                _logger.LogWarning(LoggingEvents.GetItemNotFound, "{username} failed to get department ({id}).", username, departmentId);
+                return NotFound("Department");
             }
 
+            _logger.LogInformation(LoggingEvents.GetItem, "{username} got department ({name}).", username, department.Name);
             return Ok(new Department(department));
 
         }
@@ -73,6 +79,8 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateDepartment, Permission.UpdateDepartment, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment, Permission.DeleteDepartment)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartments()
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting all departments.", username);
             return (await _departmentService.GetDepartmentsAsync()).Select(d => new Department(d)).ToList();
 
         }
@@ -82,10 +90,20 @@ namespace Server.Controllers
         [Authorize]
         public async Task<ActionResult<ICollection<Department>>> GetUserDepartments(string userId)
         {
-                        var basic = await _authorizationService.AuthorizeAsync(HttpContext.User, null, 
-                                new PermissionsAuthorizationRequirement(PermissionAttributeType.AND, Permission.BasicPermissions));
-
+            var username = _userManager.GetUserName(HttpContext.User);
             if (_userManager.GetUserId(HttpContext.User) != userId) {
+
+                _logger.LogInformation(LoggingEvents.ListItems, "{username} getting departments for user ({id}).", username, userId);
+
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null) 
+                {
+                    _logger.LogWarning(LoggingEvents.ListItemsNotFound, "{username} failed to get dpeartments for user ({id}), since the user does not exist.", username, userId);
+                    return NotFound("user");
+                }
+
+                _logger.LogInformation(LoggingEvents.ListItems, "{username} getting departments for user {name}", username, user.UserName);
                  var result = await _authorizationService.AuthorizeAsync(HttpContext.User, 
                             null, 
                             new PermissionsAuthorizationRequirement(
@@ -94,12 +112,18 @@ namespace Server.Controllers
                             ));
                 if (!result.Succeeded) 
                 {
+                    _logger.LogWarning(LoggingEvents.Unauthorized, "{username} does not have permission to get departments for user {name}.", username, user.UserName);
                     return Unauthorized();
                 }
-            } else 
+            } 
+            else 
             {
+                _logger.LogInformation(LoggingEvents.ListItems, "{username} getting departments.", username);
+                var basic = await _authorizationService.AuthorizeAsync(HttpContext.User, null, 
+                                new PermissionsAuthorizationRequirement(PermissionAttributeType.AND, Permission.BasicPermissions));
                 if (!basic.Succeeded) 
                 {
+                    _logger.LogWarning(LoggingEvents.Unauthorized, "{username} does not have permission to get departments.", username);
                     return Unauthorized();
                 }
             }
@@ -115,11 +139,19 @@ namespace Server.Controllers
             {
                 Name = department.Name
             };
+
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} creating department with name {name}", username, d.Name);
+
             var result = await _departmentService.CreateDepartmentAsync(d);
             if (result != null)
             {
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} created department with name {name}", username, result.Name);
                 return CreatedAtAction(nameof(GetDepartments), new { departmentId = result.Id }, new Department(result));
             }
+
+            _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to create department with name {name}", username, d.Name);
             return BadRequest();
         }
 
@@ -128,11 +160,26 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToDepartment)]
         public async Task<IActionResult> AddUserToDepartment(int departmentId, [FromBody] string userId)
         {
-            var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding user to department ({id}).", username, departmentId);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) 
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{usernamed} failed to add user to department ({id}), since the user does not exist.", username, departmentId);
+                return NotFound("User");
+            }
+
+
+            var result = await _departmentService.AddUsersToDepartmentAsync(departmentId, user);
             if (result)
             {
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding {other} to department ({id}).", username, user.UserName, departmentId);
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.InsertItem, "{username} failed adding {other} to department ({id}).", username, user.UserName, departmentId);
             return BadRequest();
 
         }
@@ -142,19 +189,33 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromDepartment)]
         public async Task<IActionResult> RemoveUserFromDepartment(int departmentId, [FromBody] string userId)
         {
-            var result = await _departmentService.RemoveUsersFromDepartmentAsync(departmentId, await _userManager.FindByIdAsync(userId));
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} removing user from department ({id}).", username, departmentId);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{usernamed} failed to remove user from department ({id}), since the user does not exist.", username, departmentId);
+                return NotFound("User");
+            }
+
+            var result = await _departmentService.RemoveUsersFromDepartmentAsync(departmentId, user);
             if (result)
             {
                 var chatIds = (await _chatService.GetChatsAsync(userId, departmentId)).Select(c => c.Id);
-                var user = await _userManager.FindByIdAsync(userId);
 
                 foreach (var chatId in chatIds) {
                     await _chatService.RemoveUsersFromChatAsync(chatId, userId);
                     await _chatHub.Clients.Group(chatId.ToString()).Remove(chatId, new User(user));
                     await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 }
+
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} removing {other} from department ({id}).", username, user.UserName, departmentId);
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.InsertItem, "{username} failed removing {other} from department ({id}).", username, user.UserName, departmentId);
             return BadRequest();
         }
 
@@ -164,11 +225,16 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.DeleteDepartment)]
         public async Task<ActionResult> RemoveDepartment(int departmentId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removing department ({id}).", username, departmentId);
+
             var result = await _departmentService.RemoveDepartmentAsync(departmentId);
             if (result)
             {
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed to delete department ({id}).", username, departmentId);
             return BadRequest();
         }
 
@@ -180,7 +246,18 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.UpdateDepartment)]
         public async Task<ActionResult> UpdateDepartment(int depId, [FromBody] string newName)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.UpdateItem, "{username} updating department ({id}).", username, depId);
+
             var dep = await _departmentService.GetSpecificDepartmentAsync(depId);
+
+            if (dep == null)
+            {
+                _logger.LogWarning(LoggingEvents.UpdateItemNotFound, "{username} updating department ({id}) failed, since the department does not exist.", username, depId);
+                return NotFound("Department");
+            }
+
             dep.Name = newName;
 
             var result = await _departmentService.UpdateDepartmentAsync(dep);
@@ -189,6 +266,7 @@ namespace Server.Controllers
             {
                 return Ok();
             }
+            _logger.LogWarning(LoggingEvents.UpdateItemFail, "{username} failed to update department ({id}).", username, depId);
             return BadRequest();
         }
 
@@ -197,6 +275,8 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<List<User>>> GetUsersInDepartment(int departmentId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting users in department ({id}).", username, departmentId);
             return Ok((await _departmentService.GetUsersInDepartmentsAsync(departmentId)).Select(u => new User(u)).ToList());
         }
 
@@ -205,6 +285,8 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddUserToDepartment)]
         public async Task<ActionResult<List<Department>>> GetAvailableDepartments(string userId) 
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting available departments for user ({userid}).", username, userId);
             return (await _departmentService.GetAvailableDepartmentsAsync(userId)).Select(d => new Department(d)).ToList();
         }
 
