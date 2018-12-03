@@ -21,7 +21,6 @@ namespace Server.Security
         //GetAllChats, -- CreateChat, AddUserToChat, RemoveUserFromChat
         CreateChat,
         // CreatePrivateChat,
-        LeaveChat,
         RemoveChat,
         AddUserToChat,
         RemoveUserFromChat,
