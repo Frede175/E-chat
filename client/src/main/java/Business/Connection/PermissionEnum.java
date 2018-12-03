@@ -16,7 +16,7 @@ public enum PermissionEnum {
     // ChatController
     CreateChat(PermissionType.CHAT),
     //TODO Could be basic permission
-    LeaveChat(PermissionType.CHAT),
+    DeleteChat(PermissionType.CHAT),
     AddUserToChat(PermissionType.CHAT),
     RemoveUserFromChat(PermissionType.CHAT),
 

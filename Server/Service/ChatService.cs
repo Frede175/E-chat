@@ -140,15 +140,13 @@ namespace Server.Service
         /// <returns>The chat async.</returns>
         /// <param name="chatId">Chat identifier.</param>
         /// <param name="user">User.</param>
-        public async Task<bool> RemoveChatAsync(int chatId, ApplicationUser user)
+        public async Task<bool> RemoveChatAsync(Chat chat)
         {
-            var chat = await _chats.FindAsync(chatId);
             if (chat != null)
             {
-                _userChat.Remove(new UserChat() { UserId = user.Id, ChatId = chat.Id });
-
-                var result = await _context.SaveChangesAsync();
-                if (result == 1)
+                _chats.Remove(chat);
+                int result = await _context.SaveChangesAsync();
+                if (result > 0) 
                 {
                     return true;
                 }

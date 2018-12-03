@@ -85,12 +85,33 @@ namespace Server.Controllers
             return NotFound();
         }
 
-/* TODO if remove chat is added
-        [HttpGet("user/{userId}"), Produces("application/json")]
+        // DELETE: https://localhost:5001/api/chat/{chatId}
+        [HttpDelete("{chatId}"), Produces("application/json")]
         [RequiresPermissionAttribute(permissions: Permission.RemoveChat)]
-        public async Task<ActionResult<List<Chat>>> GetAllChats()
+        public async Task<ActionResult> RemoveChat(int chatId) 
+        {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removing chat ({id})", username, chatId);
+
+            var chat = await _chatService.GetSpecificChat(chatId);
+
+            if (chat == null)
+            {
+                _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} removing chat ({id}), NOT FOUND", username, chatId);
+                return NotFound();
+            }
+
+            if (await _chatService.RemoveChatAsync(chat)) 
+            {
+                return NoContent();
+            }
+
+            _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed removing chat ({id})", username, chatId);
+            return BadRequest();
+        }
         
- */
+ 
 
         // GET: https://localhost:5001/api/chat/user/{userId} 
         [HttpGet("available/{userId}"), Produces("application/json")]
@@ -245,7 +266,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/leave/{chatId}
         [HttpPost("leave/{chatId}")]
-        [RequiresPermissionAttribute(permissions: Permission.LeaveChat)]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<ActionResult> Leave(int chatId)
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -265,7 +286,7 @@ namespace Server.Controllers
                 await _chatHub.Clients.Group(chatId.ToString()).Leave(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.LEAVE);
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, user.Id, chatId.ToString());
-                return Ok();
+                return NoContent();
             }
 
             _logger.LogWarning(LoggingEvents.DeleteItem, "{username} failed leaving chat ({id}).", username, chatId);
@@ -298,7 +319,7 @@ namespace Server.Controllers
                 await _chatHub.Clients.Group(chatId.ToString()).Add(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.ADD);
 
-                return Ok();
+                return NoContent();
             }
             _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to add {other} to chat.", username, user.UserName);
             return BadRequest();
@@ -332,7 +353,7 @@ namespace Server.Controllers
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 await SendUpdateMessage(chatId, user, UpdateMessageType.REMOVE);
 
-                return Ok();
+                return NoContent();
             }
 
             _logger.LogInformation(LoggingEvents.DeleteItemFail, "{username} failed to remove {other} from chat ({id}).", username, user.UserName, chatId);

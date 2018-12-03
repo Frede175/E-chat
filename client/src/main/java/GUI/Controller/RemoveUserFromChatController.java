@@ -52,6 +52,6 @@ public class RemoveUserFromChatController {
     public void removeUserFromChat(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().removeUserFromChat(selectedChat.getId(), selectedUser.getId());
         Stage stage = (Stage) selectUser.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 }

@@ -162,6 +162,16 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void leaveChat(int chatId){
+        restConnect.post(PathEnum.LeaveChat, chatId, null, token);
+    }
+
+    @Override
+    public void deleteChat(int chatId){
+        restConnect.post(PathEnum.DeleteChatRoom, chatId, null, token);
+    }
+
+    @Override
     public ConnectionState addUserToChat(int chatId, String userId) {
         return restConnect.post(PathEnum.AddUserToChat, chatId, userId, token).getConnectionState();
     }

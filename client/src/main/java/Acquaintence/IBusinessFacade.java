@@ -17,9 +17,11 @@ public interface IBusinessFacade {
     List<? extends IChat> getAvailableChats(String userId);
     List<? extends IChat> getUsersChats(String userId);
     ConnectionState createChat(String chatName, int departmentId);
+    void deleteChat(int chatId);
     ConnectionState addUserToChat(int chatId, String userId);
     void removeUserFromChat(int chatId, String userId);
     void setCurrentChat(int chatId);
+    void leaveChat(int chatId);
 
     RequestResponse<List<? extends  IUser>> getUsers();
     List<? extends IUser> getExistingUsers();

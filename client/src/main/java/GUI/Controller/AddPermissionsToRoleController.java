@@ -64,7 +64,7 @@ public class AddPermissionsToRoleController {
         if (selectedRole != null && !permissionLSV.getTargetItems().isEmpty()) {
             GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole, permissionstosend);
             Stage stage = (Stage) selectRoleComboBox.getScene().getWindow();
-            stage.close();
+            stage.setScene(GUI.getInstance().getPrimaryScene());
         }
     }
 }

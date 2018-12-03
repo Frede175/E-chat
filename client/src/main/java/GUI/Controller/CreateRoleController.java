@@ -30,7 +30,7 @@ public class CreateRoleController {
         permissionsForRole.addAll(roleListLSV.getTargetItems());
         GUI.GUI.getInstance().getBusiness().createRole(permissionsForRole, roleName.getText());
         Stage stage = (Stage) createRole.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
     }
 
 }

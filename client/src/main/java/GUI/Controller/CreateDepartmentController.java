@@ -16,7 +16,7 @@ public class CreateDepartmentController {
         GUI.GUI.getInstance().getBusiness().createDepartment(DepartmentName.getText());
 
         Stage stage = (Stage) CreateBtn.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
     }
 
 

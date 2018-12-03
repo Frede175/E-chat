@@ -155,7 +155,7 @@ namespace Server.Controllers
                         await _roleManager.AddClaimAsync(role, new Claim(UserClaimTypes.Permission, permission));
                     }
 
-                    return Ok();
+                    return NoContent();
                 }
 
                 _logger.LogWarning(LoggingEvents.UpdateRelativeItemFail, "{username} adding ermissions to role ({role}), permission allready on role.", username, role);
@@ -192,7 +192,7 @@ namespace Server.Controllers
                     {
                         await _roleManager.RemoveClaimAsync(role, new Claim(UserClaimTypes.Permission, permission));
                     }
-                    return Ok();
+                    return NoContent();
                 }
 
                 _logger.LogWarning(LoggingEvents.UpdateRelativeItemFail, "{username} removing ermissions to role ({role}), permission not on role.", username, role);
@@ -220,7 +220,7 @@ namespace Server.Controllers
 
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    return NoContent();
                 }
 
                 _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed deleting role ({role}).", username, roleId);

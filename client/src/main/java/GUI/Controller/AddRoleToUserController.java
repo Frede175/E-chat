@@ -55,6 +55,6 @@ public class AddRoleToUserController {
     public void addSelected(javafx.event.ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().addRoleToUser(selectedUser, selectedRole);
         Stage stage = (Stage) addRoleToUser.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 }

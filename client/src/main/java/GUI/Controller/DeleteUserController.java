@@ -32,6 +32,6 @@ public class DeleteUserController {
     public void deleteUser(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().deleteUser(selectedUser.getId());
         Stage stage = (Stage) selectUser.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 }

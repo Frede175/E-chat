@@ -177,7 +177,7 @@ namespace Server.Controllers
             if (result)
             {
                 _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding {other} to department ({id}).", username, user.UserName, departmentId);
-                return Ok();
+                return NoContent();
             }
             _logger.LogWarning(LoggingEvents.InsertItem, "{username} failed adding {other} to department ({id}).", username, user.UserName, departmentId);
             return BadRequest();
@@ -213,7 +213,7 @@ namespace Server.Controllers
                 }
 
                 _logger.LogInformation(LoggingEvents.InsertItem, "{username} removing {other} from department ({id}).", username, user.UserName, departmentId);
-                return Ok();
+                return NoContent();
             }
             _logger.LogWarning(LoggingEvents.InsertItem, "{username} failed removing {other} from department ({id}).", username, user.UserName, departmentId);
             return BadRequest();
@@ -232,7 +232,7 @@ namespace Server.Controllers
             var result = await _departmentService.RemoveDepartmentAsync(departmentId);
             if (result)
             {
-                return Ok();
+                return NoContent();
             }
             _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed to delete department ({id}).", username, departmentId);
             return BadRequest();
@@ -264,7 +264,7 @@ namespace Server.Controllers
 
             if (result)
             {
-                return Ok();
+                return NoContent();
             }
             _logger.LogWarning(LoggingEvents.UpdateItemFail, "{username} failed to update department ({id}).", username, depId);
             return BadRequest();
