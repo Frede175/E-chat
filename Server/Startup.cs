@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Authorization;
 using Server.Security;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.HttpOverrides;
+using Server.Logging;
 
 namespace Server 
 {
@@ -135,8 +136,11 @@ namespace Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) 
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory factory, IServiceProvider provider) 
         {
+
+            factory.AddDbLogging<ApplicationDbContext>(provider, LogLevel.Information);
+
 
             if (env.IsDevelopment()) 
             {

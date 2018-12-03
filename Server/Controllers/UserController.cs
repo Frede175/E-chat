@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using OpenIddict.Abstractions;
 using Server.Context;
+using Server.Logging;
 using Server.Models;
 using Server.Security;
 using Server.Service.Interfaces;
@@ -51,10 +52,15 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddAdditionalRole, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<User>> GetUser(string userId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.GetItem, "{username} getting user ({id}).", username, userId); 
+
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
+                _logger.LogInformation(LoggingEvents.GetItem, "{username} getting user ({id}), NOT FOUND.", username, userId); 
                 return NotFound();
             }
 
@@ -67,16 +73,24 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddAdditionalRole, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<ICollection<User>>> GetUsers()
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting users.", username);
+
             return await _userManager.Users.Select(u => new User(u)).ToListAsync();
         }
 
 
-        // GET: https://localhost:5001/api/User/contacts/{userId}
-        [HttpGet("contacts/{userId}"), Produces("application/json")]
+        // GET: https://localhost:5001/api/User/contacts
+        [HttpGet("contacts"), Produces("application/json")]
         [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
-        public async Task<ActionResult<ICollection<User>>> GetContacts(string userId)
+        public async Task<ActionResult<ICollection<User>>> GetContacts()
         {
-            var deps = await _departmentService.GetDepartmentsAsync(userId);
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting contracts.", username);
+
+            var deps = await _departmentService.GetDepartmentsAsync(_userManager.GetUserId(HttpContext.User)) ;
 
             var users = await _departmentService.GetUsersInDepartmentsAsync(deps.Select(d => d.Id).ToArray());
 
@@ -88,27 +102,44 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.CreateUser)]
         public async Task<ActionResult> CreateUser(CreateUser model)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} creating user {other}", username, model.UserName);
+
             var role = await _roleManager.FindByNameAsync(model.Role);
-            var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null && role != null)
+
+            if (role == null) 
             {
-                var newUser = new ApplicationUser()
-                {
-                    UserName = model.UserName
-                };
-
-                var result = await _userManager.CreateAsync(newUser, model.Password);
-
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(newUser, model.Role);
-                    foreach (var department in model.DepartmentIds) {
-                        await _departmentService.AddUsersToDepartmentAsync(department, newUser);
-                    }
-
-                    return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, new User(newUser));
-                }
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{username} creating user {other}, NOT FOUND ROLE ({role}).", username, model.UserName, model.Role);
+                return NotFound("Role");
             }
+
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user != null)
+            {
+                _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} create user {other}, failed user allready exist.", username, model.UserName);
+                return BadRequest("User allready exist.");
+            }
+
+            var newUser = new ApplicationUser()
+            {
+                UserName = model.UserName
+            };
+
+            var result = await _userManager.CreateAsync(newUser, model.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(newUser, model.Role);
+                foreach (var department in model.DepartmentIds) {
+                    await _departmentService.AddUsersToDepartmentAsync(department, newUser);
+                }
+
+                return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, new User(newUser));
+            }
+            
+            _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to create user {other}.", username, model.UserName);
             return BadRequest();
         }
 
@@ -118,18 +149,26 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.DeleteUser)]
         public async Task<ActionResult> DeleteUser(string userId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} deleting user ({id}).", username, userId);
+
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user != null)
+            if (user == null) 
             {
-
-                var result = await _userManager.DeleteAsync(user);
-
-                if (result.Succeeded)
-                {
-                    return Ok();
-                }
+                _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} deleting user ({id}), NOT FOUND.", username, userId);
+                return NotFound();
             }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+
+            _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed deleting user ({id}).", username, userId);
             return BadRequest();
         }
 
@@ -139,8 +178,17 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.AddAdditionalRole)]
         public async Task<ActionResult> AddAdditionalRole(string userId, [FromBody] string role)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} adding role ({role}) to user ({id}).", username, role, userId);
 
             var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                _logger.LogInformation(LoggingEvents.UpdateRelativeItemNotFound, "{username} adding role ({role}) to user ({id}), USER NOT FOUND.", username, role, userId);
+                return NotFound();
+            }
 
             var result = await _userManager.AddToRoleAsync(user, role);
 
@@ -148,6 +196,8 @@ namespace Server.Controllers
             {
                 return Ok();
             }
+
+            _logger.LogWarning(LoggingEvents.UpdateRelativeItemFail, "{username} failed adding role ({role}) to user ({id}).", username, role, userId);
             return BadRequest();
         }
 
@@ -155,9 +205,12 @@ namespace Server.Controllers
         [HttpGet("~/api/userinfo"), Produces("application/json")]
         public async Task<IActionResult> Userinfo()
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting userinfo.", username);
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
+                _logger.LogWarning(LoggingEvents.ListItems, "{username} getting userinfo, NOT FOUND.", username);
                 return BadRequest(new OpenIdConnectResponse
                 {
                     Error = OpenIdConnectConstants.Errors.InvalidGrant,
