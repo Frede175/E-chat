@@ -1,8 +1,6 @@
 package Business.Connection;
 
 
-import java.security.Permission;
-
 public enum PermissionEnum {
 
     // DepartmentController
@@ -16,7 +14,7 @@ public enum PermissionEnum {
     // ChatController
     CreateChat(PermissionType.CHAT),
     //TODO Could be basic permission
-    DeleteChat(PermissionType.CHAT),
+    RemoveChat(PermissionType.CHAT),
     AddUserToChat(PermissionType.CHAT),
     RemoveUserFromChat(PermissionType.CHAT),
 

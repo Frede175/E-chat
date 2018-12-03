@@ -168,7 +168,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void deleteChat(int chatId){
-        restConnect.post(PathEnum.DeleteChatRoom, chatId, null, token);
+        restConnect.delete(PathEnum.RemoveChatroom, chatId, token);
     }
 
     @Override
