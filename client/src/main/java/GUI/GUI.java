@@ -3,6 +3,7 @@ package GUI;
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IGUI;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,6 +38,13 @@ public class GUI extends Application implements IGUI {
         stage.setTitle("E-Chat");
         stage.getIcons().add(new Image("img/E-chat.png"));
         stage.show();
+    }
+
+    @Override
+    public void stop(){
+        GUI.getInstance().getBusiness().disconnectHub();
+        Platform.exit();
+        System.exit(0);
     }
 
     /**

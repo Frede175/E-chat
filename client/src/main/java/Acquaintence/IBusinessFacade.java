@@ -51,6 +51,6 @@ public interface IBusinessFacade {
     RequestResponse<List<IDepartment>> getAvailableDepartments(String userId);
     RequestResponse<List<IDepartment>> getUsersDepartments(int departmentId);
     RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
-
+    void disconnectHub();
     void logout();
 }
