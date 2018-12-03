@@ -248,7 +248,16 @@ namespace Server.Controllers
         [RequiresPermissionAttribute(permissions: Permission.LeaveChat)]
         public async Task<ActionResult> Leave(int chatId)
         {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} leaving chat ({id}).", username, chatId);
             var user = await _userManager.GetUserAsync(User);
+
+            if (user == null) 
+            {
+                _logger.LogWarning(LoggingEvents.DeleteItem, "{username} failed leaving chat ({id}).", username, chatId);
+                return BadRequest();
+            }
+
             var result = (await _chatService.RemoveUsersFromChatAsync(chatId, user.Id));
 
             if (result)
@@ -259,6 +268,7 @@ namespace Server.Controllers
                 return Ok();
             }
 
+            _logger.LogWarning(LoggingEvents.DeleteItem, "{username} failed leaving chat ({id}).", username, chatId);
             return BadRequest();
         }
 
