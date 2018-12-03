@@ -17,7 +17,7 @@ import java.util.List;
 public class RemovePermissionFromRoleController {
     
     @FXML
-    public ComboBox selectRole;
+    public ComboBox<IRole> selectRole;
     
     @FXML
     public ListSelectionView<String> permissionLSV;
@@ -26,15 +26,17 @@ public class RemovePermissionFromRoleController {
 
     public void initialize() {
         for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().add(role.getName());
+            selectRole.getItems().add(role);
         }
 
-        selectRole.valueProperty().addListener(new ChangeListener<String>() {
+        selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                selectedRole = t1;
+            public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
+                // TODO set getname() to getID();
+                selectedRole = t1.getName();
                 permissionLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getRolesPermissions(selectedRole));
             }
+
         });
 
 

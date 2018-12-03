@@ -9,48 +9,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IBusinessFacade {
-    ConnectionState login(String username, String password);
+
     RequestResponse<List<? extends IChat>> getChats();
-    RequestResponse<List<? extends  IUser>> getUsers();
-    RequestResponse<Chat> createDirectMessage(String name, IUser user);
-    RequestResponse<String> addUserToSpecificChat(String userSub, IChat chat);
-    void setCurrentChat(int chatId);
-    void sendMessage(String message);
-    RequestResponse<List<? extends IMessageIn>> getMessages(int chatId);
-    RequestResponse<List<? extends IMessageIn>> getMessages();
     RequestResponse<List<? extends IUser>> getUsersInChat();
+    IChat getCurrentChat();
+    List<? extends IChat> getExistingChats();
+    List<? extends IChat> getAvailableChats(String userId);
+    List<? extends IChat> getUsersChats(String userId);
+    ConnectionState createChat(String chatName, int departmentId);
+    ConnectionState addUserToChat(int chatId, String userId);
+    void removeUserFromChat(int chatId, String userId);
+    void setCurrentChat(int chatId);
+
+    RequestResponse<List<? extends  IUser>> getUsers();
+    List<? extends IUser> getExistingUsers();
+    void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
+    void deleteUser(String userId);
+
     RequestResponse<List<? extends IDepartment>> getDepartments();
     RequestResponse<List<? extends IDepartment>> getAllDepartments();
-    IChat getCurrentChat();
-    RequestResponse<List<String>> getAllPermissions();
-    List<String> getRolesPermissions(String roleName);
-
-    List<? extends IChat> getExistingChats();
-    void deleteUserRole(String roleName);
-    ConnectionState createChat(String chatName, int departmentId);
-    void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
+    RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
+    RequestResponse<List<IDepartment>> getAvailableDepartments(String userId);
     void createDepartment(String departmentname);
     void deleteDepartment(int depId);
-    void updateDepartment(int depId, String name);
     void addUserToDepartment(int depId, String userId);
-    void createUserRole(List<String> permissions, String name);
-    ILoginUser getLoginUser();
-    RequestResponse<List<? extends IRole>> getRoles();
-    List<? extends IUser> getExistingUsers();
-    ConnectionState addUserToChat(int chatId, String userId);
-    List<? extends IChat> getAvailableChats(String userId);
-
-    void addPermissionsToRole(String role, List<String> permissions);
-    void deleteUser(String userId);
-    List<IChat> getUsersChats(String userId);
-
-    void removeUserFromChat(int chatId, String userId);
-    void addRoleToUser(String userId, String role);
-    void removePermissionsFromRole(String role, List<String> permissions);
     void removeUserFromDepartment(String userId, int departmentId);
-    RequestResponse<List<IDepartment>> getAvailableDepartments(String userId);
-    RequestResponse<List<IDepartment>> getUsersDepartments(int departmentId);
-    RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
-    void disconnectHub();
+    void updateDepartment(int depId, String name);
+
+    RequestResponse<List<? extends IMessageIn>> getMessages(int chatId);
+    RequestResponse<List<? extends IMessageIn>> getMessages();
+    RequestResponse<Chat> createDirectMessage(String name, IUser user);
+    void sendMessage(String message);
+
+    RequestResponse<List<? extends IRole>> getRoles();
+    RequestResponse<List<String>> getAllPermissions();
+    List<String> getRolesPermissions(String roleName);
+    void deleteRole(String roleName);
+    void createRole(List<String> permissions, String name);
+    void addPermissionsToRole(String role, List<String> permissions);
+    void removePermissionsFromRole(String role, List<String> permissions);
+    void addRoleToUser(String userId, String role);
+
+    ILoginUser getLoginUser();
+    ConnectionState login(String username, String password);
     void logout();
+    void disconnectHub();
 }
