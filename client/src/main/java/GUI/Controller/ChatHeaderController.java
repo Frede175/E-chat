@@ -20,6 +20,7 @@ import java.io.IOException;
 
 public class ChatHeaderController {
 
+
     @FXML
     private Label chatNameL;
     PopOver popover = new PopOver();
@@ -33,6 +34,12 @@ public class ChatHeaderController {
         } else {
             chatNameL.setText("");
         }
+
+
+    }
+
+    public void leaveChat(){
+        GUI.GUI.getInstance().getBusiness().leaveChat(GUI.GUI.getInstance().getBusiness().getCurrentChat().getId());
     }
 
     @FXML
