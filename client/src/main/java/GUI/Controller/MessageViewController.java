@@ -64,7 +64,7 @@ public class MessageViewController {
 
     // The event listener method for new message
     private void getMessage(MessageEvent messageEvent) {
-        if(messageEvent.getMessageIn().getChatId() == GUI.getInstance().getBusiness().getCurrentChat().getId()) {
+        if(GUI.getInstance().getBusiness().getCurrentChat() != null && messageEvent.getMessageIn().getChatId() == GUI.getInstance().getBusiness().getCurrentChat().getId()) {
             Platform.runLater(() -> {
                 IMessageIn message = messageEvent.getMessageIn();
                 messages.add(message);
@@ -90,12 +90,14 @@ public class MessageViewController {
 
     // Gets the messages upon start
     public void getMessages(){
-        Set<? extends IMessageIn> response  = GUI.getInstance().getBusiness().getCurrentChat().getMessages();
-        if(response != null){
-            List<IMessageIn> mes = new ArrayList<>();
-            mes.addAll(response);
-            Collections.sort(mes);
-            messages.addAll(mes);
+        if(GUI.getInstance().getBusiness().getCurrentChat() != null) {
+            Set<? extends IMessageIn> response  = GUI.getInstance().getBusiness().getCurrentChat().getMessages();
+            if(response != null){
+                List<IMessageIn> mes = new ArrayList<>();
+                mes.addAll(response);
+                Collections.sort(mes);
+                messages.addAll(mes);
+            }
         }
     }
 }

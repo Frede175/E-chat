@@ -15,11 +15,7 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class BusinessFacade implements IBusinessFacade {
 
@@ -172,7 +168,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void deleteChat(int chatId){
-        restConnect.post(PathEnum.DeleteChatRoom, chatId, null, token);
+        restConnect.delete(PathEnum.RemoveChatroom, chatId, token);
     }
 
     @Override
