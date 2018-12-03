@@ -55,5 +55,6 @@ public interface IBusinessFacade {
     void leaveChat(int chatId);
     void deleteChat(int chatId);
 
+    void disconnectHub();
     void logout();
 }

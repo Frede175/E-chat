@@ -7,12 +7,11 @@ public class MainController {
     private ChatListController chatListController;
 
     @FXML
-    private MessageViewController chatBoxController;
+    private MessageViewController messageViewController;
 
     @FXML
     public void initialize() {
-        chatBoxController.getMessages();
-
+        messageViewController.getMessages();
     }
 
 }

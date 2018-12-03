@@ -5,25 +5,22 @@ import Acquaintence.Event.MessageEvent;
 import Acquaintence.EventManager;
 import Acquaintence.IChat;
 import Acquaintence.IMessageIn;
-import Business.Connection.RequestResponse;
 import GUI.GUI;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 
 import java.util.*;
 
 public class MessageViewController {
 
     @FXML
-    public ListView<IMessageIn> chatBox;
+    public ListView<IMessageIn> messageView;
 
     private ObservableList<IMessageIn> messages;
     private SortedList<IMessageIn> sortedMessages;
@@ -37,9 +34,9 @@ public class MessageViewController {
         messages = FXCollections.observableArrayList();
         sortedMessages = new SortedList<>(messages);
 
-        chatBox.setItems(sortedMessages);
+        messageView.setItems(sortedMessages);
 
-        chatBox.setCellFactory(param -> new ListCell<IMessageIn>() {
+        messageView.setCellFactory(param -> new ListCell<IMessageIn>() {
             @Override
             protected void updateItem(IMessageIn item, boolean empty) {
                 super.updateItem(item, empty);
@@ -62,7 +59,7 @@ public class MessageViewController {
             }
         });
         // Scrolls to the newest message
-        Platform.runLater( () -> chatBox.scrollTo(messages.size()-1) );
+        Platform.runLater( () -> messageView.scrollTo(messages.size()-1) );
     }
 
     // The event listener method for new message
@@ -93,9 +90,10 @@ public class MessageViewController {
 
     // Gets the messages upon start
     public void getMessages(){
-        RequestResponse<List<? extends IMessageIn>> response  = GUI.getInstance().getBusiness().getMessages();
+        Set<? extends IMessageIn> response  = GUI.getInstance().getBusiness().getCurrentChat().getMessages();
         if(response != null){
-            List<? extends IMessageIn> mes = response.getResponse();
+            List<IMessageIn> mes = new ArrayList<>();
+            mes.addAll(response);
             Collections.sort(mes);
             messages.addAll(mes);
         }

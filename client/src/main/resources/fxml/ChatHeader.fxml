@@ -11,7 +11,11 @@
    <children>
       <HBox alignment="CENTER_LEFT" layoutY="-36.0" minWidth="500.0" prefHeight="100.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
+<<<<<<< HEAD
             <Label fx:id="chatNameL" alignment="CENTER" maxWidth="400.0" prefHeight="30.0" prefWidth="400.0" text="Name" textAlignment="CENTER">
+=======
+            <Label fx:id="chatNameL" alignment="CENTER" maxWidth="400.0" prefHeight="30.0" prefWidth="400.0" textAlignment="CENTER">
+>>>>>>> master
                <font>
                   <Font size="25.0" />
                </font>

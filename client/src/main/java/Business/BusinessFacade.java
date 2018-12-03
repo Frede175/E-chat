@@ -393,19 +393,19 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
+        if (currentChat == null) return null;
 
-        if(currentChat != null) {
-            RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
-            currentChat.addMessages(response.getResponse());
-            return new RequestResponse<>(response.getResponse(), response.getConnectionState());
-        }
-        return new RequestResponse<>(new ArrayList<MessageIn>(), ConnectionState.SUCCESS);
-
+        return getMessages(currentChat.getId());
     }
 
     @Override
     public void sendMessage(String message) {
         hubConnect.sendMessage(message, currentChat.getId());
+    }
+
+    @Override
+    public void disconnectHub() {
+        hubConnect.disconnect();
     }
 
     @Override
@@ -418,7 +418,7 @@ public class BusinessFacade implements IBusinessFacade {
         users.clear();
         loginUser = null;
         token = null;
-        hubConnect.disconnect();
+        disconnectHub();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
             GUI.getInstance().getStage().setScene(new Scene(root));
