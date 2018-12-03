@@ -51,22 +51,7 @@ public class AddPermissionsToRoleController {
                 permissionLSV.getTargetItems().setAll(allPermissions);
             }
 
-          /*  @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                selectedRole = t1;
-                RequestResponse<List<String>> response1 = GUI.getInstance().getBusiness().getAllPermissions();
-                List<String> rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole);
-                List<String> allPermissions = response1.getResponse();
-                List<String> notCurrentPermissions = new ArrayList<>();
-                for(Iterator<String> iterator = allPermissions.iterator(); iterator.hasNext();) {
-                    String perm = iterator.next();
-                    if(!rolesPermissions.contains(perm)) {
-                        notCurrentPermissions.add(perm);
-                        iterator.remove();
-                    }
-                }
-                permissionLSV.getSourceItems().setAll(notCurrentPermissions);
-                permissionLSV.getTargetItems().setAll(allPermissions); */
+
         });
     }
 

@@ -10,7 +10,7 @@ import org.controlsfx.control.ListSelectionView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateUserRoleController {
+public class CreateRoleController {
     @FXML
     public ListSelectionView<String> roleListLSV;
 

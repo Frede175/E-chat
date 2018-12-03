@@ -20,7 +20,7 @@ public class AddRoleToUserController {
     ComboBox<IUser> selectUser;
 
     @FXML
-    ComboBox<String> selectRole;
+    ComboBox<IRole> selectRole;
 
     @FXML
     Button addRoleToUser;
@@ -41,13 +41,13 @@ public class AddRoleToUserController {
         });
 
         for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().add(role.getName());
+            selectRole.getItems().add(role);
         }
 
-        selectRole.valueProperty().addListener(new ChangeListener<String>() {
+        selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                selectedRole = t1;
+            public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
+                selectedRole = t1.getName();
             }
         });
     }

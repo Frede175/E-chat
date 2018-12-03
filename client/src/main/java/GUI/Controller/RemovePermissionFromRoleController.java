@@ -33,7 +33,7 @@ public class RemovePermissionFromRoleController {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
                 // TODO set getname() to getID();
-                selectedRole = t1.getName();
+                selectedRole = t1.getId();
                 permissionLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getRolesPermissions(selectedRole));
             }
 

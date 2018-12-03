@@ -15,11 +15,7 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class BusinessFacade implements IBusinessFacade {
 
@@ -231,8 +227,8 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.delete(PathEnum.DeleteUser, userId, token);
     }
 
-    public void addRoleToUser(String userId, String role) {
-        restConnect.put(PathEnum.AddRoleToUser, userId, role, token);
+    public void addRoleToUser(String userId, String rolename) {
+        restConnect.put(PathEnum.AddRoleToUser, userId, rolename, token);
     }
 
     /*Department Methods */
@@ -340,21 +336,21 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void createRole(List<String> permissions, String roleName) {
-        restConnect.post(PathEnum.CreateUserRole, roleName, permissions, token);
+        restConnect.post(PathEnum.CreateRole, roleName, permissions, token);
     }
 
     @Override
-    public void deleteRole(String roleName) {
-        restConnect.delete(PathEnum.DeleteUserRole, roleName, token);
+    public void deleteRole(String roleid) {
+        restConnect.delete(PathEnum.DeleteRole, roleid, token);
     }
 
     @Override
-    public void addPermissionsToRole(String role, List<String> permissions) {
-        restConnect.post(PathEnum.AddPermissionsToRole, role, permissions, token);
+    public void addPermissionsToRole(String roleid, List<String> permissions) {
+        restConnect.post(PathEnum.AddPermissionsToRole, roleid, permissions, token);
     }
 
-    public void removePermissionsFromRole(String role, List<String> permissions) {
-        restConnect.post(PathEnum.RemovePermissionsFromRole, role, permissions, token);
+    public void removePermissionsFromRole(String roleid, List<String> permissions) {
+        restConnect.post(PathEnum.RemovePermissionsFromRole, roleid, permissions, token);
     }
 
     /*Connection Methods */
