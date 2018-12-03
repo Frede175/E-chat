@@ -12,7 +12,6 @@ public class MainController {
     @FXML
     public void initialize() {
         messageViewController.getMessages();
-
     }
 
 }

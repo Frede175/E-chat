@@ -393,6 +393,11 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public void disconnectHub() {
+        hubConnect.disconnect();
+    }
+
+    @Override
     public void logout() {
         restConnect.logout(token);
         departments.clear();
@@ -402,7 +407,7 @@ public class BusinessFacade implements IBusinessFacade {
         users.clear();
         loginUser = null;
         token = null;
-        hubConnect.disconnect();
+        disconnectHub();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
             GUI.getInstance().getStage().setScene(new Scene(root));
