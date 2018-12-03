@@ -368,7 +368,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public RequestResponse<List<? extends IMessageIn>> getMessages(int chatId) {
+    public RequestResponse<List<? extends IMessageIn>> getMessages(int chatId) {        System.out.println("Calling messages second time");
         RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, chatId, new Page(0,20).toMap(), token);
         for(Chat chat : chats) {
             if(chat.getId() == chatId) {
@@ -382,7 +382,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages() {
-
         if(currentChat != null) {
             RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, currentChat.getId(), new Page(0,20).toMap(), token);
             currentChat.addMessages(response.getResponse());
