@@ -59,8 +59,8 @@ public class GUI extends Application implements IGUI {
     }
 
     /**
-     * Gets the business facade
-     * @return the business facade
+     * Gets the Business facade
+     * @return the Business facade
      */
     public IBusinessFacade getBusiness() {
         return business;

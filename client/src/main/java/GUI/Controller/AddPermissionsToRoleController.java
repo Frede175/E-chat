@@ -25,24 +25,26 @@ public class AddPermissionsToRoleController {
 
     private String selectedRole;
 
+    private List<String> rolesPermissions;
+
     public void initialize() {
 
         for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-         selectRoleComboBox.getItems().add(role);
+            selectRoleComboBox.getItems().add(role);
         }
 
         selectRoleComboBox.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
                 // TODO set getname til getID();
-                selectedRole = t1.getName();
+                selectedRole = t1.getId();
                 RequestResponse<List<String>> response1 = GUI.getInstance().getBusiness().getAllPermissions();
-                List<String> rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole);
+                rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole);
                 List<String> allPermissions = response1.getResponse();
                 List<String> notCurrentPermissions = new ArrayList<>();
-                for(Iterator<String> iterator = allPermissions.iterator(); iterator.hasNext();) {
+                for (Iterator<String> iterator = allPermissions.iterator(); iterator.hasNext(); ) {
                     String perm = iterator.next();
-                    if(!rolesPermissions.contains(perm)) {
+                    if (!rolesPermissions.contains(perm)) {
                         notCurrentPermissions.add(perm);
                         iterator.remove();
                     }
@@ -56,10 +58,11 @@ public class AddPermissionsToRoleController {
     }
 
     public void addSelected(ActionEvent actionEvent) {
-        List<String> permissions = new ArrayList<>();
-        permissions.addAll(permissionLSV.getTargetItems());
-        if(selectedRole != null) {
-            GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole, permissions);
+        ArrayList<String> permissionstosend = new ArrayList<>();
+        permissionstosend.addAll(permissionLSV.getTargetItems());
+        permissionstosend.removeAll(rolesPermissions);
+        if (selectedRole != null && !permissionLSV.getTargetItems().isEmpty()) {
+            GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole, permissionstosend);
             Stage stage = (Stage) selectRoleComboBox.getScene().getWindow();
             stage.close();
         }
