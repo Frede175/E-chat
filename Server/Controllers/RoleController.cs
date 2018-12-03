@@ -57,22 +57,22 @@ namespace Server.Controllers
         }
 
         // GET: https://localhost:5001/api/Role/permission/{name}
-        [HttpGet("permission/{name}")]
+        [HttpGet("permission/{roleId}")]
         [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUserRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
-        public async Task<ActionResult<IEnumerable<string>>> GetRolePermissions(string name) 
+        public async Task<ActionResult<IEnumerable<string>>> GetRolePermissions(string roleId) 
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting role ({name}) permissions.", username, name);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting role ({id}) permissions.", username, roleId);
 
-            var role = await _roleManager.FindByNameAsync(name);
+            var role = await _roleManager.FindByIdAsync(roleId);
             if (role != null)
             {
                 var perms = (await _roleManager.GetClaimsAsync(role)).Where(c => c.Type == UserClaimTypes.Permission).Select(c => c.Value);
                 return Ok(perms);
             }
 
-            _logger.LogWarning(LoggingEvents.ListItemsNotFound, "{username} getting role ({name}) permissions, NOT FOUND", username, name);
+            _logger.LogWarning(LoggingEvents.ListItemsNotFound, "{username} getting role ({id}) permissions, NOT FOUND", username, roleId);
             return NotFound();
         }
 
@@ -91,21 +91,21 @@ namespace Server.Controllers
 
 
 
-        // POST: https://localhost:5001/api/Role/{role}
-        [HttpPost("{role}")]
+        // POST: https://localhost:5001/api/Role/{name}
+        [HttpPost("{name}")]
         [RequiresPermissionAttribute(permissions: Permission.CreateUserRole)]
-        public async Task<ActionResult> CreateUserRole(string role, [FromBody] List<string> addedPermissions)
+        public async Task<ActionResult> CreateUserRole(string name, [FromBody] List<string> addedPermissions)
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.InsertItem, "{username} inserting role ({name}).", username, role);
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} inserting role ({name}).", username, name);
 
-            var newRole = await _roleManager.FindByNameAsync(role);
+            var newRole = await _roleManager.FindByNameAsync(name);
             string[] permissions = Enum.GetNames(typeof(Permission));
 
             if (newRole == null)
             {
-                newRole = new IdentityRole(role);
+                newRole = new IdentityRole(name);
                 var result = await _roleManager.CreateAsync(newRole);
                 if (result.Succeeded)
                 {
@@ -119,28 +119,28 @@ namespace Server.Controllers
 
                     return CreatedAtAction(nameof(GetRole), new { roleId = newRole.Id }, new Role(newRole));
                 }
-                _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed inserting role ({name})", username, role);
+                _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed inserting role ({name})", username, name);
                 return BadRequest();
             }
-            _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} inserting role ({name}), ALLREADY EXIST", username, role);
-            return BadRequest($"Role with name {role} allready exist.");
+            _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} inserting role ({name}), ALLREADY EXIST", username, name);
+            return BadRequest($"Role with name {name} allready exist.");
         }
 
         // POST: https://localhost:5001/api/Role/addperm/{name}
-        [HttpPost("addperm/{name}")]
+        [HttpPost("addperm/{roleId}")]
         [RequiresPermissionAttribute(permissions: Permission.AddPermissionToRole)]
-        public async Task<ActionResult> AddPermissionToRole(string name, [FromBody] List<string> permissionNames)
+        public async Task<ActionResult> AddPermissionToRole(string roleId, [FromBody] List<string> permissionNames)
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} adding permissions to role ({role}).", username, name);
+            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} adding permissions to role ({role}).", username, roleId);
 
 
-            var role = await _roleManager.FindByNameAsync(name);
+            var role = await _roleManager.FindByIdAsync(roleId);
 
             if (role == null)
             {
-                _logger.LogWarning(LoggingEvents.UpdateRelativeItemNotFound, "{username} adding permissions to role ({role}), NOT FOUND", username, name);
+                _logger.LogWarning(LoggingEvents.UpdateRelativeItemNotFound, "{username} adding permissions to role ({role}), NOT FOUND", username, roleId);
                 return NotFound();
             }
 
@@ -166,20 +166,20 @@ namespace Server.Controllers
         }
 
         // POST: https://localhost:5001/api/Role/removeperm/{name}
-        [HttpPost("removeperm/{name}")]
+        [HttpPost("removeperm/{roleId}")]
         [RequiresPermissionAttribute(permissions: Permission.RemovePermissionFromRole)]
-        public async Task<ActionResult> RemovePermissionFromRole(string name, [FromBody] List<string> permissionNames)
+        public async Task<ActionResult> RemovePermissionFromRole(string roleId, [FromBody] List<string> permissionNames)
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} removing permissions to role ({role}).", username, name);
+            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} removing permissions to role ({role}).", username, roleId);
 
             var permissions = Enum.GetNames(typeof(Permission));
-            var role = await _roleManager.FindByNameAsync(name);
+            var role = await _roleManager.FindByIdAsync(roleId);
 
             if (role == null)
             {
-                _logger.LogWarning(LoggingEvents.UpdateRelativeItemNotFound, "{username} removing permissions to role ({role}), NOT FOUND", username, name);
+                _logger.LogWarning(LoggingEvents.UpdateRelativeItemNotFound, "{username} removing permissions to role ({role}), NOT FOUND", username, roleId);
                 return NotFound();
             }
 
@@ -206,13 +206,13 @@ namespace Server.Controllers
         // DELETE: https://localhost:5001/api/Role/delete/{role}
         [HttpDelete("{role}")]
         [RequiresPermissionAttribute(permissions: Permission.DeleteRole)]
-        public async Task<ActionResult> DeleteRole(string role)
+        public async Task<ActionResult> DeleteRole(string roleId)
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} deleting role ({role}).", username, role);
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} deleting role ({role}).", username, roleId);
 
-            var thisRole = await _roleManager.FindByNameAsync(role);
+            var thisRole = await _roleManager.FindByIdAsync(roleId);
 
             if (thisRole != null)
             {
@@ -223,11 +223,11 @@ namespace Server.Controllers
                     return Ok();
                 }
 
-                _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed deleting role ({role}).", username, role);
+                _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed deleting role ({role}).", username, roleId);
                 return BadRequest();
             }
 
-            _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} deleting role ({role}), NOT FOUND.", username, role);
+            _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} deleting role ({role}), NOT FOUND.", username, roleId);
             return NotFound();
         }
 
