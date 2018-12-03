@@ -152,17 +152,10 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public List<IChat> getUsersChats(String userId) {
-        RequestResponse<List<Department>> departments = restConnect.get(PathEnum.GetDepartments, userId, null, token);
-        List<IChat> usersChats = new ArrayList<>();
-        for(Department department : departments.getResponse()) {
-            RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, userId, department.toMap(), token);
-            if(response.getResponse() != null ) {
-                usersChats.addAll(response.getResponse());
-            }
-        }
-        return usersChats;
-
+    public List<? extends IChat> getUsersChats(String userId) {
+        RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetChats, userId, null, token);
+        System.out.println(response.getResponse());
+        return response.getResponse();
     }
 
     @Override
@@ -171,8 +164,6 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, departmentId, chatToSend, token);
         return response.getConnectionState();
     }
-
-    // TODO Why is there two methods doin the same thing?
 
     @Override
     public ConnectionState addUserToChat(int chatId, String userId) {
@@ -335,6 +326,19 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
+    public RequestResponse<List<String>> getAllPermissions() {
+        RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
+        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
+    }
+
+    @Override
+    public List<String> getRolesPermissions(String roleid) {
+        RequestResponse<List<String>> response = restConnect.get(PathEnum.GetRolesPermissions, roleid, null, token);
+        List<String> permissions = response.getResponse();
+        return permissions;
+    }
+
+    @Override
     public void createRole(List<String> permissions, String roleName) {
         restConnect.post(PathEnum.CreateUserRole, roleName, permissions, token);
     }
@@ -351,19 +355,6 @@ public class BusinessFacade implements IBusinessFacade {
 
     public void removePermissionsFromRole(String role, List<String> permissions) {
         restConnect.post(PathEnum.RemovePermissionsFromRole, role, permissions, token);
-    }
-
-    @Override
-    public RequestResponse<List<String>> getAllPermissions() {
-        RequestResponse<List<String>> response = restConnect.get(PathEnum.GetAllPermissions, null, null, token);
-        return new RequestResponse<>(response.getResponse(), response.getConnectionState());
-    }
-
-    @Override
-    public List<String> getRolesPermissions(String roleid) {
-        RequestResponse<List<String>> response = restConnect.get(PathEnum.GetRolesPermissions, roleid, null, token);
-        List<String> permissions = response.getResponse();
-        return permissions;
     }
 
     /*Connection Methods */
