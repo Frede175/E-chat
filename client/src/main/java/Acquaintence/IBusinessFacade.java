@@ -13,7 +13,6 @@ public interface IBusinessFacade {
     RequestResponse<List<? extends IChat>> getChats();
     RequestResponse<List<? extends  IUser>> getUsers();
     RequestResponse<Chat> createDirectMessage(String name, IUser user);
-    RequestResponse<String> addUserToSpecificChat(String userSub, IChat chat);
     void setCurrentChat(int chatId);
     void sendMessage(String message);
     RequestResponse<List<? extends IMessageIn>> getMessages(int chatId);
@@ -26,14 +25,14 @@ public interface IBusinessFacade {
     List<String> getRolesPermissions(String roleName);
 
     List<? extends IChat> getExistingChats();
-    void deleteUserRole(String roleName);
+    void deleteRole(String roleName);
     ConnectionState createChat(String chatName, int departmentId);
     void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
     void createDepartment(String departmentname);
     void deleteDepartment(int depId);
     void updateDepartment(int depId, String name);
     void addUserToDepartment(int depId, String userId);
-    void createUserRole(List<String> permissions, String name);
+    void createRole(List<String> permissions, String name);
     ILoginUser getLoginUser();
     RequestResponse<List<? extends IRole>> getRoles();
     List<? extends IUser> getExistingUsers();
@@ -49,8 +48,7 @@ public interface IBusinessFacade {
     void removePermissionsFromRole(String role, List<String> permissions);
     void removeUserFromDepartment(String userId, int departmentId);
     RequestResponse<List<IDepartment>> getAvailableDepartments(String userId);
-    RequestResponse<List<IDepartment>> getUsersDepartments(int departmentId);
     RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
-
+    void disconnectHub();
     void logout();
 }
