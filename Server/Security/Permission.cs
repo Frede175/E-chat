@@ -45,6 +45,10 @@ namespace Server.Security
 
 
         //BasicRole
-        BasicPermissions
+        BasicPermissions,
+
+        //Logs
+        SeeLogs,
+        SeeAllLogs
     }
 }
