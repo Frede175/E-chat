@@ -213,7 +213,7 @@ public class BusinessFacade implements IBusinessFacade {
     /*User Methods */
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
-        RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, loginUser.getSub(), null, token);
+        RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, null, null, token);
         if(response.getResponse() != null) {
             users = (response.getResponse());
         }

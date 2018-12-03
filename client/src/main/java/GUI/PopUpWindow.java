@@ -23,28 +23,4 @@ public class PopUpWindow {
         stage.initOwner(stage.getOwner());
         stage.showAndWait();
     }
-
-    private PopUpWindow(String url, PermissionType type) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        Parent p = loader.load(getClass().getResource("/fxml/AdminPage.fxml").openStream());
-        AdminPageController controller = loader.getController();
-        controller.load(type);
-        Scene scene = new Scene(p);
-        stage = new Stage();
-        stage.setWidth(1000);
-        stage.setHeight(600);
-        stage.setScene(scene);
-        stage.initOwner(stage.getOwner());
-        stage.showAndWait();
-    }
-
-    public static PopUpWindow createAdminPopUp(PermissionType type) {
-        PopUpWindow window = null;
-        try {
-            window = new PopUpWindow("/fxml/AdminPage.fxml", type);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return window;
-    }
 }

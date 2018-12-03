@@ -2,29 +2,48 @@ package GUI.Controller;
 
 import Business.Connection.PermissionEnum;
 import Business.Connection.PermissionType;
+import GUI.GUI;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AdminPageController {
 
     @FXML
-    public VBox root;
+    public TabPane root;
 
-    @FXML
-    public Label title;
+    public void initialize() {
+        ArrayList<PermissionType> types = new ArrayList<>();
+        for (PermissionEnum pt : GUI.getInstance().getBusiness().getLoginUser().getAdminPermissions()) {
+            if(!types.contains(pt.getType())) {
+                types.add(pt.getType());
+            }
+        }
+        for (PermissionType type : types) {
+            Tab tab = new Tab(type.toString());
+            VBox vBox = new VBox();
+            vBox.setAlignment(Pos.TOP_CENTER);
+            vBox = load(type, vBox);
+            ScrollPane sp = new ScrollPane();
+            sp.setContent(vBox);
+            tab.setContent(sp);
+            root.getTabs().add(tab);
+        }
+    }
 
-    public void load(PermissionType type) {
-        title.setText(type.toString());
+    public VBox load(PermissionType type, VBox root) {
         //TODO Could be made a function for better clarity
-        for (PermissionEnum perm : GUI.GUI.getInstance().getBusiness().getLoginUser().getUserPermissionsFromType(type)) {
+        for (PermissionEnum perm : GUI.getInstance().getBusiness().getLoginUser().getUserPermissionsFromType(type)) {
             switch (perm) {
                 case CreateDepartment:
                     try {
@@ -156,6 +175,7 @@ public class AdminPageController {
                     break;
             }
         }
+        return root;
     }
 
     public Separator createSeparator() {
@@ -166,4 +186,7 @@ public class AdminPageController {
         return sep;
     }
 
+    public void back(ActionEvent actionEvent) {
+        GUI.getInstance().getStage().setScene(GUI.getInstance().getPrimaryScene());
+    }
 }

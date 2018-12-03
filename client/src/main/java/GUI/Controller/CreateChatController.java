@@ -29,7 +29,7 @@ public class CreateChatController {
         GUI.GUI.getInstance().getBusiness().createChat(nameTextField.getText(), choiceBox.getValue().getId());
 
         Stage stage = (Stage) CreateChatBtnId.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
 
     }
 }

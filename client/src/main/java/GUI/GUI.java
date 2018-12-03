@@ -23,6 +23,8 @@ public class GUI extends Application implements IGUI {
      * An instance of the IBusinessFacade.
      */
     private IBusinessFacade business;
+    private Scene primaryScene;
+
     @Override
     public void injectBusinessFacade(IBusinessFacade businessFacade) {
         this.business = businessFacade;
@@ -76,5 +78,13 @@ public class GUI extends Application implements IGUI {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public void setPrimaryScene(Scene primaryScene) {
+        this.primaryScene = primaryScene;
+    }
+
+    public Scene getPrimaryScene() {
+        return primaryScene;
     }
 }

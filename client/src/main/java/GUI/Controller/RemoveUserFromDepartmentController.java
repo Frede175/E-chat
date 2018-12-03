@@ -46,6 +46,6 @@ public class RemoveUserFromDepartmentController {
     public void removeUserFromDepartment(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().removeUserFromDepartment(selectedUser.getId(), selectedDepartment.getId());
         Stage stage = (Stage) selectUser.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 }

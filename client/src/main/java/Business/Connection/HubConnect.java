@@ -9,6 +9,7 @@ import Business.Models.MessageOut;
 import Business.Models.User;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
+import com.microsoft.signalr.HubConnectionState;
 import io.reactivex.Single;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -66,7 +67,10 @@ public class HubConnect {
     }
 
     public void disconnect() {
-        chatConnection.stop().blockingAwait();
+        if(chatConnection != null && chatConnection.getConnectionState() == HubConnectionState.CONNECTED) {
+            chatConnection.stop().blockingAwait();
+            chatConnection = null;
+        }
     }
 
     public void sendMessage(String message, int chatId) {

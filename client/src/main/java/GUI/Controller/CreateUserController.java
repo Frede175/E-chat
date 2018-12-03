@@ -35,6 +35,6 @@ public class CreateUserController {
         }
         GUI.GUI.getInstance().getBusiness().createUser(UsernameTextField.getText(), PasswordTextField.getText(), roleCB.getSelectionModel().getSelectedItem(), departmentIds);
         Stage stage = (Stage) root.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
     }
 }
