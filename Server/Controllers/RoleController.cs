@@ -91,8 +91,8 @@ namespace Server.Controllers
 
 
 
-        // POST: https://localhost:5001/api/Role/{role}
-        [HttpPost("{roleId}")]
+        // POST: https://localhost:5001/api/Role/{name}
+        [HttpPost("{name}")]
         [RequiresPermissionAttribute(permissions: Permission.CreateUserRole)]
         public async Task<ActionResult> CreateUserRole(string name, [FromBody] List<string> addedPermissions)
         {
