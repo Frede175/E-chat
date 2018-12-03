@@ -12,6 +12,7 @@ using OpenIddict.Abstractions;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
+using Server.Logging;
 
 namespace Server.Controllers
 {
@@ -42,6 +43,8 @@ namespace Server.Controllers
         [HttpPost("~/connect/logout")]
         [Authorize]
         public async Task<IActionResult> Logout() {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.SignOut, $"{username} signed out.");
             await _signInManager.SignOutAsync();
             
             return SignOut(OpenIddictServerDefaults.AuthenticationScheme);
@@ -50,12 +53,13 @@ namespace Server.Controllers
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
         {
-
+            _logger.LogInformation(LoggingEvents.AuthenticationStarted, "Exchange started for {username}", oidcRequest.Username);
             if (oidcRequest.IsPasswordGrantType())
             {
                 var user = await _userManager.FindByNameAsync(oidcRequest.Username);
                 if (user == null)
                 {
+                    _logger.LogWarning(LoggingEvents.AuthenticationFail, $"User not found for {oidcRequest.Username}");
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
@@ -67,6 +71,7 @@ namespace Server.Controllers
                 var result = await _signInManager.CheckPasswordSignInAsync(user, oidcRequest.Password, lockoutOnFailure: true);
                 if (!result.Succeeded)
                 {
+                    _logger.LogWarning(LoggingEvents.AuthenticationFail, $"Wrong password for {oidcRequest.Username}");
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
@@ -77,9 +82,11 @@ namespace Server.Controllers
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(oidcRequest, user);
 
+                _logger.LogInformation(LoggingEvents.AuthenticationSuccess, $"Authentication successful for {oidcRequest.Username}");
+
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
-
+            _logger.LogInformation(LoggingEvents.AuthenticationFail, $"Unsupported grant type for {oidcRequest.Username}");
             return BadRequest(new OpenIdConnectResponse
             {
                 Error = OpenIdConnectConstants.Errors.UnsupportedGrantType,
