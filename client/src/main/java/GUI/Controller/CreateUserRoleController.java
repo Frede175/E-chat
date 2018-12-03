@@ -1,6 +1,5 @@
 package GUI.Controller;
 
-import Acquaintence.IDepartment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,7 +28,7 @@ public class CreateUserRoleController {
     public void createRole(ActionEvent actionEvent) {
         List<String> permissionsForRole = new ArrayList<>();
         permissionsForRole.addAll(roleListLSV.getTargetItems());
-        GUI.GUI.getInstance().getBusiness().createUserRole(permissionsForRole, roleName.getText());
+        GUI.GUI.getInstance().getBusiness().createRole(permissionsForRole, roleName.getText());
         Stage stage = (Stage) createRole.getScene().getWindow();
         stage.close();
     }

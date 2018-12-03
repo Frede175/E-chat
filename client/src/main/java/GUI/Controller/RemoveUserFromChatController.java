@@ -30,7 +30,7 @@ public class RemoveUserFromChatController {
             @Override
             public void changed(ObservableValue<? extends IUser> observable, IUser oldValue, IUser newValue) {
                 selectedUser = newValue;
-                List<IChat> chats = GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId());
+                List<? extends IChat> chats = GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId());
                 for (IChat chat : chats) {
                     if(chat.isGroupChat()) {
                         selectChat.getItems().add(chat);

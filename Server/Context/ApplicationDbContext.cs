@@ -1,15 +1,19 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Server.DbModels;
+using Server.Logging;
 
 namespace Server.Context
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        
+
         public DbSet<Chat> Chat { get; set; }
         public DbSet<Message> Message { get; set; }
         public DbSet<Department> Department { get; set; }
+
+        //Logging
+        public DbSet<LogMessage> LogMessages { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -22,7 +26,7 @@ namespace Server.Context
 
             builder.Entity<UserChat>().HasKey(u => new { u.ChatId, u.UserId });
             builder.Entity<UserDepartment>().HasKey(u => new { u.UserId, u.DepartmentId });
-            
+
             builder.Entity<UserChat>()
                 .HasOne(u => u.ApplicationUser)
                 .WithMany(u => u.UserChats)
