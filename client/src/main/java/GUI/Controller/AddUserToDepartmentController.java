@@ -34,7 +34,7 @@ public class AddUserToDepartmentController {
     public void addToDepartmentBtn(ActionEvent actionEvent){
         GUI.getInstance().getBusiness().addUserToDepartment(choiceBoxDepartment.getValue().getId(), choiceBoxUser.getValue().getId());
         Stage stage = (Stage) addBtn.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 
 }

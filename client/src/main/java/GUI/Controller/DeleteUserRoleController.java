@@ -40,6 +40,6 @@ public class DeleteUserRoleController {
     public void deleteRole(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().deleteRole(selectedRole);
         Stage stage = (Stage) deleteRole.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 }

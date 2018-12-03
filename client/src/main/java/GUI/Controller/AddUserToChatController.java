@@ -31,6 +31,6 @@ public class AddUserToChatController {
     public void addUser() {
         GUI.getInstance().getBusiness().addUserToChat(chatsCB.getSelectionModel().getSelectedItem().getId(), usersCB.getSelectionModel().getSelectedItem().getId());
         Stage stage = (Stage) chatsCB.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 }

@@ -51,6 +51,6 @@ public class RemovePermissionFromRoleController {
             GUI.getInstance().getBusiness().removePermissionsFromRole(selectedRole, permissions);
         }
         Stage stage = (Stage) selectRole.getScene().getWindow();
-        stage.close();
+        stage.setScene(GUI.getInstance().getPrimaryScene());
     }
 }

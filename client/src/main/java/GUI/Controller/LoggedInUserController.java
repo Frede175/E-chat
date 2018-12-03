@@ -1,15 +1,14 @@
 package GUI.Controller;
 
-import Business.Connection.PermissionEnum;
-import Business.Connection.PermissionType;
 import GUI.GUI;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import GUI.PopUpWindow;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 public class LoggedInUserController {
 
@@ -22,23 +21,19 @@ public class LoggedInUserController {
 
     public void initialize() {
         userNameL.setText(GUI.getInstance().getBusiness().getLoginUser().getName());
-        ArrayList<PermissionType> types = new ArrayList<>();
-        for (PermissionEnum pt : GUI.getInstance().getBusiness().getLoginUser().getAdminPermissions()) {
-            if(!types.contains(pt.getType())) {
-                types.add(pt.getType());
-            }
+    }
 
-        }
-        if(types.isEmpty()) {
-            adminMB.setDisable(true);
-            adminMB.setVisible(false);
-        }
-        for (PermissionType type : types) {
-            MenuItem mi = new MenuItem(type.toString());
-            mi.setOnAction(event -> {
-                PopUpWindow.createAdminPopUp(type);
-            });
-            adminMB.getItems().add(mi);
+    public void openAdmin() {
+        Parent root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            Parent p = loader.load(getClass().getResource("/fxml/AdminPage.fxml").openStream());
+            Scene scene = new Scene(p);
+            GUI.getInstance().getStage().setWidth(1000);
+            GUI.getInstance().getStage().setHeight(600);
+            GUI.getInstance().getStage().setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

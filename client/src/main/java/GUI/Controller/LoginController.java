@@ -28,7 +28,9 @@ public class LoginController {
                 try {
                     Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
                     passwordTF.setText("");
-                    GUI.getInstance().getStage().setScene(new Scene(root));
+                    Scene scene = new Scene(root);
+                    GUI.getInstance().setPrimaryScene(scene);
+                    GUI.getInstance().getStage().setScene(scene);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -37,7 +39,9 @@ public class LoginController {
                 try {
                     Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoggedInUser.fxml"));
                     passwordTF.setText("");
-                    GUI.getInstance().getStage().setScene(new Scene(root));
+                    Scene scene = new Scene(root);
+                    GUI.getInstance().setPrimaryScene(scene);
+                    GUI.getInstance().getStage().setScene(scene);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
