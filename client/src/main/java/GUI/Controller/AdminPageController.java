@@ -75,13 +75,6 @@ public class AdminPageController {
                     }
                     break;
                 case LeaveChat:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/LeaveChat.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    break;
                 case DeleteChat:
                     try {
                         Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteChat.fxml"));

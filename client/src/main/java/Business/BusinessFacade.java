@@ -165,7 +165,6 @@ public class BusinessFacade implements IBusinessFacade {
         return response.getConnectionState();
     }
 
-    //TODO currently working on it
     @Override
     public void leaveChat(int chatId){
         restConnect.post(PathEnum.LeaveChat, chatId, null, token);
