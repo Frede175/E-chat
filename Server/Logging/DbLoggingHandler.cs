@@ -18,7 +18,7 @@ namespace Server.Logging
         private const int TIMER_INTERVAL = 5 * 1000;
         private readonly Queue<LogMessage> _messages;
 
-        System.Timers.Timer timer;
+        private System.Timers.Timer timer;
 
         private readonly IServiceProvider _serviceProvider;
         public DbLoggingHandler(IServiceProvider serviceProvider)

@@ -197,11 +197,11 @@ namespace Server.Controllers
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             var currentUsername = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.InsertItem, "{username} creating private chat.", currentUsername);
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} creating private chat with user ({userid}).", currentUsername, userId);
 
             if (currentUserId == userId) 
             {
-                _logger.LogWarning(LoggingEvents.InsertItemFail, "{username] tried to create a chat with himself.", currentUsername);
+                _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} tried to create a chat with himself.", currentUsername);
                 return BadRequest("Can't create a private with yourself.");
             }
 
@@ -209,7 +209,7 @@ namespace Server.Controllers
 
             if (otherUser == null)
             {
-                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{username} failed to create private, the other user does not exist.", currentUsername);
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{username} failed to create private, the other user ({userid}) does not exist.", currentUsername, userId);
                 return NotFound("Other user does not exists.");
             }
 
@@ -234,7 +234,7 @@ namespace Server.Controllers
                 await _chatHubState.AddUserToGroupAsync(_chatHub, userId, result.Id.ToString());
                 await _chatHubState.AddUserToGroupAsync(_chatHub, currentUserId, result.Id.ToString());
                 await _chatHub.Clients.Group(result.Id.ToString()).NewChat(new Chat(result));
-                _logger.LogInformation(LoggingEvents.InsertItem, "{username} created a private chat with {otherUsername}.", currentUsername, otherUser.UserName);
+                _logger.LogInformation(LoggingEvents.InsertItem, "{username} created a private chat ({id}) with {otherUsername}.", currentUsername, result.Id, otherUser.UserName);
                 return CreatedAtRoute(nameof(GetChat), new { chatId = result.Id }, new Chat(result));
             }
 
@@ -280,13 +280,13 @@ namespace Server.Controllers
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding user to chat.", username);
+            _logger.LogInformation(LoggingEvents.InsertItem, "{username} adding user to chat ({id}).", username, chatId);
 
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{username} failed to add user to chat, since the user does not exist.", username);
+                _logger.LogWarning(LoggingEvents.InsertItemNotFound, "{username} failed to add user to chat ({id}), since the user does not exist.", username, chatId);
                 return NotFound("User");
             }
 
@@ -298,7 +298,6 @@ namespace Server.Controllers
                 await _chatHub.Clients.Group(chatId.ToString()).Add(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.ADD);
 
-                _logger.LogInformation(LoggingEvents.InsertItem, "{username} added {other} to chat.", username, user.UserName);
                 return Ok();
             }
             _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to add {other} to chat.", username, user.UserName);
@@ -314,13 +313,13 @@ namespace Server.Controllers
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removing user from chat.", username);
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removing user from chat ({id}).", username, chatId);
 
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null) 
             {
-                _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} failed to remove a user from chat since the user does not exist.", username);
+                _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} removing user from chat ({id}), NOT FOUND", username, chatId);
                 return NotFound("User");
             }
 
@@ -333,11 +332,10 @@ namespace Server.Controllers
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 await SendUpdateMessage(chatId, user, UpdateMessageType.REMOVE);
 
-                _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removed {other} from the chat.", username, user.UserName);
                 return Ok();
             }
 
-            _logger.LogInformation(LoggingEvents.DeleteItemFail, "{username} failed to remove {other} from chat.", username, user.UserName);
+            _logger.LogInformation(LoggingEvents.DeleteItemFail, "{username} failed to remove {other} from chat ({id}).", username, user.UserName, chatId);
             return BadRequest();
         }
 
@@ -348,15 +346,14 @@ namespace Server.Controllers
         public async Task<ActionResult> GetUsersInChat(int chatId)
         {
             var username = _userManager.GetUserName(HttpContext.User);
-            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting users in chat.", username);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting users in chat ({id}).", username, chatId);
             var chat = await _chatService.GetSpecificChat(chatId);
             if (chat != null)
             {
-                _logger.LogInformation(LoggingEvents.ListItems, "{username} got users in chat {name}.", username, chat.Name);
                 var result = (await _chatService.GetUsersInChat(chatId)).Select(c => new User(c)).ToList();
                 return Ok(result);
             }
-            _logger.LogWarning(LoggingEvents.ListItemsNotFound, "{username} failed to get users in chat, since chat does not exist.", username);
+            _logger.LogWarning(LoggingEvents.ListItemsNotFound, "{username} failed to get users in chat ({id}), since chat does not exist.", username, chatId);
             return NotFound("Chat");
         }
 

@@ -145,7 +145,7 @@ namespace Server
             if (env.IsDevelopment()) 
             {
                 app.UseDeveloperExceptionPage();
- //               app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
             } 
             else 
             {
