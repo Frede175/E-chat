@@ -17,7 +17,7 @@ public enum PathEnum {
     GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
     CreateChatroom("/api/chat/", ConnectionType.POST, Chat.class),
     GetChats("/api/chat/user/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
-    DeleteChatRoom("/api/chat/", ConnectionType.DELETE, null),
+    RemoveChatroom("/api/chat/", ConnectionType.DELETE, null),
     RemoveUserFromChat("/api/chat/remove/", ConnectionType.POST, null),
     AddUserToChat("/api/chat/add/", ConnectionType.POST, null),
     LeaveChat("/api/chat/leave/", ConnectionType.POST, null),

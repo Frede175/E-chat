@@ -10,7 +10,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -93,9 +92,9 @@ public class AdminPageController {
                         e.printStackTrace();
                     }
                     break;
-                case DeleteChat:
+                case RemoveChat:
                     try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteChat.fxml"));
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveChat.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
                     } catch (IOException e) {
                         e.printStackTrace();
