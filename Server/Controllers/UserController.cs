@@ -165,7 +165,7 @@ namespace Server.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                return NoContent();
             }
 
             _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed deleting user ({id}).", username, userId);
@@ -194,7 +194,7 @@ namespace Server.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                return NoContent();
             }
 
             _logger.LogWarning(LoggingEvents.UpdateRelativeItemFail, "{username} failed adding role ({role}) to user ({id}).", username, role, userId);

@@ -265,7 +265,7 @@ namespace Server.Controllers
                 await _chatHub.Clients.Group(chatId.ToString()).Leave(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.LEAVE);
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, user.Id, chatId.ToString());
-                return Ok();
+                return NoContent();
             }
 
             _logger.LogWarning(LoggingEvents.DeleteItem, "{username} failed leaving chat ({id}).", username, chatId);
@@ -298,7 +298,7 @@ namespace Server.Controllers
                 await _chatHub.Clients.Group(chatId.ToString()).Add(chatId, new User(user));
                 await SendUpdateMessage(chatId, user, UpdateMessageType.ADD);
 
-                return Ok();
+                return NoContent();
             }
             _logger.LogWarning(LoggingEvents.InsertItemFail, "{username} failed to add {other} to chat.", username, user.UserName);
             return BadRequest();
@@ -332,7 +332,7 @@ namespace Server.Controllers
                 await _chatHubState.RemoveUserFromGroupAsync(_chatHub, userId, chatId.ToString());
                 await SendUpdateMessage(chatId, user, UpdateMessageType.REMOVE);
 
-                return Ok();
+                return NoContent();
             }
 
             _logger.LogInformation(LoggingEvents.DeleteItemFail, "{username} failed to remove {other} from chat ({id}).", username, user.UserName, chatId);
