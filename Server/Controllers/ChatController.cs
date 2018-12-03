@@ -85,12 +85,33 @@ namespace Server.Controllers
             return NotFound();
         }
 
-/* TODO if remove chat is added
-        [HttpGet("user/{userId}"), Produces("application/json")]
+        // DELETE: https://localhost:5001/api/chat/{chatId}
+        [HttpDelete("{chatId}"), Produces("application/json")]
         [RequiresPermissionAttribute(permissions: Permission.RemoveChat)]
-        public async Task<ActionResult<List<Chat>>> GetAllChats()
+        public async Task<ActionResult> RemoveChat(int chatId) 
+        {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.DeleteItem, "{username} removing chat ({id})", username, chatId);
+
+            var chat = await _chatService.GetSpecificChat(chatId);
+
+            if (chat == null)
+            {
+                _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} removing chat ({id}), NOT FOUND", username, chatId);
+                return NotFound();
+            }
+
+            if (await _chatService.RemoveChatAsync(chat)) 
+            {
+                return NoContent();
+            }
+
+            _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed removing chat ({id})", username, chatId);
+            return BadRequest();
+        }
         
- */
+ 
 
         // GET: https://localhost:5001/api/chat/user/{userId} 
         [HttpGet("available/{userId}"), Produces("application/json")]
