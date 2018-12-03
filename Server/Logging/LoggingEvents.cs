@@ -22,6 +22,7 @@ namespace Server.Logging
 
         public const int UpdateItemFail = 1502;
         public const int DeleteItemFail = 1503;
+        public const int UpdateRelativeItemFail = 1504;
         public const int InsertItemFail = 1505;
 
 
