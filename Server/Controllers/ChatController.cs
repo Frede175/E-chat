@@ -266,7 +266,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/chat/leave/{chatId}
         [HttpPost("leave/{chatId}")]
-        [RequiresPermissionAttribute(permissions: Permission.LeaveChat)]
+        [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
         public async Task<ActionResult> Leave(int chatId)
         {
             var username = _userManager.GetUserName(HttpContext.User);
