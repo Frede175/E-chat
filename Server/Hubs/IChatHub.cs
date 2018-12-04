@@ -14,5 +14,7 @@ namespace Server.Hubs
          Task Leave(int chatId, User user);
 
          Task NewChat(Chat chat);
+
+         Task DeleteChat(int chatId);
     }
 }
