@@ -31,6 +31,9 @@ public enum PermissionEnum {
     RemovePermissionFromRole(PermissionType.ROLE),
     DeleteRole(PermissionType.ROLE),
 
+    SeeLogs(PermissionType.LOG),
+    SeeAllLogs(PermissionType.LOG),
+
     // Non-admin
     BasicPermissions(null);
 
