@@ -53,48 +53,6 @@ public class RestConnect {
         this.token = token;
     }
 
-    /* public RequestResponse<String> login(String username, String password) {
-
-        try {
-
-            HttpClient client = HttpClientBuilder.create().build();
-
-            HttpPost request = new HttpPost(url + "/connect/token/");
-
-            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-            nvps.add(new BasicNameValuePair("grant_type", "password"));
-            nvps.add(new BasicNameValuePair("username", username));
-            nvps.add(new BasicNameValuePair("password", password));
-            request.setEntity(new UrlEncodedFormEntity(nvps));
-            HttpResponse response = client.execute(request);
-
-            // getResponse(response.getStatusLine().getStatusCode());
-
-            BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
-
-            StringBuffer result = new StringBuffer();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-
-
-            JsonObject json = new JsonParser().parse(result.toString()).getAsJsonObject();
-
-            if (json != null) {
-                if (json.get("error") != null) {
-                    return new RequestResponse<>(null, ConnectionState.WRONG_LOGIN);
-                }
-                return new RequestResponse<>(json.get("access_token").getAsString(), ConnectionState.SUCCESS);
-            }
-            return null;
-
-        } catch (IOException e) {
-            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
-        }
-    } */
-
     public RequestResponse<String> logout(String token) {
         try {
 
@@ -435,6 +393,30 @@ public class RestConnect {
         return getResult(response);
     }
 
+    public RequestResponse<String> logout() {
+        String url = makeUrl(null,null);
+
+        try {
+            request.setURI(new URI(url));
+        } catch (URISyntaxException e) {
+            return new RequestResponse<>(null, ConnectionState.ERROR);
+        }
+
+        addHeaders();
+
+        HttpResponse response;
+        try {
+            response = client.execute(request);
+        } catch (IOException e) {
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
+        }
+
+        if(response.getStatusLine().getStatusCode() == 200) {
+            return new RequestResponse<>("You have been logged out", ConnectionState.SUCCESS);
+        } else
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
+    }
+
     private <TResult> RequestResponse<TResult> getResult(HttpResponse response) {
         try {
             BufferedReader rd = new BufferedReader(
@@ -500,9 +482,7 @@ public class RestConnect {
         System.out.println(url);
         return url;
     }
-
-
-
+    
     private void setPasswordHeader(String password, String username) throws UnsupportedEncodingException {
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("grant_type", "password"));
