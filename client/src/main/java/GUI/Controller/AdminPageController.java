@@ -140,9 +140,9 @@ public class AdminPageController {
                         e.printStackTrace();
                     }
                     break;
-                case CreateUserRole:
+                case CreateRole:
                     try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateUserRole.fxml"));
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateRole.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -166,7 +166,7 @@ public class AdminPageController {
                     break;
                 case DeleteRole:
                     try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteUserRole.fxml"));
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteRole.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
                     } catch (IOException e) {
                         e.printStackTrace();

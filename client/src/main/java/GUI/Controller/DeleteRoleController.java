@@ -10,10 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
-public class DeleteUserRoleController {
+public class DeleteRoleController {
 
     @FXML
-    ComboBox<String> selectRole;
+    ComboBox<IRole> selectRole;
 
     @FXML
     Button deleteRole;
@@ -21,18 +21,20 @@ public class DeleteUserRoleController {
     private String selectedRole;
 
     public void initialize() {
+
         for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().add(role.getName());
+            selectRole.getItems().add(role);
         }
         if(!selectRole.getItems().isEmpty()) {
             selectRole.getSelectionModel().select(0);
-            selectedRole = selectRole.getItems().get(0);
+            selectedRole = selectRole.getItems().get(0).getId();
         }
-        selectRole.valueProperty().addListener(new ChangeListener<String>() {
+        selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                selectedRole = t1;
+            public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
+                selectedRole = t1.getId();
             }
+
         });
 
     }

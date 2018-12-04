@@ -4,7 +4,8 @@ public enum PermissionType {
     DEPARTMENT("Department"),
     USER("User"),
     CHAT("Chat"),
-    ROLE("Role");
+    ROLE("Role"),
+    LOG("Log");
 
     private String name;
 

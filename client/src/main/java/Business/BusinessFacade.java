@@ -30,7 +30,6 @@ public class BusinessFacade implements IBusinessFacade {
     private String token = null;
 
 
-
     public BusinessFacade() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
         EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
@@ -43,9 +42,9 @@ public class BusinessFacade implements IBusinessFacade {
 
     /* Listener methods */
     private void getMessage(MessageEvent event) {
-        for(Chat chat : chats) {
-            if(chat.getId() == event.getMessageIn().getChatId()) {
-                if(chat.getMessages().isEmpty()) {
+        for (Chat chat : chats) {
+            if (chat.getId() == event.getMessageIn().getChatId()) {
+                if (chat.getMessages().isEmpty()) {
                     // TODO make new thread for downloading existing messages
                     getMessages(chat.getId());
                 }
@@ -56,45 +55,45 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     private void leaveChatEvent(LeaveChatEvent leaveChatEvent) {
-        if(leaveChatEvent.getUser().getId().equals(loginUser.getSub())) {
+        if (leaveChatEvent.getUser().getId().equals(loginUser.getSub())) {
             chats.removeIf(chat -> chat.getId() == leaveChatEvent.getChatId());
         }
-        if(!chats.isEmpty() && currentChat.getId() == leaveChatEvent.getChatId()) {
+        if (!chats.isEmpty() && currentChat.getId() == leaveChatEvent.getChatId()) {
             setCurrentChat(chats.get(0).getId());
         } else {
             currentChat = null;
             EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
         }
         users.clear();
-        users.addAll((List<User>)getUsers().getResponse());
+        users.addAll((List<User>) getUsers().getResponse());
     }
 
     private void removeUserFromChat(RemoveUserFromChatEvent removeUserFromChatEvent) {
-        if(removeUserFromChatEvent.getUser().getId().equals(loginUser.getSub())) {
+        if (removeUserFromChatEvent.getUser().getId().equals(loginUser.getSub())) {
             chats.removeIf(chat -> chat.getId() == removeUserFromChatEvent.getChatId());
         }
-        if(!chats.isEmpty() && currentChat.getId() == removeUserFromChatEvent.getChatId()) {
+        if (!chats.isEmpty() && currentChat.getId() == removeUserFromChatEvent.getChatId()) {
             setCurrentChat(chats.get(0).getId());
         } else {
             currentChat = null;
             EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
         }
         users.clear();
-        users.addAll((List<User>)getUsers().getResponse());
+        users.addAll((List<User>) getUsers().getResponse());
     }
 
     private void addChat(AddChatEvent addChatEvent) {
         boolean found = false;
         for (Chat chat : chats) {
-            if(chat.getId() == addChatEvent.getChatId()) {
+            if (chat.getId() == addChatEvent.getChatId()) {
                 found = true;
                 break;
             }
         }
-        if(!found) {
+        if (!found) {
             RequestResponse<Chat> chat = restConnect.get(PathEnum.GetChat, addChatEvent.getChatId(), null, token);
             chats.add(chat.getResponse());
-            if(users.contains(addChatEvent.getUser())) {
+            if (users.contains(addChatEvent.getUser())) {
                 RequestResponse<User> user = restConnect.get(PathEnum.GetUser, addChatEvent.getUser().getId(), null, token);
                 users.add(user.getResponse());
                 EventManager.getInstance().fireEvent(new AddUserEvent(this, user.getResponse()));
@@ -103,22 +102,23 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     private void getNewChat(NewChatEvent newChatEvent) {
-        chats.add((Chat)newChatEvent.getChat());
+        chats.add((Chat) newChatEvent.getChat());
     }
 
     /*Chat Methods */
     @Override
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> chats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), null, token);
-        if(chats.getResponse() != null && !chats.getResponse().isEmpty()) {
-            for(Chat chat : chats.getResponse()) {
-                if(chat.isGroupChat()) {
+        if (chats.getResponse() != null && !chats.getResponse().isEmpty()) {
+            for (Chat chat : chats.getResponse()) {
+                if (chat.isGroupChat()) {
                     this.chats.add(chat);
                 } else {
                     // Temporary polish fix
-                    RequestResponse<List<? extends IUser>> response = restConnect.get(PathEnum.GetUsersInChat, chat.getId(), null, token );;
+                    RequestResponse<List<? extends IUser>> response = restConnect.get(PathEnum.GetUsersInChat, chat.getId(), null, token);
+                    ;
                     for (IUser user : response.getResponse()) {
-                        if(!user.getName().equals(loginUser.getName())) {
+                        if (!user.getName().equals(loginUser.getName())) {
                             chat.setName(user.getName());
                             this.chats.add(chat);
                         }
@@ -155,7 +155,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public ConnectionState createChat(String chatName, int departmentId){
+    public ConnectionState createChat(String chatName, int departmentId) {
         Chat chatToSend = new Chat(chatName);
         RequestResponse<Chat> response = restConnect.post(PathEnum.CreateChatroom, departmentId, chatToSend, token);
         return response.getConnectionState();
@@ -183,12 +183,12 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void setCurrentChat(int chatId) {
-        if(currentChat != null) {
-            if(currentChat.getId() != chatId) {
+        if (currentChat != null) {
+            if (currentChat.getId() != chatId) {
                 for (Chat tempchat : chats) {
-                    if(tempchat.getId() == chatId) {
+                    if (tempchat.getId() == chatId) {
                         currentChat = tempchat;
-                        if(currentChat.getMessages().isEmpty()) {
+                        if (currentChat.getMessages().isEmpty()) {
                             getMessages();
                         }
                         EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
@@ -198,7 +198,7 @@ public class BusinessFacade implements IBusinessFacade {
             }
         } else if (chats != null && !chats.isEmpty()) {
             currentChat = chats.get(0);
-            if(currentChat.getMessages().isEmpty()) {
+            if (currentChat.getMessages().isEmpty()) {
                 getMessages();
             }
             EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
@@ -210,7 +210,7 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = restConnect.get(PathEnum.GetUsers, null, null, token);
-        if(response.getResponse() != null) {
+        if (response.getResponse() != null) {
             users = (response.getResponse());
         }
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
@@ -223,7 +223,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IUser>> getUsersInChat() {
-        return restConnect.get(PathEnum.GetUsersInChat, currentChat.getId(), null, token );
+        return restConnect.get(PathEnum.GetUsersInChat, currentChat.getId(), null, token);
     }
 
     @Override
@@ -237,15 +237,15 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.delete(PathEnum.DeleteUser, userId, token);
     }
 
-    public void addRoleToUser(String userId, String role) {
-        restConnect.put(PathEnum.AddRoleToUser, userId, role, token);
+    public void addRoleToUser(String userId, String rolename) {
+        restConnect.put(PathEnum.AddRoleToUser, userId, rolename, token);
     }
 
     /*Department Methods */
     @Override
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
-        RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, loginUser.getSub(),null,token);
-        if(response.getResponse() != null && !response.getResponse().isEmpty()) {
+        RequestResponse<List<Department>> response = restConnect.get(PathEnum.GetDepartments, loginUser.getSub(), null, token);
+        if (response.getResponse() != null && !response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
             departments = response.getResponse();
         }
@@ -254,7 +254,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<? extends IDepartment>> getAllDepartments() {
-        return restConnect.get(PathEnum.GetAllDepartments, null, null, token );
+        return restConnect.get(PathEnum.GetAllDepartments, null, null, token);
     }
 
     @Override
@@ -267,17 +267,17 @@ public class BusinessFacade implements IBusinessFacade {
         return restConnect.get(PathEnum.GetAllUsersInDepartment, departmentId, null, token);
     }
 
-    public void createDepartment(String departmentName){
+    public void createDepartment(String departmentName) {
         Department departmentToSend = new Department(departmentName);
         RequestResponse<Department> response = restConnect.post(PathEnum.CreateDepartment, null, departmentToSend, token);
         departments.add(response.getResponse());
     }
 
-    public void deleteDepartment(int depId){
+    public void deleteDepartment(int depId) {
         restConnect.delete(PathEnum.DeleteDepartment, depId, token);
     }
 
-    public void updateDepartment(int depId, String name){
+    public void updateDepartment(int depId, String name) {
         restConnect.put(PathEnum.UpdateDepartment, depId, name, token);
     }
 
@@ -293,10 +293,10 @@ public class BusinessFacade implements IBusinessFacade {
 
     /*Message Methods */
     @Override
-    public RequestResponse<List<? extends IMessageIn>> getMessages(int chatId) {        System.out.println("Calling messages second time");
-        RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, chatId, new Page(0,20).toMap(), token);
-        for(Chat chat : chats) {
-            if(chat.getId() == chatId) {
+    public RequestResponse<List<? extends IMessageIn>> getMessages(int chatId) {
+        RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, chatId, new Page(0, 20).toMap(), token);
+        for (Chat chat : chats) {
+            if (chat.getId() == chatId) {
                 if (chat.getMessages().isEmpty()) {
                     chat.addMessages(response.getResponse());
                 }
@@ -346,21 +346,21 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public void createRole(List<String> permissions, String roleName) {
-        restConnect.post(PathEnum.CreateUserRole, roleName, permissions, token);
+        restConnect.post(PathEnum.CreateRole, roleName, permissions, token);
     }
 
     @Override
-    public void deleteRole(String roleName) {
-        restConnect.delete(PathEnum.DeleteUserRole, roleName, token);
+    public void deleteRole(String roleid) {
+        restConnect.delete(PathEnum.DeleteRole, roleid, token);
     }
 
     @Override
-    public void addPermissionsToRole(String role, List<String> permissions) {
-        restConnect.post(PathEnum.AddPermissionsToRole, role, permissions, token);
+    public void addPermissionsToRole(String roleid, List<String> permissions) {
+        restConnect.post(PathEnum.AddPermissionsToRole, roleid, permissions, token);
     }
 
-    public void removePermissionsFromRole(String role, List<String> permissions) {
-        restConnect.post(PathEnum.RemovePermissionsFromRole, role, permissions, token);
+    public void removePermissionsFromRole(String roleid, List<String> permissions) {
+        restConnect.post(PathEnum.RemovePermissionsFromRole, roleid, permissions, token);
     }
 
     /*Connection Methods */
@@ -386,7 +386,7 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public ConnectionState login(String username, String password) {
         RequestResponse<String> temp = restConnect.login(username, password);
-        if(temp.getConnectionState() == ConnectionState.SUCCESS) {
+        if (temp.getConnectionState() == ConnectionState.SUCCESS) {
             token = temp.getResponse();
             hubConnect.connect(token);
             RequestResponse<LoginUser> data = restConnect.get(PathEnum.GetUserInfo, null, null, token);
@@ -395,7 +395,7 @@ public class BusinessFacade implements IBusinessFacade {
             getDepartments();
             getUsers();
             getChats();
-            if(loginUser.getUserPermissions().isEmpty()) {
+            if (loginUser.getUserPermissions().isEmpty()) {
                 return ConnectionState.NO_BASIC_PERMISSIONS;
             }
         }

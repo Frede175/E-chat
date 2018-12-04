@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.*;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
@@ -53,10 +54,7 @@ public class RestConnect {
             request.setEntity(new UrlEncodedFormEntity(nvps));
             HttpResponse response = client.execute(request);
 
-
-
-            System.out.println("Response Code Login: "
-                    + response.getStatusLine().getStatusCode());
+            responeCode(response.getStatusLine().getStatusCode());
 
             BufferedReader rd = new BufferedReader(
                     new InputStreamReader(response.getEntity().getContent()));
@@ -95,11 +93,7 @@ public class RestConnect {
 
             HttpResponse response = client.execute(request);
 
-
-            System.out.println("Response Code Login: "
-                    + response.getStatusLine().getStatusCode());
-
-
+            responeCode(response.getStatusLine().getStatusCode());
 
             return new RequestResponse<>("You have been logged out", ConnectionState.SUCCESS);
 
@@ -122,8 +116,7 @@ public class RestConnect {
 
                 response = client.execute(request);
 
-                System.out.println("Response Code Get : "
-                        + response.getStatusLine().getStatusCode());
+                responeCode(response.getStatusLine().getStatusCode());
 
                 BufferedReader rd = new BufferedReader(
                         new InputStreamReader(response.getEntity().getContent()));
@@ -160,12 +153,11 @@ public class RestConnect {
             StringEntity postingString = new StringEntity(gson.toJson(content));
             request.setEntity(postingString);
 
-            request.addHeader("Content-type", "application/json");
+            request.addHeader("Content-type", "application/json; charset=UTF-8");
             HttpResponse response = null;
 
             response = client.execute(request);
-            System.out.println("Response Code Post: "
-                    + response.getStatusLine().getStatusCode());
+            responeCode(response.getStatusLine().getStatusCode());
             if(response.getStatusLine().getStatusCode() == 201) {
                 BufferedReader rd = new BufferedReader(
                         new InputStreamReader(response.getEntity().getContent()));
@@ -196,12 +188,11 @@ public class RestConnect {
             HttpDelete request = request(path, route, null, token);
 
 
-            request.addHeader("Content-type", "application/json");
+            request.addHeader("Content-type", "application/json; charset=UTF-8");
             HttpResponse response = null;
 
             response = client.execute(request);
-            System.out.println("Response Code Post: "
-                    + response.getStatusLine().getStatusCode());
+            responeCode(response.getStatusLine().getStatusCode());
             return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
@@ -220,13 +211,12 @@ public class RestConnect {
 
             request.setEntity(postingString);
 
-            request.addHeader("Content-type", "application/json");
+            request.addHeader("Content-type", "application/json; charset=UTF-8");
 
             HttpResponse response = null;
 
             response = client.execute(request);
-            System.out.println("Response Code Post: "
-                    + response.getStatusLine().getStatusCode());
+            responeCode(response.getStatusLine().getStatusCode());
             return new RequestResponse<>(null, ConnectionState.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
@@ -292,6 +282,36 @@ public class RestConnect {
         return (T1) request;
     }
 
-
-
+    private void responeCode(int response) {
+        switch (response) {
+            case 200: {
+                System.out.println("Ok, " + " Object returned");
+                break;
+            }
+            case 201: {
+                System.out.println("Object created and return");
+                break;
+            }
+            case 204: {
+                System.out.println("Ok, nothing returned");
+                break;
+            }
+            case 400: {
+                System.out.println("Error, bad request");
+                break;
+            }
+            case 401: {
+                System.out.println("Unautherized");
+                break;
+            }
+            case 404: {
+                System.out.println("Not found");
+                break;
+            }
+            case 500: {
+                System.out.println("Internal Sever Error");
+                break;
+            }
+        }
+    }
 }

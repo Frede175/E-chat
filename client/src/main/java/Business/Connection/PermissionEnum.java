@@ -26,10 +26,13 @@ public enum PermissionEnum {
 
 
     // RoleController
-    CreateUserRole(PermissionType.ROLE),
+    CreateRole(PermissionType.ROLE),
     AddPermissionToRole(PermissionType.ROLE),
     RemovePermissionFromRole(PermissionType.ROLE),
     DeleteRole(PermissionType.ROLE),
+
+    SeeLogs(PermissionType.LOG),
+    SeeAllLogs(PermissionType.LOG),
 
     // Non-admin
     BasicPermissions(null);
