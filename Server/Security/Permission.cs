@@ -38,13 +38,17 @@ namespace Server.Security
 
         //RoleController
         //GetRoles, -- CreateUserRole, AddPermissionToRole, RemovePermissionFromRole, DeleteRole
-        CreateUserRole,
+        CreateRole,
         AddPermissionToRole,
         RemovePermissionFromRole,
         DeleteRole,
 
 
         //BasicRole
-        BasicPermissions
+        BasicPermissions,
+
+        //Logs
+        SeeLogs,
+        SeeAllLogs
     }
 }

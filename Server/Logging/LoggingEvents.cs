@@ -20,6 +20,8 @@ namespace Server.Logging
         public const int UpdateRelativeItemNotFound = 1404;
         public const int InsertItemNotFound = 1005;
 
+
+        public const int ListItemsFail = 1500;
         public const int UpdateItemFail = 1502;
         public const int DeleteItemFail = 1503;
         public const int UpdateRelativeItemFail = 1504;
@@ -36,5 +38,6 @@ namespace Server.Logging
         public const int Unauthorized = 3002;
         public const int SignOut = 3003;
         public const int AuthenticationStarted = 3004;
+        
     }
 }
