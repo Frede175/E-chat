@@ -53,7 +53,7 @@ public class RestConnect {
         this.token = token;
     }
 
-    public RequestResponse<String> logout(String token) {
+    /* public RequestResponse<String> logout(String token) {
         try {
 
             HttpClient client = HttpClientBuilder.create().build();
@@ -71,7 +71,7 @@ public class RestConnect {
         } catch (IOException e) {
             return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-    }
+    } */
 
     public <T, T1> RequestResponse<T> get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
         {
@@ -482,7 +482,7 @@ public class RestConnect {
         System.out.println(url);
         return url;
     }
-    
+
     private void setPasswordHeader(String password, String username) throws UnsupportedEncodingException {
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("grant_type", "password"));

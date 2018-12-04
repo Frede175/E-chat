@@ -366,7 +366,7 @@ public class BusinessFacade implements IBusinessFacade {
     /*Connection Methods */
     @Override
     public void logout() {
-        restConnect.logout(token);
+        new RestConnect(PathEnum.Logout,token).create().logout();
         departments.clear();
         currentDepartment = null;
         chats.clear();
