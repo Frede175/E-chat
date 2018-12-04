@@ -4,5 +4,7 @@ public enum ConnectionType {
     POST,
     GET,
     PUT,
-    DELETE;
+    DELETE,
+    LOGIN,
+    LOGOUT;
 }

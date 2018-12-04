@@ -385,9 +385,10 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public ConnectionState login(String username, String password) {
-        RequestResponse<String> temp = restConnect.login(username, password);
+        RequestResponse<Login> temp = new RestConnect(PathEnum.Login,null).create().login(password,username);
+        // restConnect.login(username, password);
         if (temp.getConnectionState() == ConnectionState.SUCCESS) {
-            token = temp.getResponse();
+            token = temp.getResponse().getAccess_token();
             hubConnect.connect(token);
             RequestResponse<LoginUser> data = restConnect.get(PathEnum.GetUserInfo, null, null, token);
             loginUser = data.getResponse();

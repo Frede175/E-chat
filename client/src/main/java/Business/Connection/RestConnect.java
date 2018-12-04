@@ -2,6 +2,7 @@ package Business.Connection;
 
 
 import Acquaintence.ConnectionState;
+import Business.Models.Login;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -52,7 +53,7 @@ public class RestConnect {
         this.token = token;
     }
 
-    public RequestResponse<String> login(String username, String password) {
+    /* public RequestResponse<String> login(String username, String password) {
 
         try {
 
@@ -92,7 +93,7 @@ public class RestConnect {
         } catch (IOException e) {
             return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
         }
-    }
+    } */
 
     public RequestResponse<String> logout(String token) {
         try {
@@ -326,6 +327,8 @@ public class RestConnect {
     public RestConnect create() {
         switch (path.getType()) {
             case POST:
+            case LOGIN:
+            case LOGOUT:
                 request = new HttpPost();
                 break;
             case GET:
@@ -407,6 +410,31 @@ public class RestConnect {
 
     }
 
+    public RequestResponse<Login> login(String password, String username) {
+        String url = makeUrl(null,null);
+
+        try {
+            request.setURI(new URI(url));
+        } catch (URISyntaxException e) {
+            return new RequestResponse<>(null, ConnectionState.ERROR);
+        }
+
+        try {
+            setPasswordHeader(password,username);
+        } catch (UnsupportedEncodingException e) {
+            return new RequestResponse<>(null, ConnectionState.ERROR);
+        }
+
+        HttpResponse response;
+        try {
+            response = client.execute(request);
+        } catch (IOException e) {
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
+        }
+
+        return getResult(response);
+    }
+
     private <TResult> RequestResponse<TResult> getResult(HttpResponse response) {
         try {
             BufferedReader rd = new BufferedReader(
@@ -428,16 +456,24 @@ public class RestConnect {
     }
 
     private void addHeaders() {
-        request.addHeader("User-Agent", USER_AGENT);
-        request.addHeader("Authorization", "Bearer " + token);
 
         switch (path.getType()) {
+            case LOGIN:
+                break;
+            case LOGOUT:
+                request.addHeader("Authorization", "Bearer " + token);
+                request.addHeader("Content-type", "application/x-www-form-urlencoded");
+                break;
             case POST:
             case PUT:
+                request.addHeader("Authorization", "Bearer " + token);
+                request.addHeader("User-Agent", USER_AGENT);
                 request.addHeader("Content-type", "application/json; charset=UTF-8");
                 break;
             case DELETE:
             case GET:
+                request.addHeader("Authorization", "Bearer " + token);
+                request.addHeader("User-Agent", USER_AGENT);
                 break;
         }
 
@@ -464,4 +500,17 @@ public class RestConnect {
         System.out.println(url);
         return url;
     }
+
+
+
+    private void setPasswordHeader(String password, String username) throws UnsupportedEncodingException {
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        nvps.add(new BasicNameValuePair("grant_type", "password"));
+        nvps.add(new BasicNameValuePair("username", username));
+        nvps.add(new BasicNameValuePair("password", password));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new UrlEncodedFormEntity(nvps));
+    }
+
+
+
 }
