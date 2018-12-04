@@ -41,6 +41,11 @@ public class RestConnect {
     public RestConnect() {
     }
 
+    public RestConnect(PathEnum path) {
+        this.client = HttpClientBuilder.create().build();
+        this.path = path;
+    }
+
     public RestConnect(PathEnum path, String token) {
         this.client = HttpClientBuilder.create().build();
         this.path = path;
