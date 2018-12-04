@@ -39,7 +39,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Role/{roleId}
         [HttpGet("{roleId}")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUserRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
         public async Task<ActionResult<Role>> GetRole(string roleId) 
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -58,7 +58,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Role/permission/{name}
         [HttpGet("permission/{roleId}")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUserRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
         public async Task<ActionResult<IEnumerable<string>>> GetRolePermissions(string roleId) 
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -79,7 +79,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Role/
         [HttpGet]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUserRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateRole, Permission.DeleteRole, Permission.AddPermissionToRole, Permission.RemovePermissionFromRole, Permission.CreateUser)]
         public async Task<ActionResult<List<Role>>> GetRoles() 
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -93,7 +93,7 @@ namespace Server.Controllers
 
         // POST: https://localhost:5001/api/Role/{name}
         [HttpPost("{name}")]
-        [RequiresPermissionAttribute(permissions: Permission.CreateUserRole)]
+        [RequiresPermissionAttribute(permissions: Permission.CreateRole)]
         public async Task<ActionResult> CreateUserRole(string name, [FromBody] List<string> addedPermissions)
         {
             var username = _userManager.GetUserName(HttpContext.User);
