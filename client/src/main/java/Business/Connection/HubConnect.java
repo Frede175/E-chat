@@ -19,7 +19,6 @@ import org.controlsfx.control.Notifications;
 public class HubConnect {
 
     private HubConnection chatConnection;
-    private BusinessFacade businessFacade;
     private ImageView img;
 
     public void connect(String token) {
@@ -87,9 +86,5 @@ public class HubConnect {
     private void receive(MessageIn message) {
         EventManager.getInstance().fireEvent(new MessageEvent(this, message));
     }
-
-
-    public void injectBusiness(BusinessFacade businessFacade) {
-        this.businessFacade = businessFacade;
-    }
+    
 }
