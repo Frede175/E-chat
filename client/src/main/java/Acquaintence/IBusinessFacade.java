@@ -3,6 +3,7 @@ package Acquaintence;
 import Business.Connection.RequestResponse;
 import Business.Models.Chat;
 import Business.Models.Department;
+import Business.Models.LogMessage;
 import Business.Models.User;
 
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public interface IBusinessFacade {
     void addPermissionsToRole(String role, List<String> permissions);
     void removePermissionsFromRole(String role, List<String> permissions);
     void addRoleToUser(String userId, String role);
+
+    RequestResponse<List<? extends ILogMessage>> getAllLogs();
+    RequestResponse<List<? extends ILogMessage>> getCustomLogs();
 
     ILoginUser getLoginUser();
     ConnectionState login(String username, String password);

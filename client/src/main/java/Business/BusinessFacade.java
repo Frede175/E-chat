@@ -369,6 +369,23 @@ public class BusinessFacade implements IBusinessFacade {
         restConnect.post(PathEnum.RemovePermissionsFromRole, roleid, permissions, token);
     }
 
+    /*Log Methods */
+    public RequestResponse<List<? extends ILogMessage>> getAllLogs() {
+        RequestResponse<List<LogMessage>> requestResponse = restConnect.get(PathEnum.GetAllLogs, null, new Page(0, 100).toMap(), token);
+        for(LogMessage logMessage : requestResponse.getResponse()) {
+            logMessage.initializeLogLevel();
+        }
+        return new RequestResponse<>(requestResponse.getResponse(), requestResponse.getConnectionState());
+    }
+
+    public RequestResponse<List<? extends ILogMessage>> getCustomLogs() {
+        RequestResponse<List<LogMessage>> requestResponse = restConnect.get(PathEnum.GetCustomLogs, null, new Page(0, 100).toMap(), token);
+        for(LogMessage logMessage : requestResponse.getResponse()) {
+            logMessage.initializeLogLevel();
+        }
+        return new RequestResponse<>(requestResponse.getResponse(), requestResponse.getConnectionState());
+    }
+
     /*Connection Methods */
     @Override
     public void logout() {

@@ -16,20 +16,20 @@ public class MainController {
     @FXML
     private MessageViewController messageViewController;
 
-    private ImageView logo;
 
     @FXML
     public void initialize() {
         EventManager.getInstance().registerListener(MessageEvent.class, this::showNotification);
         messageViewController.getMessages();
-        logo = new ImageView(new Image("img/E-chat.png"));
-        logo.setFitHeight(40.0);
-        logo.setFitWidth(40.0);
+
     }
 
     public void showNotification(MessageEvent event) {
         Platform.runLater(() -> {
             if(GUI.getInstance().getBusiness().getLoginUser() != null && GUI.getInstance().getBusiness().getLoginUser().getSub().equals(event.getMessageIn().getUser().getId())) {
+                ImageView logo = new ImageView(new Image("img/E-chat.png"));
+                logo.setFitHeight(40.0);
+                logo.setFitWidth(40.0);
                 Notifications.create()
                         .title(event.getMessageIn().getUser().getName())
                         .text(event.getMessageIn().getContent())

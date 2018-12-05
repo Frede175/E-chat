@@ -104,6 +104,7 @@ namespace Server.Controllers
 
             if (await _chatService.RemoveChatAsync(chat)) 
             {
+                await _chatHub.Clients.Group(chatId.ToString()).DeleteChat(chatId);
                 return NoContent();
             }
 

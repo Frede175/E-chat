@@ -32,7 +32,7 @@ namespace Server.Controllers
         // GET: https://localhost:5001/api/logging/custom
         [HttpGet("custom")]
         [RequiresPermissionAttribute(permissions: Permission.SeeLogs)]
-        public async Task<ActionResult> GetCustomLogs([FromBody] Page page)
+        public async Task<ActionResult> GetCustomLogs([FromQuery] Page page)
         {
             var username = _userManager.GetUserName(HttpContext.User);
             _logger.LogInformation(LoggingEvents.ListItems, "{username} getting custom logs", username);
@@ -49,7 +49,7 @@ namespace Server.Controllers
         // GET: https://localhost:5001/api/logging
         [HttpGet]
         [RequiresPermissionAttribute(permissions: Permission.SeeAllLogs)]
-        public async Task<ActionResult> GetLogs([FromBody] Page page)
+        public async Task<ActionResult> GetLogs([FromQuery] Page page)
         {
             var username = _userManager.GetUserName(HttpContext.User);
             _logger.LogInformation(LoggingEvents.ListItems, "{username} getting all logs", username);

@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 
 import java.io.IOException;
 
@@ -16,8 +15,6 @@ public class LoggedInUserController {
     @FXML
     private Label userNameL;
 
-    @FXML
-    private MenuButton adminMB;
 
     public void initialize() {
         userNameL.setText(GUI.getInstance().getBusiness().getLoginUser().getName());
