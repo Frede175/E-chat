@@ -16,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class LogController {
 
@@ -37,13 +38,13 @@ public class LogController {
     @FXML
     private Button customBtn;
 
-    ObservableList<Log> logs = FXCollections.observableArrayList();
+    ObservableList<Log> logs = FXCollections.observableArrayList();g
 
     public void initialize() {
         logLevel.setCellValueFactory(new PropertyValueFactory<>("logLevel"));
         message.setCellValueFactory(new PropertyValueFactory<>("message"));
         timestamp.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
-        ArrayList<PermissionEnum> perms = GUI.getInstance().getBusiness().getLoginUser().getAdminPermissions();
+        Set<PermissionEnum> perms = GUI.getInstance().getBusiness().getLoginUser().getAdminPermissions();
         for(PermissionEnum perm : perms) {
             if(perm == PermissionEnum.SeeAllLogs) {
                 allBtn.setVisible(true);
