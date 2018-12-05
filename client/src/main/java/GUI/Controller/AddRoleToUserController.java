@@ -41,7 +41,7 @@ public class AddRoleToUserController {
         });
 
         for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().add(role);
+            selectRole.getItems().setAll(GUI.getInstance().getBusiness().getRoles().getResponse());
         }
 
         selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
