@@ -29,7 +29,7 @@ public class Page implements IPage, IToMap {
     @Override
     public HashMap<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("page", String.valueOf(page));
+        map.put("pageNumber", String.valueOf(page));
         map.put("pageSize", String.valueOf(pageSize));
         return map;
     }

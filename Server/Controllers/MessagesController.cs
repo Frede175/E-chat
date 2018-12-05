@@ -34,10 +34,10 @@ namespace Server.Controllers
         // GET: https://localhost:5001/api/Messages/{chatId}
         [HttpGet("{chatId}"), Produces("application/json")]
         [RequiresPermissionAttribute(permissions: Permission.BasicPermissions)]
-        public async Task<ActionResult<ICollection<Message>>> GetMessages(int chatId, int pageNumber, int pageSize){
+        public async Task<ActionResult<ICollection<Message>>> GetMessages(int chatId, [FromQuery] Page page){
             var username = _userManager.GetUserName(HttpContext.User);
-            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting messages page {page}, count {coumt} from chat {id}.", username, pageNumber, pageSize, chatId);
-            return (await _chatService.RetrieveMessagesAsync(chatId, pageNumber, pageSize)).Select(d => new Message(d)).ToList();
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting messages page {page}, count {coumt} from chat {id}.", username, page.PageNumber, page.PageSize, chatId);
+            return (await _chatService.RetrieveMessagesAsync(chatId, page.PageNumber, page.PageSize)).Select(d => new Message(d)).ToList();
         }
 
         
