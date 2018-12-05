@@ -52,7 +52,7 @@ public class UserListController {
                     }
                 }
 
-                RequestResponse<? extends IChat> response = GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem().getName(), temp);
+                GUI.getInstance().getBusiness().createDirectMessage(userList.getSelectionModel().getSelectedItem().getName(), temp.getId());
             }
         });
     }

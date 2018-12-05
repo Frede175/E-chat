@@ -41,7 +41,7 @@ public interface IBusinessFacade {
 
     RequestResponse<List<? extends IMessageIn>> getMessages(int chatId);
     RequestResponse<List<? extends IMessageIn>> getMessages();
-    RequestResponse<Chat> createDirectMessage(String name, IUser user);
+    void createDirectMessage(String name, String otherUserId);
     void sendMessage(String message);
 
     RequestResponse<List<? extends IRole>> getRoles();

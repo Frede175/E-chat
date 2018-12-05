@@ -3,7 +3,6 @@ package Business.Models;
 import Acquaintence.ILogMessage;
 import Acquaintence.IMessageIn;
 import Acquaintence.LogLevel;
-import sun.rmi.runtime.Log;
 
 
 import java.util.Date;

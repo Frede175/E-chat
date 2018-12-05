@@ -4,8 +4,6 @@ package Business.Connection;
 import Acquaintence.ConnectionState;
 import Business.Models.Login;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -78,6 +76,7 @@ public class RestConnect {
         }
     } */
 
+    /*
     public <T, T1> RequestResponse<T> get(PathEnum path, T1 route, HashMap<String, String> param, String token) {
         {
             try {
@@ -208,6 +207,8 @@ public class RestConnect {
      * @param <T1> The respective request type
      * @return The respective request
      */
+
+    /*
     public <T, T1> T1 request(PathEnum path, T route, HashMap<String, String> param, String token) {
         HttpRequestBase request = null;
         String url = this.url + path.getPath();
@@ -251,6 +252,7 @@ public class RestConnect {
 
         return (T1) request;
     }
+    */
 
     private <TContent> RequestResponse<TContent> getResponse(HttpResponse response) {
         switch (response.getStatusLine().getStatusCode()) {
@@ -336,6 +338,10 @@ public class RestConnect {
         return this;
     }
 
+    public <TResult> RequestResponse executeNoParameters() {
+        return execute(null,null);
+    }
+
     public <TResult, TRoute> RequestResponse<TResult> executeRoute(TRoute route) {
         return execute(route, null);
     }
@@ -383,7 +389,7 @@ public class RestConnect {
         }
 
         try {
-            setPasswordHeader(password,username);
+            setLoginHeader(password,username);
         } catch (UnsupportedEncodingException e) {
             return new RequestResponse<>(null, ConnectionState.ERROR);
         }
@@ -488,7 +494,7 @@ public class RestConnect {
         return url;
     }
 
-    private void setPasswordHeader(String password, String username) throws UnsupportedEncodingException {
+    private void setLoginHeader(String password, String username) throws UnsupportedEncodingException {
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("grant_type", "password"));
         nvps.add(new BasicNameValuePair("username", username));
