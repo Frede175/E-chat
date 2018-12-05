@@ -5,6 +5,7 @@ import Business.Connection.PermissionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public interface ILoginUser {
 
@@ -14,11 +15,11 @@ public interface ILoginUser {
 
     ArrayList<String> getRoles();
 
-    ArrayList<PermissionEnum> getUserPermissions();
+    Set<PermissionEnum> getUserPermissions();
 
     ArrayList<PermissionEnum> getUserPermissionsFromType(PermissionType type);
 
-    ArrayList<PermissionEnum> getAdminPermissions();
+    Set<PermissionEnum> getAdminPermissions();
 
     void setName(String name);
 

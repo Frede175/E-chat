@@ -204,7 +204,7 @@ namespace Server.Controllers
         }
 
         // DELETE: https://localhost:5001/api/Role/delete/{role}
-        [HttpDelete("{role}")]
+        [HttpDelete("{roleId}")]
         [RequiresPermissionAttribute(permissions: Permission.DeleteRole)]
         public async Task<ActionResult> DeleteRole(string roleId)
         {

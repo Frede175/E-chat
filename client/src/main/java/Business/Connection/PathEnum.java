@@ -9,10 +9,12 @@ import java.util.List;
 public enum PathEnum {
 
 
-    CreateDepartment("/api/department/", ConnectionType.POST, new TypeToken<Department>() {}.getType()),
+    Login("/connect/token/", ConnectionType.LOGIN, Login.class),
+    Logout("/connect/logout/", ConnectionType.LOGOUT, null),
+    CreateDepartment("/api/department/", ConnectionType.POST, Department.class),
     UpdateDepartment("/api/department/", ConnectionType.PUT, null),
     GetDepartments("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
-    CreateUser("/api/user/create/", ConnectionType.POST, new TypeToken<User>() {}.getType()),
+    CreateUser("/api/user/create/", ConnectionType.POST, User.class),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
     GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),
     CreateChatroom("/api/chat/", ConnectionType.POST, Chat.class),
@@ -24,7 +26,8 @@ public enum PathEnum {
     PutChatRoom("/api/chat/", ConnectionType.PUT, null),
     GetUserInfo("/api/userinfo/", ConnectionType.GET, new TypeToken<LoginUser>() {}.getType()),
     GetUsersInChat("/api/chat/users/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
-    GetUsers("/api/user/contacts/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
+    GetContacts("/api/user/contacts/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
+    GetAllUsers("/api/user/", ConnectionType.GET, new TypeToken<List<User>>() {}.getType()),
     AddUserToDeparment("/api/department/", ConnectionType.POST, null),
     GetRoles("/api/Role/", ConnectionType.GET, new TypeToken<List<Role>>() {}.getType()),
     CreateDirectMessage("/api/chat/private/", ConnectionType.POST, new TypeToken<Chat>() {}.getType()),

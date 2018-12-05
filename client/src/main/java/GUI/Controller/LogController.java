@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class LogController {
 
@@ -48,7 +49,7 @@ public class LogController {
         logLevelEnum.setCellValueFactory(new PropertyValueFactory<>("logLevel"));
         message.setCellValueFactory(new PropertyValueFactory<>("message"));
         timestamp.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
-        ArrayList<PermissionEnum> perms = GUI.getInstance().getBusiness().getLoginUser().getAdminPermissions();
+        Set<PermissionEnum> perms = GUI.getInstance().getBusiness().getLoginUser().getAdminPermissions();
         for(PermissionEnum perm : perms) {
             if(perm == PermissionEnum.SeeAllLogs) {
                 allBtn.setVisible(true);

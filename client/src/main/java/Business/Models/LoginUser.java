@@ -7,14 +7,16 @@ import Business.Connection.PermissionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class LoginUser implements ILoginUser, IToMap {
 
     private String sub;
     private String name;
     private ArrayList<String> roles;
-    private ArrayList<PermissionEnum> userPermissions;
-    private ArrayList<PermissionEnum> adminPermissions;
+    private Set<PermissionEnum> userPermissions;
+    private Set<PermissionEnum> adminPermissions;
     private ArrayList<String> permissions;
 
     public LoginUser(String sub, String name, ArrayList<String> roles, ArrayList<String> permissions) {
@@ -31,8 +33,8 @@ public class LoginUser implements ILoginUser, IToMap {
 
 
     public void initializePermissions() {
-        userPermissions = new ArrayList<>();
-        adminPermissions = new ArrayList<>();
+        userPermissions = new HashSet<>();
+        adminPermissions = new HashSet<>();
         for(String permission : this.permissions) {
             PermissionEnum permissionEnum = PermissionEnum.valueOf(permission);
             if(permissionEnum.hasElevatedPermission()) {
@@ -50,12 +52,12 @@ public class LoginUser implements ILoginUser, IToMap {
     }
 
     @Override
-    public ArrayList<PermissionEnum> getAdminPermissions() {
+    public Set<PermissionEnum> getAdminPermissions() {
         return adminPermissions;
     }
 
     @Override
-    public ArrayList<PermissionEnum> getUserPermissions() {
+    public Set<PermissionEnum> getUserPermissions() {
         return userPermissions;
     }
 
