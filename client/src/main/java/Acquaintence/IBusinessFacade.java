@@ -39,9 +39,9 @@ public interface IBusinessFacade {
     void removeUserFromDepartment(String userId, int departmentId);
     void updateDepartment(int depId, String name);
 
-    RequestResponse<List<? extends IMessageIn>> getMessages(int chatId);
-    RequestResponse<List<? extends IMessageIn>> getMessages();
-    void createDirectMessage(String name, String otherUserId);
+    RequestResponse<List<? extends IMessageIn>> getMessages(int chatId, int page);
+    RequestResponse<List<? extends IMessageIn>> getMessages(int page);
+    RequestResponse<Chat> createDirectMessage(String name, IUser user);
     void sendMessage(String message);
 
     RequestResponse<List<? extends IRole>> getRoles();
@@ -53,8 +53,8 @@ public interface IBusinessFacade {
     void removePermissionsFromRole(String role, List<String> permissions);
     void addRoleToUser(String userId, String role);
 
-    RequestResponse<List<? extends ILogMessage>> getAllLogs();
-    RequestResponse<List<? extends ILogMessage>> getCustomLogs();
+    RequestResponse<List<? extends ILogMessage>> getAllLogs(int page);
+    RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page);
 
     ILoginUser getLoginUser();
     ConnectionState login(String username, String password);

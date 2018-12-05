@@ -29,9 +29,9 @@
             </HBox>
             <TableView visible="false" fx:id="table" prefHeight="493.0" prefWidth="1000.0">
               <columns>
-                <TableColumn fx:id="logLevel" prefWidth="115.0" text="Log Level" />
-                <TableColumn fx:id="message" prefWidth="640.8768005371094" text="Message" />
-                  <TableColumn fx:id="timestamp" prefWidth="243.1231689453125" text="Timestamp" />
+                <TableColumn fx:id="logLevelEnum" prefWidth="115.0" text="Log Level" />
+                <TableColumn fx:id="message" prefWidth="630.8768005371094" text="Message" />
+                  <TableColumn fx:id="timestamp" prefWidth="235.1231689453125" text="Timestamp" />
               </columns>
             </TableView>
          </children>

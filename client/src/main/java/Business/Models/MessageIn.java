@@ -51,6 +51,14 @@ public class MessageIn implements IMessageIn {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o instanceof MessageIn) {
+            return timeStamp.equals(((MessageIn) o).timeStamp);
+        }
+        return false;
+    }
+
+    @Override
     public int compareTo(IMessageIn o) {
         return timeStamp.compareTo(o.getTimeStamp());
     }
