@@ -85,19 +85,21 @@ public class LogController {
     }
 
     public void customLogs(ActionEvent actionEvent) {
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
+        Platform.runLater(() -> {
+            if(!isCustom) {
                 setItems(GUI.getInstance().getBusiness().getCustomLogs(0).getResponse(), false);
                 isCustom = true;
+                table.scrollTo(0);
             }
         });
     }
 
     public void allLogs(ActionEvent actionEvent) {
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
+        Platform.runLater(() -> {
+            if(isCustom) {
                 setItems(GUI.getInstance().getBusiness().getAllLogs(0).getResponse(), false);
                 isCustom = false;
+                table.scrollTo(0);
             }
         });
     }
