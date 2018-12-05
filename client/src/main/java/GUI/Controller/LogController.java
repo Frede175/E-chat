@@ -38,7 +38,7 @@ public class LogController {
     @FXML
     private Button customBtn;
 
-    ObservableList<Log> logs = FXCollections.observableArrayList();g
+    ObservableList<Log> logs = FXCollections.observableArrayList();
 
     public void initialize() {
         logLevel.setCellValueFactory(new PropertyValueFactory<>("logLevel"));
