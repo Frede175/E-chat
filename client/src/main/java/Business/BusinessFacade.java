@@ -201,7 +201,7 @@ public class BusinessFacade implements IBusinessFacade {
                     if (tempchat.getId() == chatId) {
                         currentChat = tempchat;
                         if (currentChat.getMessages().isEmpty()) {
-                            getMessages();
+                            getMessages(0);
                         }
                         EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
                         break;
@@ -211,7 +211,7 @@ public class BusinessFacade implements IBusinessFacade {
         } else if (chats != null && !chats.isEmpty()) {
             currentChat = chats.get(0);
             if (currentChat.getMessages().isEmpty()) {
-                getMessages();
+                getMessages(0);
             }
             EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
         }
@@ -305,8 +305,8 @@ public class BusinessFacade implements IBusinessFacade {
 
     /*Message Methods */
     @Override
-    public RequestResponse<List<? extends IMessageIn>> getMessages(int chatId) {
-        RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, chatId, new Page(0, 20).toMap(), token);
+    public RequestResponse<List<? extends IMessageIn>> getMessages(int chatId, int page) {
+        RequestResponse<List<MessageIn>> response = restConnect.get(PathEnum.GetMessages, chatId, new Page(page, 20).toMap(), token);
         for (Chat chat : chats) {
             if (chat.getId() == chatId) {
                 if (chat.getMessages().isEmpty()) {
@@ -318,10 +318,10 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public RequestResponse<List<? extends IMessageIn>> getMessages() {
+    public RequestResponse<List<? extends IMessageIn>> getMessages(int page) {
         if (currentChat == null) return null;
 
-        return getMessages(currentChat.getId());
+        return getMessages(currentChat.getId(), page);
     }
 
     @Override
@@ -376,16 +376,16 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     /*Log Methods */
-    public RequestResponse<List<? extends ILogMessage>> getAllLogs() {
-        RequestResponse<List<LogMessage>> requestResponse = restConnect.get(PathEnum.GetAllLogs, null, new Page(0, 100).toMap(), token);
+    public RequestResponse<List<? extends ILogMessage>> getAllLogs(int page) {
+        RequestResponse<List<LogMessage>> requestResponse = restConnect.get(PathEnum.GetAllLogs, null, new Page(page, 100).toMap(), token);
         for(LogMessage logMessage : requestResponse.getResponse()) {
             logMessage.initializeLogLevel();
         }
         return new RequestResponse<>(requestResponse.getResponse(), requestResponse.getConnectionState());
     }
 
-    public RequestResponse<List<? extends ILogMessage>> getCustomLogs() {
-        RequestResponse<List<LogMessage>> requestResponse = restConnect.get(PathEnum.GetCustomLogs, null, new Page(0, 100).toMap(), token);
+    public RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page) {
+        RequestResponse<List<LogMessage>> requestResponse = restConnect.get(PathEnum.GetCustomLogs, null, new Page(page, 100).toMap(), token);
         for(LogMessage logMessage : requestResponse.getResponse()) {
             logMessage.initializeLogLevel();
         }

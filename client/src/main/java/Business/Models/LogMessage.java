@@ -1,9 +1,7 @@
 package Business.Models;
 
 import Acquaintence.ILogMessage;
-import Acquaintence.IMessageIn;
 import Acquaintence.LogLevel;
-import sun.rmi.runtime.Log;
 
 
 import java.util.Date;
@@ -11,8 +9,8 @@ import java.util.Date;
 public class LogMessage implements ILogMessage {
 
     private int id;
-    private LogLevel logLevel;
-    private int logLevelInt;
+    private LogLevel logLevelEnum;
+    private int logLevel;
     private String message;
     private Date timeStamp;
 
@@ -22,13 +20,13 @@ public class LogMessage implements ILogMessage {
 
     public LogMessage(int id, int logLevel, String message, Date timeStamp) {
         this.id = id;
-        this.logLevelInt = logLevel;
+        this.logLevel = logLevel;
         this.message = message;
         this.timeStamp = timeStamp;
     }
 
     public void initializeLogLevel() {
-        logLevel = LogLevel.values()[logLevelInt];
+        logLevelEnum = LogLevel.values()[logLevel];
     }
 
     @Override
@@ -37,8 +35,8 @@ public class LogMessage implements ILogMessage {
     }
 
     @Override
-    public LogLevel getLogLevel() {
-        return logLevel;
+    public LogLevel getLogLevelEnum() {
+        return logLevelEnum;
     }
 
     @Override
@@ -49,6 +47,11 @@ public class LogMessage implements ILogMessage {
     @Override
     public Date getTimeStamp() {
         return timeStamp;
+    }
+
+    @Override
+    public int getLogLevel() {
+        return logLevel;
     }
 
     @Override

@@ -5,6 +5,7 @@ import Acquaintence.Event.MessageEvent;
 import Acquaintence.EventManager;
 import Acquaintence.IChat;
 import Acquaintence.IMessageIn;
+import Business.Connection.RequestResponse;
 import GUI.GUI;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Tooltip;
 
 import java.util.*;
@@ -25,6 +27,8 @@ public class MessageViewController {
     private ObservableList<IMessageIn> messages;
     private SortedList<IMessageIn> sortedMessages;
 
+    private boolean canGetMore = true;
+
     @FXML
     public void initialize() {
         // Registers the event listener
@@ -32,8 +36,7 @@ public class MessageViewController {
         EventManager.getInstance().registerListener(ChangeChatEvent.class, this::changeChat);
 
         messages = FXCollections.observableArrayList();
-        sortedMessages = new SortedList<>(messages);
-
+        sortedMessages = new SortedList<>(messages, Comparator.comparing(IMessageIn::getTimeStamp));
         messageView.setItems(sortedMessages);
 
         messageView.setCellFactory(param -> new ListCell<IMessageIn>() {
@@ -60,6 +63,23 @@ public class MessageViewController {
         });
         // Scrolls to the newest message
         Platform.runLater( () -> messageView.scrollTo(messages.size()-1) );
+        Platform.runLater(() -> {
+            ScrollBar bar  = (ScrollBar) messageView.lookup(".scroll-bar:vertical");
+            bar.valueProperty().addListener((observableValue, number, t1) -> {
+                if (number.doubleValue() != 0 && t1.doubleValue() == 0 && canGetMore) {
+                    int page = messages.size()  / 20;
+                    RequestResponse<List<? extends IMessageIn>> response = GUI.getInstance().getBusiness().getMessages(page);
+                    List<? extends IMessageIn> newMessages = response.getResponse();
+                    newMessages.removeAll(messages);
+                    if (!newMessages.isEmpty()) {
+                        messages.addAll(newMessages);
+                        messageView.scrollTo(response.getResponse().get(0));
+                    } else {
+                        canGetMore = false;
+                    }
+                }
+            });
+        });
     }
 
     // The event listener method for new message
@@ -93,10 +113,7 @@ public class MessageViewController {
         if(GUI.getInstance().getBusiness().getCurrentChat() != null) {
             Set<? extends IMessageIn> response  = GUI.getInstance().getBusiness().getCurrentChat().getMessages();
             if(response != null){
-                List<IMessageIn> mes = new ArrayList<>();
-                mes.addAll(response);
-                Collections.sort(mes);
-                messages.addAll(mes);
+                messages.addAll(response);
             }
         }
     }
