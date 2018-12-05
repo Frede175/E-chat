@@ -38,7 +38,6 @@ public class BusinessFacade implements IBusinessFacade {
         EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
         EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
         EventManager.getInstance().registerListener(DeleteChatEvent.class, this::deleteChatEvent);
-        hubConnect.injectBusiness(this);
     }
 
 
@@ -408,6 +407,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     /*Log Methods */
+    @Override
     public RequestResponse<List<? extends ILogMessage>> getAllLogs(int page) {
         // RequestResponse<List<LogMessage>> response = restConnect.get(PathEnum.GetAllLogs, null, new Page(0, 100).toMap(), token);
         RequestResponse<List<LogMessage>> response = new RestConnect(PathEnum.GetAllLogs, token).create().executeContent(new Page(page, 100).toMap());
@@ -417,6 +417,7 @@ public class BusinessFacade implements IBusinessFacade {
         return new RequestResponse<>(response.getResponse(), response.getConnectionState());
     }
 
+    @Override
     public RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page) {
         // RequestResponse<List<LogMessage>> response = restConnect.get(PathEnum.GetCustomLogs, null, new Page(0, 100).toMap(), token);
         RequestResponse<List<LogMessage>> response = new RestConnect(PathEnum.GetCustomLogs, token).create().executeContent(new Page(page, 100).toMap());
