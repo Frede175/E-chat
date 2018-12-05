@@ -24,7 +24,7 @@
                   <Insets />
                </opaqueInsets>
             </Button>
-            <Button fx:id="LeaveBtn" mnemonicParsing="false" onAction="#leaveChat" text="Leave" />
+            <Button fx:id="leaveBtn" mnemonicParsing="false" onAction="#leaveChat" text="Leave" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

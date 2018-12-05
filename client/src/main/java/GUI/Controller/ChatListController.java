@@ -14,6 +14,7 @@ import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.MouseEvent;
 
 import java.util.EventObject;
+import java.util.Iterator;
 
 
 public class ChatListController {
@@ -31,6 +32,7 @@ public class ChatListController {
         EventManager.getInstance().registerListener(AddChatEvent.class, this::getAddChat);
         EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
         EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
+        EventManager.getInstance().registerListener(DeleteChatEvent.class, this::deleteChatEvent);
         names = FXCollections.observableArrayList();
         if(GUI.GUI.getInstance().getBusiness().getExistingChats() != null) {
             names.addAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
@@ -45,6 +47,12 @@ public class ChatListController {
                     GUI.GUI.getInstance().getBusiness().setCurrentChat(chatList.getSelectionModel().getSelectedItem().getId());
                 }
             }
+        });
+    }
+
+    private void deleteChatEvent(DeleteChatEvent deleteChatEvent) {
+        Platform.runLater(() -> {
+            names.removeIf(c -> c.getId() == deleteChatEvent.getChatId());
         });
     }
 

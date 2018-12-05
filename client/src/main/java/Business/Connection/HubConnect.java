@@ -46,9 +46,12 @@ public class HubConnect {
         // New Chat method callback
         chatConnection.on("Leave", this::leave, Integer.class, User.class);
 
+        chatConnection.on("DeleteChat", this::deleteChat, Integer.class);
+
         //Start the connection
         chatConnection.start().blockingAwait();
     }
+
 
     private void newChat(Chat chat) {
         EventManager.getInstance().fireEvent(new NewChatEvent(this, chat));
@@ -64,6 +67,10 @@ public class HubConnect {
 
     private void leave(int chatId, User user) {
         EventManager.getInstance().fireEvent(new LeaveChatEvent(this, chatId, user));
+    }
+
+    private void deleteChat(int chatId) {
+        EventManager.getInstance().fireEvent(new DeleteChatEvent(this, chatId));
     }
 
     public void disconnect() {

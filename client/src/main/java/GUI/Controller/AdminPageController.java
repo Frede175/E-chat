@@ -47,12 +47,6 @@ public class AdminPageController {
             tab.setContent(sp);
             root.getTabs().add(tab);
         }
-        ObservableList<ILogMessage> logs = FXCollections.observableArrayList();
-        logs.addAll(GUI.getInstance().getBusiness().getCustomLogs().getResponse());
-        SortedList<ILogMessage> sortedLogs = new SortedList<>(logs);
-        for(ILogMessage m : sortedLogs) {
-            System.out.println(m);
-        }
     }
 
     public VBox load(PermissionType type, VBox root) {

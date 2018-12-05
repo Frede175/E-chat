@@ -23,6 +23,10 @@ public class ChatHeaderController {
 
     @FXML
     private Label chatNameL;
+    @FXML
+    private Button cHButton;
+    @FXML
+    private Button leaveBtn;
     PopOver popover = new PopOver();
 
     public void initialize() {
@@ -31,28 +35,34 @@ public class ChatHeaderController {
         IChat currentChat = GUI.GUI.getInstance().getBusiness().getCurrentChat();
         if(currentChat != null) {
             chatNameL.setText(currentChat.getName());
+            showBtns(true);
         } else {
             chatNameL.setText("");
+            showBtns(false);
         }
 
 
+    }
+
+    private void showBtns(boolean show) {
+        cHButton.setVisible(show);
+        leaveBtn.setVisible(show);
     }
 
     public void leaveChat(){
         GUI.GUI.getInstance().getBusiness().leaveChat(GUI.GUI.getInstance().getBusiness().getCurrentChat().getId());
     }
 
-    @FXML
-    private Button cHButton;
-
     private void changeName(ChangeChatEvent event) {
         if(event.getChat() != null) {
             Platform.runLater(() -> {
                 chatNameL.setText(event.getChat().getName());
+                showBtns(true);
             });
         } else {
             Platform.runLater(() -> {
                 chatNameL.setText("");
+                showBtns(false);
             });
         }
     }

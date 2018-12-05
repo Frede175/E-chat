@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
@@ -36,6 +37,7 @@ public class BusinessFacade implements IBusinessFacade {
         EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
         EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
         EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
+        EventManager.getInstance().registerListener(DeleteChatEvent.class, this::deleteChatEvent);
         hubConnect.injectBusiness(this);
     }
 
@@ -103,6 +105,22 @@ public class BusinessFacade implements IBusinessFacade {
 
     private void getNewChat(NewChatEvent newChatEvent) {
         chats.add((Chat) newChatEvent.getChat());
+    }
+
+    private void deleteChatEvent(DeleteChatEvent deleteChatEvent) {
+        for (Iterator i = chats.iterator(); i.hasNext(); ) {
+            Chat c = (Chat) i.next();
+            if (c.getId() == deleteChatEvent.getChatId()) {
+                i.remove();
+                break;
+            }
+        }
+        if (!chats.isEmpty() && currentChat.getId() == deleteChatEvent.getChatId()) {
+            setCurrentChat(chats.get(0).getId());
+        } else {
+            currentChat = null;
+            EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
+        }
     }
 
     /*Chat Methods */
