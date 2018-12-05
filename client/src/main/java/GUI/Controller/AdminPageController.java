@@ -1,12 +1,8 @@
 package GUI.Controller;
 
-import Acquaintence.ILogMessage;
 import Business.Connection.PermissionEnum;
 import Business.Connection.PermissionType;
 import GUI.GUI;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +18,6 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdminPageController {
 
@@ -141,13 +136,24 @@ public class AdminPageController {
                         e.printStackTrace();
                     }
                     break;
-                case AddAdditionalRole:
+                case AddRoleToUser:
                     try {
                         Parent parent = FXMLLoader.load(getClass().getResource("/fxml/AddRoleToUser.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    break;
+                case RemoveRoleFromUser:
+                    //TODO
+                    /*
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveRoleFromUser.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    */
                     break;
                 case CreateRole:
                     try {
