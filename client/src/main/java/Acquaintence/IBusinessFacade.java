@@ -53,8 +53,8 @@ public interface IBusinessFacade {
     void removePermissionsFromRole(String role, List<String> permissions);
     void addRoleToUser(String userId, String role);
 
-    RequestResponse<List<? extends ILogMessage>> getAllLogs();
-    RequestResponse<List<? extends ILogMessage>> getCustomLogs();
+    RequestResponse<List<? extends ILogMessage>> getAllLogs(int page);
+    RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page);
 
     ILoginUser getLoginUser();
     ConnectionState login(String username, String password);
