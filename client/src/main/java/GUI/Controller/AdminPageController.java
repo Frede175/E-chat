@@ -1,8 +1,12 @@
 package GUI.Controller;
 
+import Acquaintence.ILogMessage;
 import Business.Connection.PermissionEnum;
 import Business.Connection.PermissionType;
 import GUI.GUI;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,16 +14,21 @@ import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminPageController {
 
     @FXML
     public TabPane root;
+    private boolean alreadyLog;
 
     public void initialize() {
         ArrayList<PermissionType> types = new ArrayList<>();
@@ -37,6 +46,12 @@ public class AdminPageController {
             sp.setContent(vBox);
             tab.setContent(sp);
             root.getTabs().add(tab);
+        }
+        ObservableList<ILogMessage> logs = FXCollections.observableArrayList();
+        logs.addAll(GUI.getInstance().getBusiness().getCustomLogs().getResponse());
+        SortedList<ILogMessage> sortedLogs = new SortedList<>(logs);
+        for(ILogMessage m : sortedLogs) {
+            System.out.println(m);
         }
     }
 
@@ -168,6 +183,18 @@ public class AdminPageController {
                     try {
                         Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteRole.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case SeeAllLogs:
+                case SeeLogs:
+                    try {
+                        if(!alreadyLog) {
+                            Parent parent = FXMLLoader.load(getClass().getResource("/fxml/Log.fxml"));
+                            root.getChildren().addAll(createSeparator(), parent);
+                            alreadyLog = true;
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

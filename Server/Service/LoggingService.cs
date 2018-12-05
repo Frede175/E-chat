@@ -27,7 +27,7 @@ namespace Server.Service
 
         public async Task<List<LogMessage>> GetLogMessagesAsync(int page, int pageSize, bool all = false)
         {
-            return await _logMessages.Where(l => all || (l.EventId >= MinCustomEventId && l.EventId <= MaxCustomEventId)).Skip(page * pageSize).Take(pageSize).OrderByDescending(l => l.TimeStamp).ToListAsync();
+            return await _logMessages.Where(l => all || (l.EventId >= MinCustomEventId && l.EventId <= MaxCustomEventId)).OrderByDescending(l => l.TimeStamp).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
     }
 }

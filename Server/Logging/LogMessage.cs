@@ -14,7 +14,7 @@ namespace Server.Logging
             LogLevel = logLevel;
             Message = message;
             TimeStamp = timeStamp;
-        }
+        } 
 
 
         public int Id { get; set; }

@@ -18,7 +18,7 @@ namespace Server.Logging
         public const int UpdateItemNotFound = 1402;
         public const int DeleteItemNotFound = 1403;
         public const int UpdateRelativeItemNotFound = 1404;
-        public const int InsertItemNotFound = 1005;
+        public const int InsertItemNotFound = 1405;
 
 
         public const int ListItemsFail = 1500;
