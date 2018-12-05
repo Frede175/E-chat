@@ -108,13 +108,7 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     private void deleteChatEvent(DeleteChatEvent deleteChatEvent) {
-        for (Iterator i = chats.iterator(); i.hasNext(); ) {
-            Chat c = (Chat) i.next();
-            if (c.getId() == deleteChatEvent.getChatId()) {
-                i.remove();
-                break;
-            }
-        }
+        chats.removeIf(c -> c.getId() == deleteChatEvent.getChatId());
         if (!chats.isEmpty() && currentChat.getId() == deleteChatEvent.getChatId()) {
             setCurrentChat(chats.get(0).getId());
         } else {
