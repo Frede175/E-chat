@@ -438,6 +438,7 @@ public class BusinessFacade implements IBusinessFacade {
         users.clear();
         loginUser = null;
         token = null;
+        EventManager.getInstance().clearListeners();
         disconnectHub();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));

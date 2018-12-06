@@ -27,6 +27,10 @@ public class EventManager {
         }
     }
 
+    public void clearListeners() {
+        eventListeners.clear();
+    }
+
     public static EventManager getInstance() {
         if (eventManager == null) eventManager =  new EventManager();
         return eventManager;
