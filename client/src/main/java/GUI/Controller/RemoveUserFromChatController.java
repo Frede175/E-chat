@@ -1,11 +1,10 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IChat;
 import Acquaintence.IUser;
-import Business.Connection.RequestResponse;
 import GUI.GUI;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -26,32 +25,25 @@ public class RemoveUserFromChatController {
         for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
             selectUser.getItems().add(user);
         }
-        selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
-            @Override
-            public void changed(ObservableValue<? extends IUser> observable, IUser oldValue, IUser newValue) {
-                selectedUser = newValue;
-                List<? extends IChat> chats = GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId());
-                for (IChat chat : chats) {
-                    if(chat.isGroupChat()) {
-                        selectChat.getItems().add(chat);
-                    }
+        selectUser.valueProperty().addListener((observable, oldValue, newValue) -> {
+            selectedUser = newValue;
+            List<? extends IChat> chats = GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId());
+            for (IChat chat : chats) {
+                if(chat.isGroupChat()) {
+                    selectChat.getItems().add(chat);
                 }
             }
         });
 
-        selectChat.valueProperty().addListener(new ChangeListener<IChat>() {
-            @Override
-            public void changed(ObservableValue<? extends IChat> observableValue, IChat iChat, IChat t1) {
-                selectedChat = t1;
-            }
-
-        });
+        selectChat.valueProperty().addListener((observableValue, iChat, t1) -> selectedChat = t1);
 
     }
 
     public void removeUserFromChat(ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().removeUserFromChat(selectedChat.getId(), selectedUser.getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().removeUserFromChat(selectedChat.getId(), selectedUser.getId());
         Stage stage = (Stage) selectUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully removed the user " + selectedUser.getName() + " from the chat " + selectedChat.getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }

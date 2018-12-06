@@ -1,8 +1,9 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IRole;
 import Acquaintence.IUser;
-import Business.Connection.RequestResponse;
+import GUI.NotificationUpdater;
 import GUI.GUI;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,8 +26,8 @@ public class AddRoleToUserController {
     @FXML
     Button addRoleToUser;
 
-    private String selectedUser;
-    private String selectedRole;
+    private IUser selectedUser;
+    private IRole selectedRole;
 
     public void initialize() {
         //TODO Make labels or something for clarity
@@ -36,7 +37,7 @@ public class AddRoleToUserController {
         selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
             public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
-                selectedUser = t1.getId();
+                selectedUser = t1;
             }
         });
 
@@ -47,14 +48,16 @@ public class AddRoleToUserController {
         selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
-                selectedRole = t1.getName();
+                selectedRole = t1;
             }
         });
     }
 
     public void addSelected(javafx.event.ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().addRoleToUser(selectedUser, selectedRole);
+        ConnectionState connectionState = GUI.getInstance().getBusiness().addRoleToUser(selectedUser.getId(), selectedRole.getId());
         Stage stage = (Stage) addRoleToUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully added role " + selectedRole.getName() + " to the user " + selectedUser.getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }

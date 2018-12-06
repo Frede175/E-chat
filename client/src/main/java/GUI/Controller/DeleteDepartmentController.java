@@ -1,6 +1,8 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IDepartment;
+import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -23,9 +25,11 @@ public class DeleteDepartmentController {
     }
 
     public void delete(ActionEvent actionEvent){
-        GUI.GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
+        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
         Stage stage = (Stage) deleteBtn.getScene().getWindow();
         stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully deleted the department " + choiceBox.getValue().getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 
 
