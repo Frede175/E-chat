@@ -1,14 +1,10 @@
 package GUI;
 
 import Acquaintence.ConnectionState;
-import Business.Connection.ConnectionType;
+import Acquaintence.Event.MessageEvent;
 import javafx.application.Platform;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
-import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.Notifications;
 
 public class NotificationUpdater {
@@ -32,8 +28,24 @@ public class NotificationUpdater {
                         .title(connectionState.getLevel())
                         .text(returnMssage(input,connectionState))
                         .graphic(logo)
+                        .darkStyle()
                         .show();
 
+        });
+    }
+
+    public void showNotification(MessageEvent event) {
+        Platform.runLater(() -> {
+            if(GUI.getInstance().getBusiness().getLoginUser() != null && GUI.getInstance().getBusiness().getLoginUser().getSub().equals(event.getMessageIn().getUser().getId())) {
+                ImageView logo = new ImageView(new Image("img/E-chat.png"));
+                logo.setFitHeight(40.0);
+                logo.setFitWidth(40.0);
+                Notifications.create()
+                        .title(event.getMessageIn().getUser().getName())
+                        .text(event.getMessageIn().getContent())
+                        .graphic(logo)
+                        .show();
+            }
         });
     }
 
@@ -59,6 +71,7 @@ public class NotificationUpdater {
                 return "There was a problem with the input";
             default:
                 return "There was an error";
+
         }
 
     }

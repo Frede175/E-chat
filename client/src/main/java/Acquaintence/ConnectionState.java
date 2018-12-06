@@ -11,11 +11,9 @@ public enum ConnectionState {
     NOT_FOUND("Not found"),
     BAD_REQUEST("Bad request");
 
-
     String level;
 
-    ConnectionState(String i) { level = i;
-    }
+    ConnectionState(String i) { level = i; }
 
     public String getLevel() {
         return level;
