@@ -10,6 +10,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ public class RestConnectTest {
         when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes()));
         when(response.getStatusLine()).thenReturn(line);
         when(response.getEntity()).thenReturn(entity);
-        when(client.execute(any(HttpPost.class))).thenReturn(response);
+        when(client.execute(any(HttpRequestBase.class))).thenReturn(response);
     }
 
     @Test
@@ -61,7 +62,7 @@ public class RestConnectTest {
 
         new RestConnect(client, PathEnum.CreateChatroom, "").create(post).execute(1, new Chat("Unit_test"));
 
-        assertEquals(post.getURI().getPath(), "/api/chat/1");
+        assertEquals("/api/chat/1", post.getURI().getPath());
 
         String json = EntityUtils.toString(post.getEntity());
         assertTrue(json.contains("\"name\":\"Unit_test\""));
@@ -79,10 +80,10 @@ public class RestConnectTest {
         new RestConnect(client, PathEnum.CreateChatroom, token).create(post).execute(1, new Chat("Unit_test"));
 
         Header header = post.getFirstHeader("Authorization");
-        assertEquals(header.getValue(), "Bearer " + token);
+        assertEquals("Bearer " + token, header.getValue());
 
         header = post.getFirstHeader("Content-Type");
-        assertEquals(header.getValue(), "application/json; charset=UTF-8");
+        assertEquals("application/json; charset=UTF-8", header.getValue());
 
     }
 
@@ -112,24 +113,22 @@ public class RestConnectTest {
 
         new RestConnect(client, PathEnum.GetMessages, "").create(get).execute(1, new Page(0,20).toMap());
 
-        assertEquals(get.getURI().getPath(), "/api/Messages/1?pageNumber=0&pageSize=20");
+        assertEquals("/api/Messages/1", get.getURI().getPath());
+        assertEquals("pageNumber=0&pageSize=20", get.getURI().getQuery());
     }
 
     @Test
     public void get_has_correct_headers() throws IOException {
-        HttpPost post = spy(new HttpPost());
+        HttpGet get = spy(new HttpGet());
 
         String token = "tempToken";
 
-        setup("[{}]", 200);
+        setup("[]", 200);
 
-        new RestConnect(client, PathEnum.CreateChatroom, token).create(post).execute(1, new Chat("Unit_test"));
+        new RestConnect(client, PathEnum.GetMessages, token).create(get).execute(1, new Page(0,20).toMap());
 
-        Header header = post.getFirstHeader("Authorization");
-        assertEquals(header.getValue(), "Bearer " + token);
-
-        header = post.getFirstHeader("Content-Type");
-        assertEquals(header.getValue(), "application/json; charset=UTF-8");
+        Header header = get.getFirstHeader("Authorization");
+        assertEquals("Bearer " + token, header.getValue());
 
     }
 
