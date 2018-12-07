@@ -45,6 +45,10 @@ public interface IBusinessFacade {
     void sendMessage(String message);
 
     RequestResponse<List<? extends IRole>> getRoles();
+
+    // TODO new - Trying to get the "getAvailableRoles" to work
+    RequestResponse<List<IRole>> getAvailableRoles(String userId);
+
     RequestResponse<List<String>> getAllPermissions();
     List<String> getRolesPermissions(String roleName);
     void deleteRole(String roleName);
@@ -52,6 +56,8 @@ public interface IBusinessFacade {
     void addPermissionsToRole(String role, List<String> permissions);
     void removePermissionsFromRole(String role, List<String> permissions);
     void addRoleToUser(String userId, String role);
+    //TODO new
+    void removeRoleFromUser(String userId, String role);
 
     RequestResponse<List<? extends ILogMessage>> getAllLogs(int page);
     RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page);

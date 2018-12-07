@@ -268,6 +268,11 @@ public class BusinessFacade implements IBusinessFacade {
         new RestConnect(PathEnum.AddRoleToUser, token).create().execute(userId, rolename);
     }
 
+    //TODO new
+    public void removeRoleFromUser(String userId, String rolename){
+        new RestConnect(PathEnum.RemoveRoleFromUser, token).create().execute(userId, rolename);
+    }
+
     /*Department Methods */
     @Override
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
@@ -393,6 +398,20 @@ public class BusinessFacade implements IBusinessFacade {
     public void deleteRole(String roleid) {
         // restConnect.delete(PathEnum.DeleteRole, roleid, token);
         new RestConnect(PathEnum.DeleteRole, token).create().executeRoute(roleid);
+    }
+
+
+    // TODO new - Still a work in progress atm.
+    /*@Override
+    public List<? extends IRole> getAvailableRoles(String userId) {
+        // RequestResponse<List<Chat>> response = restConnect.get(PathEnum.GetAvailableChats, userId, null, token);
+        RequestResponse<List<Role>> response = new RestConnect(PathEnum.GetAvailableRoles, token).create().executeRoute(userId);
+        return response.getResponse();
+    }*/
+
+    @Override
+    public RequestResponse<List<IRole>> getAvailableRoles(String userId){
+        return new RestConnect(PathEnum.GetAvailableRoles, token).create().executeRoute(userId);
     }
 
     @Override

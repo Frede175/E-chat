@@ -24,6 +24,7 @@ public class AdminPageController {
     @FXML
     public TabPane root;
     private boolean alreadyLog;
+    private boolean alreadyRole;
 
     public void initialize() {
         ArrayList<PermissionType> types = new ArrayList<>();
@@ -146,16 +147,22 @@ public class AdminPageController {
                     }
                     break;
                 case RemoveRoleFromUser:
-                    //TODO
-                    /*
                     try {
                         Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveRoleFromUser.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    */
                     break;
+                /*case RemoveRoleFromUser:
+                    //TODO Trying to merge it into "AddRoleToUser"
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveRoleFromUser.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;*/
                 case CreateRole:
                     try {
                         Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateRole.fxml"));
