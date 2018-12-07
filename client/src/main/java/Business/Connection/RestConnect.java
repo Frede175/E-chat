@@ -48,11 +48,17 @@ public class RestConnect {
 
         this.request.setURI(uriBuilder.build());
 
+        if (path.getContentType() != null) {
+            request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
+            request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
+        }
+
+        if (token != null) {
+            this.request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        }
+
         if (content != null) {
             if (!(this.request instanceof HttpEntityEnclosingRequest)) throw new IllegalArgumentException("Request is not of type HttpEntityEnclosingRequest");
-
-            this.request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
-            this.request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
 
             if (path.getContentType() == ContentType.APPLICATION_JSON) {
                 ((HttpEntityEnclosingRequest) this.request).setEntity(new StringEntity(gson.toJson(content), Consts.UTF_8));
@@ -65,15 +71,7 @@ public class RestConnect {
             } else {
                 throw new UnsupportedOperationException();
             }
-        } else if (path.getContentType() != null) {
-            request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
-            request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
         }
-
-        if (token != null) {
-            this.request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-        }
-
     }
 
     public <TContent> RequestResponse<TContent> execute() {
