@@ -26,7 +26,7 @@ public class HubConnect {
         img.setFitHeight(40.0);
         img.setFitWidth(40.0);
 
-        chatConnection = HubConnectionBuilder.create("https://localhost:5001/hubs/chat")
+        chatConnection = HubConnectionBuilder.create(ConnectionConst.HOST + "/hubs/chat")
                 .withAccessTokenProvider(Single.just(token))
                 .build();
 
