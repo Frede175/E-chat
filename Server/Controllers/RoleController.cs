@@ -89,6 +89,28 @@ namespace Server.Controllers
             return await _roleManager.Roles.Select(r => new Role(r)).ToListAsync();
         }
 
+        // GET: https://localhost:5001/api/Role/available/{userId}
+        [HttpGet("available/{userId}")]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.AddRoleToUser, Permission.RemoveRoleFromUser)]
+        public async Task<ActionResult<List<Role>>> GetAvailableRoles(string userId) 
+        {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting available roles for {userId}.", username, userId);
+
+            var user = await _userManager.FindByIdAsync(userId);
+            
+            if (user == null) 
+            {
+                _logger.LogWarning(LoggingEvents.ListItems, "{username} getting available roles for {userId}, USER NOT FOUND.", username, userId);
+                return NotFound();
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return await _roleManager.Roles.Where(r => !roles.Contains(r.Name)).Select(r => new Role(r)).ToListAsync();
+        }
+
 
 
         // POST: https://localhost:5001/api/Role/{name}
