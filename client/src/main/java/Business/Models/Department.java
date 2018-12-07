@@ -38,13 +38,6 @@ public class Department implements IDepartment, IParameters {
         this.name = name;
     }
 
-
-    public HashMap<String, String> toMap() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("departmentId", String.valueOf(id));
-        return map;
-    }
-
     @Override
     public String toString() {
         return name;

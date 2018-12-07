@@ -86,13 +86,6 @@ public class LoginUser implements ILoginUser, IParameters {
         this.name = name;
     }
 
-
-    public HashMap<String, String> toMap() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("userId", sub);
-        return map;
-    }
-
     @Override
     public List<NameValuePair> getParameters() {
         List<NameValuePair> nvps = new ArrayList<>();
