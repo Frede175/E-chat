@@ -3,68 +3,51 @@ package GUI.Controller;
 import Acquaintence.IRole;
 import Acquaintence.IUser;
 import GUI.GUI;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class RemoveRoleFromUserController {
 
     @FXML
-    ChoiceBox<IUser> userCB;
+    ComboBox<IUser> selectUser;
 
     @FXML
-    ChoiceBox<IRole> roleCB;
+    ComboBox<IRole> selectRole;
 
     @FXML
     Button removeRoleFromUser;
 
-    private String selectedUser;
-    private String selectedRole;
 
-    /*public void initialize() {
-        //TODO Fine tune it later
-        for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
-            selectUser.getItems().add(user);
-        }
-        selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
-            @Override
-            public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
-                selectedUser = t1.getId();
-            }
-        });
+    private List<IRole> roleList;
 
-        for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().setAll(GUI.getInstance().getBusiness().getRoles().getResponse());
-        }
-
-        selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
-            @Override
-            public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
-                selectedRole = t1.getName();
-            }
-        });
-    }*/
 
     public void initialize(){
+        roleList = new ArrayList<>();
 
-        userCB.getItems().addAll(GUI.getInstance().getBusiness().getUsers().getResponse());
-        if(!userCB.getItems().isEmpty()){
-            userCB.getSelectionModel().select(0);
-        }
+        roleList.addAll(GUI.getInstance().getBusiness().getRoles().getResponse());
 
-        roleCB.getItems().addAll(GUI.getInstance().getBusiness().getAvailableRoles(userCB.getValue().getId()).getResponse());
-        if(!roleCB.getItems().isEmpty()){
-            roleCB.getSelectionModel().select(0);
-        }
+        selectUser.getItems().addAll(GUI.getInstance().getBusiness().getUsers().getResponse());
 
-        //choiceBox.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+        selectUser.valueProperty().addListener((observableValue, iUser, t1) -> {
+            List<IRole> newRoles = new ArrayList<>(roleList);
+            newRoles.removeAll(GUI.getInstance().getBusiness().getAvailableRoles(t1.getId()).getResponse());
+            selectRole.getItems().setAll(newRoles);
+        });
+
 
     }
 
     public void removeSelected(ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().removeRoleFromUser(userCB.getValue().getId(), roleCB.getValue().getId());
+        GUI.getInstance().getBusiness().removeRoleFromUser(selectUser.getValue().getId(), selectRole.getValue().getId());
         Stage stage = (Stage) removeRoleFromUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
     }

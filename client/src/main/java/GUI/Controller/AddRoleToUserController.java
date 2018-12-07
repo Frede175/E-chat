@@ -30,25 +30,11 @@ public class AddRoleToUserController {
 
     public void initialize() {
         //TODO Make labels or something for clarity
-        for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
-            selectUser.getItems().add(user);
-        }
-        selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
-            @Override
-            public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
-                selectedUser = t1.getId();
-            }
-        });
+        selectUser.getItems().setAll(GUI.getInstance().getBusiness().getUsers().getResponse());
 
-        for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().setAll(GUI.getInstance().getBusiness().getRoles().getResponse());
-        }
-
-        selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
-            @Override
-            public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
-                selectedRole = t1.getId();
-            }
+        selectUser.valueProperty().addListener((observableValue, iUser, t1) -> {
+            selectedUser = t1.getId();
+            selectRole.getItems().setAll(GUI.getInstance().getBusiness().getAvailableRoles(t1.getId()).getResponse());
         });
     }
 
