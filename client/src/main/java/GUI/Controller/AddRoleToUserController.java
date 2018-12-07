@@ -47,7 +47,7 @@ public class AddRoleToUserController {
         selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
-                selectedRole = t1.getName();
+                selectedRole = t1.getId();
             }
         });
     }

@@ -263,10 +263,10 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void addRoleToUser(String userId, String rolename) {
+    public void addRoleToUser(String userId, String roleId) {
         // restConnect.put(PathEnum.AddRoleToUser, userId, rolename, token);
         System.out.println(userId);
-        new RestConnect(PathEnum.AddRoleToUser, token).create().execute(userId, rolename);
+        new RestConnect(PathEnum.AddRoleToUser, token).create().execute(userId, roleId);
     }
 
     //TODO new
