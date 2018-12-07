@@ -2,13 +2,15 @@ package Business.Connection;
 
 
 import Acquaintence.ConnectionState;
+import Business.Interfaces.IParameters;
 import Business.Models.Login;
 import com.google.gson.Gson;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -26,34 +28,61 @@ import static org.apache.http.protocol.HTTP.USER_AGENT;
 
 public class RestConnect {
 
-    private String url = "http://localhost:5000";
-    private final String formType = "application/x-www-form-urlencoded";
-    //private final String url = "https://ptsv2.com";
     private final Gson gson = new Gson();
-    private HttpClient client;
-    private HttpRequestBase request;
-    private PathEnum path;
-    private String token;
-    // /api/values
 
-    public RestConnect() {
-    }
+    private final HttpClient client;
+    private final HttpRequestBase request;
+    private final PathEnum path;
 
-    public RestConnect(PathEnum path) {
-        this.client = HttpClientBuilder.create().build();
-        this.path = path;
-    }
-
-    public RestConnect(PathEnum path, String token) {
-        this.client = HttpClientBuilder.create().build();
-        this.path = path;
-        this.token = token;
-    }
-
-    public RestConnect(HttpClient client, PathEnum path, String token) {
+    RestConnect(PathEnum path, String token, String host, Object content, Object route, IParameters parameters, HttpClient client, HttpRequestBase request) throws URISyntaxException {
         this.client = client;
+        this.request = request;
         this.path = path;
-        this.token = token;
+
+
+        URIBuilder uriBuilder = new URIBuilder(host);
+        if (route != null) uriBuilder.setPath(path.getPath() + route.toString());
+        else uriBuilder.setPath(path.getPath());
+
+        if (parameters != null) uriBuilder.setParameters(parameters.getParameters());
+
+        request.setURI(uriBuilder.build());
+
+        if (content != null) {
+            if (!(request instanceof HttpEntityEnclosingRequest)) throw new IllegalArgumentException("Request is not of type HttpEntityEnclosingRequest");
+
+            request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
+            request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
+
+            if (path.getContentType() == ContentType.APPLICATION_JSON) {
+                ((HttpEntityEnclosingRequest) request).setEntity(new StringEntity(gson.toJson(content), Consts.UTF_8));
+            } else if (path.getContentType() == ContentType.APPLICATION_FORM_URLENCODED) {
+                if (content instanceof IParameters) {
+                    ((HttpEntityEnclosingRequest) request).setEntity(new UrlEncodedFormEntity(((IParameters) content).getParameters(), Consts.UTF_8));
+                } else {
+                    throw new IllegalArgumentException("Content is not of type IParameters");
+                }
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        } /*else if (path.getContentType() != null) {
+            request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
+            request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
+        }*/
+
+        if (token != null) {
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        }
+
+    }
+
+    public <TContent> RequestResponse<TContent> execute() {
+        try {
+            HttpResponse response = client.execute(request);
+            return getResponse(response);
+        } catch (IOException e) {
+            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
+        }
     }
 
     private <TContent> RequestResponse<TContent> getResponse(HttpResponse response) {
@@ -91,145 +120,6 @@ public class RestConnect {
         }
     }
 
-    public RestConnect create() {
-        switch (path.getType()) {
-            case POST:
-            case LOGIN:
-            case LOGOUT:
-                request = new HttpPost();
-                break;
-            case GET:
-                request = new HttpGet();
-                break;
-            case PUT:
-                request = new HttpPut();
-                break;
-            case DELETE:
-                request = new HttpDelete();
-                break;
-        }
-        return this;
-
-    }
-
-    public RestConnect create(HttpRequestBase request) {
-        switch (path.getType()) {
-            case POST:
-                if (!(request instanceof HttpPost)) {
-                    throw new IllegalArgumentException();
-                }
-                break;
-            case GET:
-                if (!(request instanceof HttpGet)) {
-                    throw new IllegalArgumentException();
-                }
-                break;
-            case PUT:
-                if (!(request instanceof HttpPut)) {
-                    throw new IllegalArgumentException();
-                }
-                break;
-            case DELETE:
-                if (!(request instanceof HttpDelete)) {
-                    throw new IllegalArgumentException();
-                }
-                break;
-        }
-
-        this.request = request;
-        return this;
-    }
-
-    public <TResult> RequestResponse executeNoParameters() {
-        return execute(null,null);
-    }
-
-    public <TResult, TRoute> RequestResponse<TResult> executeRoute(TRoute route) {
-        return execute(route, null);
-    }
-
-    public <TResult, TContent> RequestResponse<TResult> executeContent(TContent content) {
-        return execute(null, content);
-    }
-
-    public <TResult, TRoute, TContent> RequestResponse<TResult> execute(TRoute route, TContent content) {
-        String url = makeUrl(route, content);
-
-        try {
-            request.setURI(new URI(url));
-        } catch (URISyntaxException e) {
-            return new RequestResponse<>(null, ConnectionState.ERROR);
-        }
-
-        addHeaders();
-
-        if (path.getType() == ConnectionType.POST || path.getType() == ConnectionType.PUT)
-        try {
-            setEntity(content);
-        } catch (UnsupportedEncodingException e) {
-            return new RequestResponse<>(null, ConnectionState.ERROR);
-        }
-
-        HttpResponse response;
-        try {
-            response = client.execute(request);
-        } catch (IOException e) {
-            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
-        }
-
-        return getResponse(response);
-
-    }
-
-    public RequestResponse<Login> login(String password, String username) {
-        String url = makeUrl(null,null);
-
-        try {
-            request.setURI(new URI(url));
-        } catch (URISyntaxException e) {
-            return new RequestResponse<>(null, ConnectionState.ERROR);
-        }
-
-        try {
-            setLoginHeader(password,username);
-        } catch (UnsupportedEncodingException e) {
-            return new RequestResponse<>(null, ConnectionState.ERROR);
-        }
-
-        HttpResponse response;
-        try {
-            response = client.execute(request);
-        } catch (IOException e) {
-            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
-        }
-
-        return getResult(response);
-    }
-
-    public RequestResponse<String> logout() {
-        String url = makeUrl(null,null);
-
-        try {
-            request.setURI(new URI(url));
-        } catch (URISyntaxException e) {
-            return new RequestResponse<>(null, ConnectionState.ERROR);
-        }
-
-        addHeaders();
-
-        HttpResponse response;
-        try {
-            response = client.execute(request);
-        } catch (IOException e) {
-            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
-        }
-
-        if(response.getStatusLine().getStatusCode() == 200) {
-            return new RequestResponse<>("You have been logged out", ConnectionState.SUCCESS);
-        } else
-            return new RequestResponse<>(null, ConnectionState.NO_CONNECTION);
-    }
-
     private <TResult> RequestResponse<TResult> getResult(HttpResponse response) {
         try {
             BufferedReader rd = new BufferedReader(
@@ -249,61 +139,6 @@ public class RestConnect {
         }
 
     }
-
-    private void addHeaders() {
-
-        switch (path.getType()) {
-            case LOGIN:
-                break;
-            case LOGOUT:
-                request.addHeader("Authorization", "Bearer " + token);
-                request.addHeader("Content-type", "application/x-www-form-urlencoded");
-                break;
-            case POST:
-            case PUT:
-                request.addHeader("Authorization", "Bearer " + token);
-                request.addHeader("User-Agent", USER_AGENT);
-                request.addHeader("Content-type", "application/json; charset=UTF-8");
-                break;
-            case DELETE:
-            case GET:
-                request.addHeader("Authorization", "Bearer " + token);
-                request.addHeader("User-Agent", USER_AGENT);
-                break;
-        }
-
-    }
-
-    private <TContent> void setEntity(TContent content) throws UnsupportedEncodingException {
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new StringEntity(gson.toJson(content)));
-    }
-
-    private <TRoute, TContent> String makeUrl(TRoute route, TContent content) {
-        String url = this.url + path.getPath();
-        if (route != null) {
-            url = url.concat(route.toString());
-        }
-
-        if (content instanceof HashMap && path.getType() == ConnectionType.GET) {
-            HashMap<String,String> newContent = (HashMap<String,String>) content;
-            url = url.concat("?");
-            for (Map.Entry<String, String> entry : newContent.entrySet()) {
-                url = url.concat(entry.getKey() + "=" + entry.getValue() + "&");
-            }//TODO Better fix for &
-            url = url.substring(0, url.length() - 1);
-        }
-        System.out.println(url);
-        return url;
-    }
-
-    private void setLoginHeader(String password, String username) throws UnsupportedEncodingException {
-        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-        nvps.add(new BasicNameValuePair("grant_type", "password"));
-        nvps.add(new BasicNameValuePair("username", username));
-        nvps.add(new BasicNameValuePair("password", password));
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
-    }
-
 
 
 }

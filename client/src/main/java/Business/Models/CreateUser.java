@@ -3,11 +3,7 @@ package Business.Models;
 import Acquaintence.ICreateUser;
 
 
-import Acquaintence.IToMap;
-
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CreateUser implements ICreateUser {
     private String userName;

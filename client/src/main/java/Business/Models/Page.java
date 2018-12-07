@@ -1,12 +1,15 @@
 package Business.Models;
 
-import Acquaintence.IChat;
 import Acquaintence.IPage;
-import Acquaintence.IToMap;
+import Business.Interfaces.IParameters;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class Page implements IPage, IToMap {
+public class Page implements IPage, IParameters {
 
     private int page;
     private int pageSize;
@@ -26,12 +29,20 @@ public class Page implements IPage, IToMap {
         return pageSize;
     }
 
-    @Override
+
     public HashMap<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
         map.put("pageNumber", String.valueOf(page));
         map.put("pageSize", String.valueOf(pageSize));
         return map;
+    }
+
+    @Override
+    public List<NameValuePair> getParameters() {
+        List<NameValuePair> nvps = new ArrayList<>();
+        nvps.add(new BasicNameValuePair("pageNumber", String.valueOf(page)));
+        nvps.add(new BasicNameValuePair("pageSize", String.valueOf(pageSize)));
+        return nvps;
     }
 }
 

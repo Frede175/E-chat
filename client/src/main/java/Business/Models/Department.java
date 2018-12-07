@@ -1,11 +1,15 @@
 package Business.Models;
 
 import Acquaintence.IDepartment;
-import Acquaintence.IToMap;
+import Business.Interfaces.IParameters;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class Department implements IDepartment, IToMap {
+public class Department implements IDepartment, IParameters {
 
     private int id;
     private String name;
@@ -34,7 +38,7 @@ public class Department implements IDepartment, IToMap {
         this.name = name;
     }
 
-    @Override
+
     public HashMap<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
         map.put("departmentId", String.valueOf(id));
@@ -44,5 +48,12 @@ public class Department implements IDepartment, IToMap {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public List<NameValuePair> getParameters() {
+        List<NameValuePair> nvps = new ArrayList<>();
+        nvps.add(new BasicNameValuePair("departmentId", String.valueOf(id)));
+        return nvps;
     }
 }

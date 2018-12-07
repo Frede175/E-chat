@@ -3,10 +3,7 @@ package Business;
 
 import Acquaintence.*;
 import Acquaintence.Event.*;
-import Business.Connection.HubConnect;
-import Business.Connection.PathEnum;
-import Business.Connection.RequestResponse;
-import Business.Connection.RestConnect;
+import Business.Connection.*;
 import Business.Models.*;
 import GUI.GUI;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +18,6 @@ import java.util.List;
 public class BusinessFacade implements IBusinessFacade {
 
     private HubConnect hubConnect = new HubConnect();
-    private RestConnect restConnect = new RestConnect();
     private List<Department> departments = new ArrayList();
     private Department currentDepartment = null;
     private List<Chat> chats = new ArrayList();
@@ -92,12 +88,14 @@ public class BusinessFacade implements IBusinessFacade {
             }
         }
         if (!found) {
+            RequestResponse<Chat> chat = RestConnectBuilder.create(PathEnum.GetChat).withToken(token).withRoute(addChatEvent.getChatId()).build().execute();
             // RequestResponse<Chat> chat = restConnect.get(PathEnum.GetChat, addChatEvent.getChatId(), null, token);
-            RequestResponse<Chat> chat = new RestConnect(PathEnum.GetChat,token).create().executeRoute(addChatEvent.getChatId());
+            // RequestResponse<Chat> chat = new RestConnect(PathEnum.GetChat,token).create().executeRoute(addChatEvent.getChatId());
             chats.add(chat.getResponse());
             if (users.contains(addChatEvent.getUser())) {
+                RequestResponse<User> user = RestConnectBuilder.create(PathEnum.GetUser).withToken(token).withRoute(addChatEvent.getUser().getId()).build().execute();
                 // RequestResponse<User> user = restConnect.get(PathEnum.GetUser, addChatEvent.getUser().getId(), null, token);
-                RequestResponse<User> user = new RestConnect(PathEnum.GetUser, token).create().executeRoute(addChatEvent.getUser().getId());
+                // RequestResponse<User> user = new RestConnect(PathEnum.GetUser, token).create().executeRoute(addChatEvent.getUser().getId());
                 users.add(user.getResponse());
                 EventManager.getInstance().fireEvent(new AddUserEvent(this, user.getResponse()));
             }
@@ -121,16 +119,18 @@ public class BusinessFacade implements IBusinessFacade {
     /*Chat Methods */
     @Override
     public RequestResponse<List<? extends IChat>> getChats() {
+        RequestResponse<List<Chat>> chats = RestConnectBuilder.create(PathEnum.GetChats).withToken(token).withRoute(loginUser.getSub()).build().execute();
         // RequestResponse<List<Chat>> chats = restConnect.get(PathEnum.GetChats, loginUser.getSub(), null, token);
-        RequestResponse<List<Chat>> chats = new RestConnect(PathEnum.GetChats,token).create().executeRoute(loginUser.getSub());
+        // RequestResponse<List<Chat>> chats = new RestConnect(PathEnum.GetChats,token).create().executeRoute(loginUser.getSub());
         if (chats.getResponse() != null && !chats.getResponse().isEmpty()) {
             for (Chat chat : chats.getResponse()) {
                 if (chat.isGroupChat()) {
                     this.chats.add(chat);
                 } else {
                     // Temporary polish fix
+                    RequestResponse<List<? extends IUser>> response = RestConnectBuilder.create(PathEnum.GetUsersInChat).withToken(token).withRoute(chat.getId()).build().execute();
                     // RequestResponse<List<? extends IUser>> response = restConnect.get(PathEnum.GetUsersInChat, chat.getId(), null, token);
-                    RequestResponse<List<? extends IUser>> response = new RestConnect(PathEnum.GetUsersInChat,token).create().executeRoute(chat.getId());
+                    // RequestResponse<List<? extends IUser>> response = new RestConnect(PathEnum.GetUsersInChat,token).create().executeRoute(chat.getId());
                     for (IUser user : response.getResponse()) {
                         if (!user.getName().equals(loginUser.getName())) {
                             chat.setName(user.getName());

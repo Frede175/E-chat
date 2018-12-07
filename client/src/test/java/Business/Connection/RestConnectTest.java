@@ -77,7 +77,13 @@ public class RestConnectTest {
 
         setup("{ \"name\": \"Unit_test\", \"id\": 1, \"isGroupChat\": true, \"departmentId\": 1}", 201);
 
-        new RestConnect(client, PathEnum.CreateChatroom, token).create(post).execute(1, new Chat("Unit_test"));
+        RestConnect connect = RestConnectBuilder.create(PathEnum.CreateChatroom)
+                .withClient(client)
+                .withRequest(post)
+                .withToken(token)
+                .withRoute(1)
+                .withContent(new Chat("Unit_test"))
+                .build();
 
         Header header = post.getFirstHeader("Authorization");
         assertEquals("Bearer " + token, header.getValue());
@@ -111,7 +117,12 @@ public class RestConnectTest {
 
         setup("[]", 200);
 
-        new RestConnect(client, PathEnum.GetMessages, "").create(get).execute(1, new Page(0,20).toMap());
+        RestConnect connect = RestConnectBuilder.create(PathEnum.GetMessages)
+                .withClient(client)
+                .withRequest(get)
+                .withRoute(1)
+                .withParameters(new Page(0,20))
+                .build();
 
         assertEquals("/api/Messages/1", get.getURI().getPath());
         assertEquals("pageNumber=0&pageSize=20", get.getURI().getQuery());
@@ -125,7 +136,14 @@ public class RestConnectTest {
 
         setup("[]", 200);
 
-        new RestConnect(client, PathEnum.GetMessages, token).create(get).execute(1, new Page(0,20).toMap());
+
+        RestConnect connect = RestConnectBuilder.create(PathEnum.GetMessages)
+                .withClient(client)
+                .withRequest(get)
+                .withRoute(1)
+                .withToken(token)
+                .withParameters(new Page(0,20))
+                .build();
 
         Header header = get.getFirstHeader("Authorization");
         assertEquals("Bearer " + token, header.getValue());
