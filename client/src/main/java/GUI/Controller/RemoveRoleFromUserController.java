@@ -57,13 +57,23 @@ public class RemoveRoleFromUserController {
     }*/
 
     public void initialize(){
-        userCB.getItems().setAll(GUI.getInstance().getBusiness().getUsers().getResponse());
 
-        roleCB.getItems().setAll(GUI.getInstance().getBusiness().getAvailableRoles(userCB.getValue().getId()).getResponse());
+        userCB.getItems().addAll(GUI.getInstance().getBusiness().getUsers().getResponse());
+        if(!userCB.getItems().isEmpty()){
+            userCB.getSelectionModel().select(0);
+        }
+
+        roleCB.getItems().addAll(GUI.getInstance().getBusiness().getAvailableRoles(userCB.getValue().getId()).getResponse());
+        if(!roleCB.getItems().isEmpty()){
+            roleCB.getSelectionModel().select(0);
+        }
+
+        //choiceBox.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+
     }
 
     public void removeSelected(ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().removeRoleFromUser(userCB.getValue().getId(), roleCB.getValue().getName());
+        GUI.getInstance().getBusiness().removeRoleFromUser(userCB.getValue().getId(), roleCB.getValue().getId());
         Stage stage = (Stage) removeRoleFromUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
     }

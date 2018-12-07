@@ -57,7 +57,7 @@ public interface IBusinessFacade {
     void removePermissionsFromRole(String role, List<String> permissions);
     void addRoleToUser(String userId, String role);
     //TODO new
-    void removeRoleFromUser(String userId, String role);
+    void removeRoleFromUser(String userId, String roleId);
 
     RequestResponse<List<? extends ILogMessage>> getAllLogs(int page);
     RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page);

@@ -38,8 +38,8 @@ public enum PathEnum {
     AddRoleToUser("/api/user/role/add/", ConnectionType.PUT, null),
 
     //TODO new - "GetAvailableRoles" is not implemented in the server yet
-    RemoveRoleFromUser("/api/user/role/remove/", ConnectionType.PUT, null),
-    GetAvailableRoles("/api/Role/available", ConnectionType.GET, new TypeToken<List<Role>>() {}.getType()),
+    RemoveRoleFromUser("/api/User/role/remove/", ConnectionType.PUT, null),
+    GetAvailableRoles("/api/Role/available/", ConnectionType.GET, new TypeToken<List<Role>>() {}.getType()),
 
     GetAvailableChats("/api/chat/available/", ConnectionType.GET, new TypeToken<List<Chat>>() {}.getType()),
     GetUser("/api/user/", ConnectionType.GET, new TypeToken<User>() {}.getType()),
