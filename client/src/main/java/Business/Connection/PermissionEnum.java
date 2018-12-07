@@ -22,7 +22,8 @@ public enum PermissionEnum {
     // UserController
     CreateUser(PermissionType.USER),
     DeleteUser(PermissionType.USER),
-    AddAdditionalRole(PermissionType.USER),
+    AddRoleToUser(PermissionType.USER),
+    RemoveRoleFromUser(PermissionType.USER),
 
 
     // RoleController

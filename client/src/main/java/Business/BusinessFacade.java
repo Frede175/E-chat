@@ -248,6 +248,12 @@ public class BusinessFacade implements IBusinessFacade {
 
     public ConnectionState addRoleToUser(String userId, String roleId) {
         return new RestConnect(PathEnum.AddRoleToUser, token).create().execute(userId, roleId).getConnectionState();
+
+    }
+
+    @Override
+    public ConnectionState removeRoleFromUser(String userId, String roleId){
+        return new RestConnect(PathEnum.RemoveRoleFromUser, token).create().execute(userId, roleId).getConnectionState();
     }
 
     /*Department Methods */
@@ -365,7 +371,13 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public ConnectionState addPermissionsToRole(String roleid, List<String> permissions) {
         return new RestConnect(PathEnum.AddPermissionsToRole, token).create().execute(roleid, permissions).getConnectionState();
+
     }
+    @Override
+    public RequestResponse<List<IRole>> getAvailableRoles(String userId){
+        return new RestConnect(PathEnum.GetAvailableRoles, token).create().executeRoute(userId);
+    }
+
 
     public ConnectionState removePermissionsFromRole(String roleid, List<String> permissions) {
         return new RestConnect(PathEnum.RemovePermissionsFromRole, token).create().execute(roleid, permissions).getConnectionState();
@@ -401,6 +413,7 @@ public class BusinessFacade implements IBusinessFacade {
         users.clear();
         loginUser = null;
         token = null;
+        EventManager.getInstance().clearListeners();
         disconnectHub();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));

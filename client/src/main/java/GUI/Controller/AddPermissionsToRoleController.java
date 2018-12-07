@@ -67,7 +67,7 @@ public class AddPermissionsToRoleController {
             ConnectionState connectionState = GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole.getId(), permissionstosend);
             Stage stage = (Stage) selectRoleComboBox.getScene().getWindow();
             stage.setScene(GUI.getInstance().getPrimaryScene());
-            String input = "Succesfully added permissions to the role " + selectedRole.getId();
+            String input = "Succesfully added permissions to the role " + selectedRole.getName();
             NotificationUpdater.getInstance().showNotification(input, connectionState);
         }
     }

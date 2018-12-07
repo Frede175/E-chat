@@ -49,7 +49,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/{userId}
         [HttpGet("{userId}", Name = "GetUser"), Produces("application/json")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddAdditionalRole, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddRoleToUser, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<User>> GetUser(string userId)
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -70,7 +70,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/ 
         [HttpGet, Produces("application/json")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddAdditionalRole, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddRoleToUser, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
         public async Task<ActionResult<ICollection<User>>> GetUsers()
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -173,24 +173,32 @@ namespace Server.Controllers
         }
 
 
-        // PUT https://localhost:5001/api/User/{userId}
-        [HttpPut("{userId}")]
-        [RequiresPermissionAttribute(permissions: Permission.AddAdditionalRole)]
-        public async Task<ActionResult> AddAdditionalRole(string userId, [FromBody] string role)
+        // PUT https://localhost:5001/api/User/role/add/{userId}
+        [HttpPut("role/add/{userId}")]
+        [RequiresPermissionAttribute(permissions: Permission.AddRoleToUser)]
+        public async Task<ActionResult> AddRole(string userId, [FromBody] string roleId)
         {
             var username = _userManager.GetUserName(HttpContext.User);
 
-            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} adding role ({role}) to user ({id}).", username, role, userId);
+            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} adding role ({role}) to user ({id}).", username, roleId, userId);
 
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                _logger.LogInformation(LoggingEvents.UpdateRelativeItemNotFound, "{username} adding role ({role}) to user ({id}), USER NOT FOUND.", username, role, userId);
+                _logger.LogInformation(LoggingEvents.UpdateRelativeItemNotFound, "{username} adding role ({role}) to user ({id}), USER NOT FOUND.", username, roleId, userId);
                 return NotFound();
             }
 
-            var result = await _userManager.AddToRoleAsync(user, role);
+            var role = await _roleManager.FindByIdAsync(roleId);
+
+            if (role == null)
+            {
+                _logger.LogInformation(LoggingEvents.UpdateRelativeItemNotFound, "{username} adding role ({role}) to user ({id}), ROLE NOT FOUND.", username, roleId, userId);
+                return NotFound();
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, role.Name);
 
             if (result.Succeeded)
             {
@@ -198,6 +206,42 @@ namespace Server.Controllers
             }
 
             _logger.LogWarning(LoggingEvents.UpdateRelativeItemFail, "{username} failed adding role ({role}) to user ({id}).", username, role, userId);
+            return BadRequest();
+        }
+
+        // PUT https://localhost:5001/api/User/role/remove/{userId}
+        [HttpPut("role/remove/{userId}")]
+        [RequiresPermissionAttribute(permissions: Permission.RemoveRoleFromUser)]
+        public async Task<ActionResult> RemoveRole(string userId, [FromBody] string roleId)
+        {
+            var username = _userManager.GetUserName(HttpContext.User);
+
+            _logger.LogInformation(LoggingEvents.UpdateRelativeItem, "{username} removing role ({role}) from user ({id}).", username, roleId, userId);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                _logger.LogInformation(LoggingEvents.UpdateRelativeItemNotFound, "{username} removing role ({role}) from user ({id}), USER NOT FOUND.", username, roleId, userId);
+                return NotFound();
+            }
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+
+            if (role == null)
+            {
+                _logger.LogInformation(LoggingEvents.UpdateRelativeItemNotFound, "{username} removing role ({role}) from user ({id}), ROLE NOT FOUND.", username, roleId, userId);
+                return NotFound();
+            }
+
+            var result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+
+            _logger.LogWarning(LoggingEvents.UpdateRelativeItemFail, "{username} failed removing role ({role}) from user ({id}).", username, role, userId);
             return BadRequest();
         }
 

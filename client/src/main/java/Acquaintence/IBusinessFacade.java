@@ -45,13 +45,17 @@ public interface IBusinessFacade {
     void sendMessage(String message);
 
     RequestResponse<List<? extends IRole>> getRoles();
+    RequestResponse<List<IRole>> getAvailableRoles(String userId);
     RequestResponse<List<String>> getAllPermissions();
     List<String> getRolesPermissions(String roleName);
-    ConnectionState deleteRole(String roleName);
+
+    ConnectionState deleteRole(String roleId);
     ConnectionState createRole(List<String> permissions, String name);
     ConnectionState addPermissionsToRole(String role, List<String> permissions);
     ConnectionState removePermissionsFromRole(String role, List<String> permissions);
     ConnectionState addRoleToUser(String userId, String role);
+    ConnectionState removeRoleFromUser(String userId, String roleId);
+
 
     RequestResponse<List<? extends ILogMessage>> getAllLogs(int page);
     RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page);

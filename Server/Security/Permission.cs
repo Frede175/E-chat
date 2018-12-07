@@ -33,7 +33,8 @@ namespace Server.Security
         // GetContacts,
         CreateUser,
         DeleteUser,
-        AddAdditionalRole,
+        AddRoleToUser,
+        RemoveRoleFromUser,
 
 
         //RoleController
@@ -50,5 +51,6 @@ namespace Server.Security
         //Logs
         SeeLogs,
         SeeAllLogs
+        
     }
 }
