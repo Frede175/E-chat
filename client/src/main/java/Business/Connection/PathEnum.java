@@ -13,7 +13,7 @@ public enum PathEnum {
     Logout("/connect/logout/", ConnectionType.LOGOUT, null),
     CreateDepartment("/api/department/", ConnectionType.POST, Department.class),
     UpdateDepartment("/api/department/", ConnectionType.PUT, null),
-    GetDepartments("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
+    GetDepartmentsForUser("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),
     CreateUser("/api/user/create/", ConnectionType.POST, User.class),
     DeleteDepartment("/api/department/", ConnectionType.DELETE, null),
     GetMessages("/api/Messages/", ConnectionType.GET, new TypeToken<List<MessageIn>>() {}.getType()),

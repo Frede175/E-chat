@@ -1,5 +1,6 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IUser;
 import GUI.GUI;
 import javafx.beans.value.ChangeListener;
@@ -8,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+import GUI.NotificationUpdater;
 
 public class DeleteUserController {
 
@@ -30,8 +32,10 @@ public class DeleteUserController {
     }
 
     public void deleteUser(ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().deleteUser(selectedUser.getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().deleteUser(selectedUser.getId());
         Stage stage = (Stage) selectUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully deleted the user " + selectedUser.getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }

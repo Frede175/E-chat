@@ -1,5 +1,6 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IDepartment;
 import Acquaintence.IUser;
 import GUI.GUI;
@@ -9,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
+import GUI.NotificationUpdater;
 
 public class AddUserToDepartmentController {
 
@@ -32,9 +34,11 @@ public class AddUserToDepartmentController {
     }
 
     public void addToDepartmentBtn(ActionEvent actionEvent){
-        GUI.getInstance().getBusiness().addUserToDepartment(choiceBoxDepartment.getValue().getId(), choiceBoxUser.getValue().getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().addUserToDepartment(choiceBoxDepartment.getValue().getId(), choiceBoxUser.getValue().getId());
         Stage stage = (Stage) addBtn.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully added user " + choiceBoxUser.getValue().getName() + " to the department " + choiceBoxDepartment.getValue().getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 
 }

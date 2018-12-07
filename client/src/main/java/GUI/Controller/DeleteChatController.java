@@ -1,14 +1,14 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IChat;
 import GUI.GUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
+import GUI.NotificationUpdater;
 
-import java.awt.event.ActionEvent;
-
-public class RemoveChatController {
+public class DeleteChatController {
 
     public Button deleteBtn;
     public ChoiceBox<IChat> cbChat;
@@ -21,9 +21,11 @@ public class RemoveChatController {
     }
 
     public void delete(){
-        GUI.getInstance().getBusiness().deleteChat(cbChat.getValue().getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().deleteChat(cbChat.getValue().getId());
         Stage stage = (Stage) deleteBtn.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully deleted the chat " + cbChat.getValue().getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 
 }

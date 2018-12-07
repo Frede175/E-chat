@@ -1,5 +1,6 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IRole;
 import Business.Connection.RequestResponse;
 import GUI.GUI;
@@ -10,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import org.controlsfx.control.ListSelectionView;
+import GUI.NotificationUpdater;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +25,7 @@ public class AddPermissionsToRoleController {
     @FXML
     public ListSelectionView<String> permissionLSV;
 
-    private String selectedRole;
+    private IRole selectedRole;
 
     private List<String> rolesPermissions;
 
@@ -37,9 +39,9 @@ public class AddPermissionsToRoleController {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
                 // TODO set getname til getID();
-                selectedRole = t1.getId();
+                selectedRole = t1;
                 RequestResponse<List<String>> response1 = GUI.getInstance().getBusiness().getAllPermissions();
-                rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole);
+                rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole.getId());
                 List<String> allPermissions = response1.getResponse();
                 List<String> notCurrentPermissions = new ArrayList<>();
                 for (Iterator<String> iterator = allPermissions.iterator(); iterator.hasNext(); ) {
@@ -62,9 +64,11 @@ public class AddPermissionsToRoleController {
         permissionstosend.addAll(permissionLSV.getTargetItems());
         permissionstosend.removeAll(rolesPermissions);
         if (selectedRole != null && !permissionLSV.getTargetItems().isEmpty()) {
-            GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole, permissionstosend);
+            ConnectionState connectionState = GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole.getId(), permissionstosend);
             Stage stage = (Stage) selectRoleComboBox.getScene().getWindow();
             stage.setScene(GUI.getInstance().getPrimaryScene());
+            String input = "Succesfully added permissions to the role " + selectedRole.getName();
+            NotificationUpdater.getInstance().showNotification(input, connectionState);
         }
     }
 }

@@ -1,8 +1,9 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IChat;
 import Acquaintence.IUser;
-import Business.Connection.PermissionType;
+import GUI.NotificationUpdater;
 import GUI.GUI;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,8 +30,11 @@ public class AddUserToChatController {
     }
 
     public void addUser() {
-        GUI.getInstance().getBusiness().addUserToChat(chatsCB.getSelectionModel().getSelectedItem().getId(), usersCB.getSelectionModel().getSelectedItem().getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().addUserToChat(chatsCB.getSelectionModel().getSelectedItem().getId(), usersCB.getSelectionModel().getSelectedItem().getId());
         Stage stage = (Stage) chatsCB.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully added the user " + usersCB.getSelectionModel().getSelectedItem().getName() +
+                        " to the chat " + chatsCB.getSelectionModel().getSelectedItem().getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }

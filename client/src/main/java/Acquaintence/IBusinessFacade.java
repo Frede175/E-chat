@@ -18,26 +18,26 @@ public interface IBusinessFacade {
     List<? extends IChat> getAvailableChats(String userId);
     List<? extends IChat> getUsersChats(String userId);
     ConnectionState createChat(String chatName, int departmentId);
-    void deleteChat(int chatId);
+    ConnectionState deleteChat(int chatId);
     ConnectionState addUserToChat(int chatId, String userId);
-    void removeUserFromChat(int chatId, String userId);
+    ConnectionState removeUserFromChat(int chatId, String userId);
     void setCurrentChat(int chatId);
     void leaveChat(int chatId);
 
     RequestResponse<List<? extends  IUser>> getUsers();
     List<? extends IUser> getExistingUsers();
-    void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
-    void deleteUser(String userId);
+    ConnectionState createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
+    ConnectionState deleteUser(String userId);
 
     RequestResponse<List<? extends IDepartment>> getDepartments();
     RequestResponse<List<? extends IDepartment>> getAllDepartments();
     RequestResponse<List<IUser>> getAllUsersInDepartment(int departmentId);
     RequestResponse<List<IDepartment>> getAvailableDepartments(String userId);
-    void createDepartment(String departmentname);
-    void deleteDepartment(int depId);
-    void addUserToDepartment(int depId, String userId);
-    void removeUserFromDepartment(String userId, int departmentId);
-    void updateDepartment(int depId, String name);
+    ConnectionState createDepartment(String departmentname);
+    ConnectionState deleteDepartment(int depId);
+    ConnectionState addUserToDepartment(int depId, String userId);
+    ConnectionState removeUserFromDepartment(String userId, int departmentId);
+    ConnectionState updateDepartment(int depId, String name);
 
     RequestResponse<List<? extends IMessageIn>> getMessages(int chatId, int page);
     RequestResponse<List<? extends IMessageIn>> getMessages(int page);
@@ -48,12 +48,14 @@ public interface IBusinessFacade {
     RequestResponse<List<IRole>> getAvailableRoles(String userId);
     RequestResponse<List<String>> getAllPermissions();
     List<String> getRolesPermissions(String roleName);
-    void deleteRole(String roleName);
-    void createRole(List<String> permissions, String name);
-    void addPermissionsToRole(String role, List<String> permissions);
-    void removePermissionsFromRole(String role, List<String> permissions);
-    void addRoleToUser(String userId, String role);
-    void removeRoleFromUser(String userId, String roleId);
+
+    ConnectionState deleteRole(String roleId);
+    ConnectionState createRole(List<String> permissions, String name);
+    ConnectionState addPermissionsToRole(String role, List<String> permissions);
+    ConnectionState removePermissionsFromRole(String role, List<String> permissions);
+    ConnectionState addRoleToUser(String userId, String role);
+    ConnectionState removeRoleFromUser(String userId, String roleId);
+
 
     RequestResponse<List<? extends ILogMessage>> getAllLogs(int page);
     RequestResponse<List<? extends ILogMessage>> getCustomLogs(int page);

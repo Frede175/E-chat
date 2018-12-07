@@ -1,18 +1,14 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IRole;
 import Acquaintence.IUser;
-import Business.Connection.RequestResponse;
+import GUI.NotificationUpdater;
 import GUI.GUI;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-
-import java.awt.event.ActionEvent;
-import java.util.List;
 
 public class AddRoleToUserController {
 
@@ -33,10 +29,11 @@ public class AddRoleToUserController {
         });
     }
 
-
     public void addSelected(javafx.event.ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().addRoleToUser(selectUser.getValue().getId(), selectRole.getValue().getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().addRoleToUser(selectUser.getValue().getId(), selectRole.getValue().getId());
         Stage stage = (Stage) addRoleToUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully added role " + selectRole.getValue().getName() + " to the user " + selectUser.getValue().getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }
