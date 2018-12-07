@@ -1,16 +1,15 @@
 package Business.Models;
 
 import Acquaintence.ILoginUser;
-import Acquaintence.IToMap;
+import Business.Interfaces.IParameters;
 import Business.Connection.PermissionEnum;
 import Business.Connection.PermissionType;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class LoginUser implements ILoginUser, IToMap {
+public class LoginUser implements ILoginUser, IParameters {
 
     private String sub;
     private String name;
@@ -88,9 +87,9 @@ public class LoginUser implements ILoginUser, IToMap {
     }
 
     @Override
-    public HashMap<String, String> toMap() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("userId", sub);
-        return map;
+    public List<NameValuePair> getParameters() {
+        List<NameValuePair> nvps = new ArrayList<>();
+        nvps.add(new BasicNameValuePair("userId", sub));
+        return nvps;
     }
 }
