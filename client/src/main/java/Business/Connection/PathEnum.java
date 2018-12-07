@@ -9,8 +9,8 @@ import java.util.List;
 
 public enum PathEnum {
 
-    Login("/connect/token/", ConnectionType.LOGIN, ContentType.APPLICATION_FORM_URLENCODED, Login.class),
-    Logout("/connect/logout/", ConnectionType.LOGOUT, ContentType.APPLICATION_FORM_URLENCODED),
+    Login("/connect/token/", ConnectionType.POST, ContentType.APPLICATION_FORM_URLENCODED, Login.class),
+    Logout("/connect/logout/", ConnectionType.POST, ContentType.APPLICATION_FORM_URLENCODED),
     CreateDepartment("/api/department/", ConnectionType.POST, Department.class),
     UpdateDepartment("/api/department/", ConnectionType.PUT),
     GetDepartments("/api/department/user/", ConnectionType.GET, new TypeToken<List<Department>>(){}.getType()),

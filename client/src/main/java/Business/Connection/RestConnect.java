@@ -46,19 +46,19 @@ public class RestConnect {
 
         if (parameters != null) uriBuilder.setParameters(parameters.getParameters());
 
-        request.setURI(uriBuilder.build());
+        this.request.setURI(uriBuilder.build());
 
         if (content != null) {
-            if (!(request instanceof HttpEntityEnclosingRequest)) throw new IllegalArgumentException("Request is not of type HttpEntityEnclosingRequest");
+            if (!(this.request instanceof HttpEntityEnclosingRequest)) throw new IllegalArgumentException("Request is not of type HttpEntityEnclosingRequest");
 
-            request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
-            request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
+            this.request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
+            this.request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
 
             if (path.getContentType() == ContentType.APPLICATION_JSON) {
-                ((HttpEntityEnclosingRequest) request).setEntity(new StringEntity(gson.toJson(content), Consts.UTF_8));
+                ((HttpEntityEnclosingRequest) this.request).setEntity(new StringEntity(gson.toJson(content), Consts.UTF_8));
             } else if (path.getContentType() == ContentType.APPLICATION_FORM_URLENCODED) {
                 if (content instanceof IParameters) {
-                    ((HttpEntityEnclosingRequest) request).setEntity(new UrlEncodedFormEntity(((IParameters) content).getParameters(), Consts.UTF_8));
+                    ((HttpEntityEnclosingRequest) this.request).setEntity(new UrlEncodedFormEntity(((IParameters) content).getParameters(), Consts.UTF_8));
                 } else {
                     throw new IllegalArgumentException("Content is not of type IParameters");
                 }
@@ -71,7 +71,7 @@ public class RestConnect {
         }*/
 
         if (token != null) {
-            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+            this.request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         }
 
     }

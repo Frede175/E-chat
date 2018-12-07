@@ -60,25 +60,31 @@ public class RestConnectBuilder {
         return this;
     }
 
+    private void createRequest() {
+        switch (path.getType()) {
+            case POST:
+                request = new HttpPost();
+                break;
+            case GET:
+                request = new HttpGet();
+                break;
+            case PUT:
+                request = new HttpPut();
+                break;
+            case DELETE:
+                request = new HttpDelete();
+                break;
+        }
+    }
+
     public RestConnect build() {
         if (host == null) host = ConnectionConst.HOST;
         if (client == null) client = HttpClientBuilder.create().build();
         if (request == null) {
-            switch (path.getType()) {
-                case POST:
-                    request = new HttpPost();
-                    break;
-                case GET:
-                    request = new HttpGet();
-                    break;
-                case PUT:
-                    request = new HttpPut();
-                    break;
-                case DELETE:
-                    request = new HttpDelete();
-                    break;
-            }
+            createRequest();
         }
+
+        System.out.println("Creating rest connect for:" + path);
 
         try {
             return new RestConnect(path, token, host, content, route, parameters, client, request);

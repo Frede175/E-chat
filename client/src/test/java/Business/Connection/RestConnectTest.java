@@ -60,7 +60,7 @@ public class RestConnectTest {
 
         setup("{ \"name\": \"Unit_test\", \"id\": 1, \"isGroupChat\": true, \"departmentId\": 1}", 201);
 
-        new RestConnect(client, PathEnum.CreateChatroom, "").create(post).execute(1, new Chat("Unit_test"));
+        RestConnectBuilder.create(PathEnum.CreateChatroom).withClient(client).withRequest(post).withRoute(1).withContent(new Chat("Unit_test")).build();
 
         assertEquals("/api/chat/1", post.getURI().getPath());
 
@@ -77,19 +77,16 @@ public class RestConnectTest {
 
         setup("{ \"name\": \"Unit_test\", \"id\": 1, \"isGroupChat\": true, \"departmentId\": 1}", 201);
 
-        RestConnect connect = RestConnectBuilder.create(PathEnum.CreateChatroom)
-                .withClient(client)
-                .withRequest(post)
-                .withToken(token)
-                .withRoute(1)
-                .withContent(new Chat("Unit_test"))
-                .build();
+        RestConnectBuilder.create(PathEnum.CreateChatroom).withToken(token).withClient(client).withRequest(post).withRoute(1).withContent(new Chat("Unit_test")).build();
 
         Header header = post.getFirstHeader("Authorization");
         assertEquals("Bearer " + token, header.getValue());
 
         header = post.getFirstHeader("Content-Type");
-        assertEquals("application/json; charset=UTF-8", header.getValue());
+        assertEquals("application/json", header.getValue());
+
+        header = post.getFirstHeader("Content-Encoding");
+        assertEquals("UTF-8", header.getValue());
 
     }
 
@@ -99,7 +96,7 @@ public class RestConnectTest {
 
         setup("{ \"name\": \"Unit_test\", \"id\": 1, \"isGroupChat\": true, \"departmentId\": 1}", 201);
 
-        RequestResponse<Chat> result = new RestConnect(client, PathEnum.CreateChatroom, "").create(post).execute(1, new Chat("Unit_test"));
+        RequestResponse<Chat> result = RestConnectBuilder.create(PathEnum.CreateChatroom).withClient(client).withRequest(post).withRoute(1).withContent(new Chat("Unit_test")).build().execute();
 
         assertNotNull(result);
         assertNotNull(result.getResponse());
@@ -117,7 +114,7 @@ public class RestConnectTest {
 
         setup("[]", 200);
 
-        RestConnect connect = RestConnectBuilder.create(PathEnum.GetMessages)
+        RestConnectBuilder.create(PathEnum.GetMessages)
                 .withClient(client)
                 .withRequest(get)
                 .withRoute(1)
@@ -137,7 +134,7 @@ public class RestConnectTest {
         setup("[]", 200);
 
 
-        RestConnect connect = RestConnectBuilder.create(PathEnum.GetMessages)
+        RestConnectBuilder.create(PathEnum.GetMessages)
                 .withClient(client)
                 .withRequest(get)
                 .withRoute(1)
