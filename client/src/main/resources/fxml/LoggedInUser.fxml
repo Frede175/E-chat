@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER" prefHeight="70.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.LoggedInUserController">
+<HBox alignment="CENTER" prefHeight="70.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.LoggedInUserController" fillHeight="true" >
    <children>
       <Label fx:id="userNameL" alignment="CENTER" prefHeight="17.0" prefWidth="254.0" text="Lars ">
          <font>
@@ -16,7 +16,7 @@
             <Insets />
          </HBox.margin>
       </Label>
-      <Button fx:id="adminBtn" onAction="#openAdmin" mnemonicParsing="false" text="Admin" />
+      <Button fx:id="adminBtn" onAction="#openAdmin" mnemonicParsing="false" text="Admin"/>
       <Button mnemonicParsing="false" onAction="#logout" text="Logout">
          <HBox.margin>
             <Insets left="10.0" />

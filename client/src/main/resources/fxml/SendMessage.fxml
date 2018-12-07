@@ -5,15 +5,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 
-
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SendMessageController">
+<HBox alignment="CENTER" prefHeight="80.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SendMessageController">
    <children>
-      <TextField fx:id="messageTF" onAction="#sendMessage" prefHeight="80.0" prefWidth="396.0" promptText="Write message">
+      <TextField fx:id="messageTF" nodeOrientation="LEFT_TO_RIGHT" onAction="#sendMessage" prefHeight="80.0" prefWidth="396.0" promptText="Write message">
          <HBox.margin>
             <Insets bottom="10.0" top="10.0" />
          </HBox.margin>
       </TextField>
-      <Button mnemonicParsing="false" fx:id="sendBtn" onAction="#sendMessage" text="Send">
+      <Button fx:id="sendBtn" mnemonicParsing="false" onAction="#sendMessage" text="Send">
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin>
