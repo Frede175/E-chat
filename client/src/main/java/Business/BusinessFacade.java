@@ -262,10 +262,15 @@ public class BusinessFacade implements IBusinessFacade {
         new RestConnect(PathEnum.DeleteUser, token).create().executeRoute(userId);
     }
 
-    public void addRoleToUser(String userId, String rolename) {
-        // restConnect.put(PathEnum.AddRoleToUser, userId, rolename, token);
-        System.out.println(userId);
-        new RestConnect(PathEnum.AddRoleToUser, token).create().execute(userId, rolename);
+    @Override
+    public void addRoleToUser(String userId, String roleId) {
+        new RestConnect(PathEnum.AddRoleToUser, token).create().execute(userId, roleId);
+    }
+
+    //TODO new
+    @Override
+    public void removeRoleFromUser(String userId, String roleId){
+        new RestConnect(PathEnum.RemoveRoleFromUser, token).create().execute(userId, roleId);
     }
 
     /*Department Methods */
@@ -393,6 +398,11 @@ public class BusinessFacade implements IBusinessFacade {
     public void deleteRole(String roleid) {
         // restConnect.delete(PathEnum.DeleteRole, roleid, token);
         new RestConnect(PathEnum.DeleteRole, token).create().executeRoute(roleid);
+    }
+
+    @Override
+    public RequestResponse<List<IRole>> getAvailableRoles(String userId){
+        return new RestConnect(PathEnum.GetAvailableRoles, token).create().executeRoute(userId);
     }
 
     @Override

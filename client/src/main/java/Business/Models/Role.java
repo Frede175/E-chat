@@ -24,4 +24,12 @@ public class Role implements IRole {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Role) {
+            return id.equals(((Role) o).getId());
+        }
+        return false;
+    }
 }

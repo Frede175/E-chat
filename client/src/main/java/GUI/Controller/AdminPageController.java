@@ -146,15 +146,12 @@ public class AdminPageController {
                     }
                     break;
                 case RemoveRoleFromUser:
-                    //TODO
-                    /*
                     try {
                         Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveRoleFromUser.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    */
                     break;
                 case CreateRole:
                     try {
