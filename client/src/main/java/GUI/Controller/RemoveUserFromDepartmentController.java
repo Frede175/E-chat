@@ -1,6 +1,7 @@
 package GUI.Controller;
 
-import Acquaintence.IChat;
+import Acquaintence.ConnectionState;
+import GUI.NotificationUpdater;
 import Acquaintence.IDepartment;
 import Acquaintence.IUser;
 import GUI.GUI;
@@ -21,31 +22,24 @@ public class RemoveUserFromDepartmentController {
     private IDepartment selectedDepartment;
 
     public void initialize() {
-        for (IDepartment department : GUI.getInstance().getBusiness().getDepartments().getResponse()) {
+        for (IDepartment department : GUI.getInstance().getBusiness().getAllDepartments().getResponse()) {
             selectDepartment.getItems().add(department);
         }
-        selectDepartment.valueProperty().addListener(new ChangeListener<IDepartment>() {
-            @Override
-            public void changed(ObservableValue<? extends IDepartment> observableValue, IDepartment iDepartment, IDepartment t1) {
-                selectedDepartment = t1;
-                selectUser.getItems().setAll(GUI.getInstance().getBusiness().getAllUsersInDepartment(selectedDepartment.getId()).getResponse());
+        selectDepartment.valueProperty().addListener((observableValue, iDepartment, t1) -> {
+            selectedDepartment = t1;
+            selectUser.getItems().setAll(GUI.getInstance().getBusiness().getAllUsersInDepartment(selectedDepartment.getId()).getResponse());
 
-            }
         });
 
-
-        selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
-            @Override
-            public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
-                selectedUser = t1;
-            }
-        });
+        selectUser.valueProperty().addListener((observableValue, iUser, t1) -> selectedUser = t1);
 
     }
 
     public void removeUserFromDepartment(ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().removeUserFromDepartment(selectedUser.getId(), selectedDepartment.getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().removeUserFromDepartment(selectedUser.getId(), selectedDepartment.getId());
         Stage stage = (Stage) selectUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
+        String input = "Succesfully removed the user " + selectedUser.getName() + " from the department " + selectedDepartment.getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }

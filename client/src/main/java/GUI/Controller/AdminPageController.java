@@ -137,9 +137,17 @@ public class AdminPageController {
                         e.printStackTrace();
                     }
                     break;
-                case AddAdditionalRole:
+                case AddRoleToUser:
                     try {
                         Parent parent = FXMLLoader.load(getClass().getResource("/fxml/AddRoleToUser.fxml"));
+                        root.getChildren().addAll(createSeparator(), parent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case RemoveRoleFromUser:
+                    try {
+                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveRoleFromUser.fxml"));
                         root.getChildren().addAll(createSeparator(), parent);
                     } catch (IOException e) {
                         e.printStackTrace();

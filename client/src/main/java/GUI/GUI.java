@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import org.controlsfx.control.NotificationPane;
 
 public class GUI extends Application implements IGUI {
     /**
@@ -19,6 +20,7 @@ public class GUI extends Application implements IGUI {
     private static GUI gui;
 
     private Stage stage;
+
 
     /**
      * An instance of the IBusinessFacade.
@@ -41,6 +43,7 @@ public class GUI extends Application implements IGUI {
         stage.setTitle("E-Chat");
         stage.getIcons().add(new Image("img/E-chat.png"));
         stage.show();
+
     }
 
     @Override

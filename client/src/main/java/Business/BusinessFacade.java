@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class BusinessFacade implements IBusinessFacade {
@@ -116,12 +115,13 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<List<? extends IChat>> getChats() {
         RequestResponse<List<Chat>> chats = RestConnectBuilder.create(PathEnum.GetChats).withToken(token).withRoute(loginUser.getSub()).build().execute();
+
         if (chats.getResponse() != null && !chats.getResponse().isEmpty()) {
             for (Chat chat : chats.getResponse()) {
                 if (chat.isGroupChat()) {
                     this.chats.add(chat);
                 } else {
-                    // Temporary polish fix
+                    // Temporary polish fix TODO A fix on server side
                     RequestResponse<List<? extends IUser>> response = RestConnectBuilder.create(PathEnum.GetUsersInChat).withToken(token).withRoute(chat.getId()).build().execute();
                     for (IUser user : response.getResponse()) {
                         if (!user.getName().equals(loginUser.getName())) {
@@ -150,12 +150,14 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public List<? extends IChat> getAvailableChats(String userId) {
         RequestResponse<List<Chat>> response = RestConnectBuilder.create(PathEnum.GetAvailableChats).withToken(token).withRoute(userId).build().execute();
+
         return response.getResponse();
     }
 
     @Override
     public List<? extends IChat> getUsersChats(String userId) {
         RequestResponse<List<Chat>> response = RestConnectBuilder.create(PathEnum.GetChats).withToken(token).withRoute(userId).build().execute();
+
         System.out.println(response.getResponse());
         return response.getResponse();
     }
@@ -173,8 +175,8 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void deleteChat(int chatId){
-        RestConnectBuilder.create(PathEnum.RemoveChatroom).withToken(token).withRoute(chatId).build().execute();
+    public ConnectionState deleteChat(int chatId) {
+        return RestConnectBuilder.create(PathEnum.RemoveChatroom).withToken(token).withRoute(chatId).build().execute().getConnectionState();
     }
 
     @Override
@@ -183,8 +185,8 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void removeUserFromChat(int chatId, String userId) {
-        RestConnectBuilder.create(PathEnum.RemoveUserFromChat).withToken(token).withRoute(chatId).withContent(userId).build().execute();
+    public ConnectionState removeUserFromChat(int chatId, String userId) {
+        return RestConnectBuilder.create(PathEnum.RemoveUserFromChat).withToken(token).withRoute(chatId).withContent(userId).build().execute().getConnectionState();
     }
 
     @Override
@@ -233,24 +235,31 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds) {
+    public ConnectionState createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds) {
         CreateUser userToSend = new CreateUser(username, password, role.getName(), departmentsIds);
-        RestConnectBuilder.create(PathEnum.CreateUser).withToken(token).withContent(userToSend).build().execute();
+        return RestConnectBuilder.create(PathEnum.CreateUser).withToken(token).withContent(userToSend).build().execute().getConnectionState();
     }
 
     @Override
-    public void deleteUser(String userId) {
-        RestConnectBuilder.create(PathEnum.DeleteUser).withToken(token).withRoute(userId).build().execute();
+    public ConnectionState deleteUser(String userId) {
+        return RestConnectBuilder.create(PathEnum.DeleteUser).withToken(token).withRoute(userId).build().execute().getConnectionState();
     }
 
-    public void addRoleToUser(String userId, String rolename) {
-        RestConnectBuilder.create(PathEnum.AddRoleToUser).withToken(token).withRoute(userId).withContent(rolename).build().execute();
+    public ConnectionState addRoleToUser(String userId, String roleId) {
+        return RestConnectBuilder.create(PathEnum.AddRoleToUser).withToken(token).withRoute(userId).withContent(roleId).build().execute().getConnectionState();
+
+    }
+
+    @Override
+    public ConnectionState removeRoleFromUser(String userId, String roleId){
+        return RestConnectBuilder.create(PathEnum.RemoveRoleFromUser).withToken(token).withRoute(userId).withContent(roleId).build().execute().getConnectionState();
     }
 
     /*Department Methods */
     @Override
     public RequestResponse<List<? extends IDepartment>> getDepartments() {
-        RequestResponse<List<Department>> response = RestConnectBuilder.create(PathEnum.GetDepartments).withToken(token).withRoute(loginUser.getSub()).build().execute();
+        RequestResponse<List<Department>> response = RestConnectBuilder.create(PathEnum.GetDepartmentsForUser).withToken(token).withRoute(loginUser.getSub()).build().execute();
+
         if (response.getResponse() != null && !response.getResponse().isEmpty()) {
             currentDepartment = response.getResponse().get(0);
             departments = response.getResponse();
@@ -273,28 +282,29 @@ public class BusinessFacade implements IBusinessFacade {
         return RestConnectBuilder.create(PathEnum.GetAllUsersInDepartment).withToken(token).withRoute(departmentId).build().execute();
     }
 
-    public void createDepartment(String departmentName) {
+    public ConnectionState createDepartment(String departmentName) {
         Department departmentToSend = new Department(departmentName);
         RequestResponse<Department> response = RestConnectBuilder.create(PathEnum.CreateDepartment).withToken(token).withContent(departmentToSend).build().execute();
         departments.add(response.getResponse());
+        return response.getConnectionState();
     }
 
-    public void deleteDepartment(int departmentId) {
-        RestConnectBuilder.create(PathEnum.DeleteDepartment).withToken(token).withRoute(departmentId).build().execute();
+    public ConnectionState deleteDepartment(int departmentId) {
+        return RestConnectBuilder.create(PathEnum.DeleteDepartment).withToken(token).withRoute(departmentId).build().execute().getConnectionState();
     }
 
-    public void updateDepartment(int departmentId, String name) {
-        RestConnectBuilder.create(PathEnum.UpdateDepartment).withToken(token).withRoute(departmentId).withContent(name).build().execute();
-    }
-
-    @Override
-    public void addUserToDepartment(int departmentId, String userId) {
-        RestConnectBuilder.create(PathEnum.AddUserToDeparment).withToken(token).withRoute(departmentId).withContent(userId).build().execute();
+    public ConnectionState updateDepartment(int departmentId, String name) {
+        return RestConnectBuilder.create(PathEnum.UpdateDepartment).withToken(token).withRoute(departmentId).withContent(name).build().execute().getConnectionState();
     }
 
     @Override
-    public void removeUserFromDepartment(String userId, int departmentId) {
-        RestConnectBuilder.create(PathEnum.RemoveUserFromDepartment).withToken(token).withRoute(departmentId).withContent(userId).build().execute();
+    public ConnectionState addUserToDepartment(int departmentId, String userId) {
+        return RestConnectBuilder.create(PathEnum.AddUserToDeparment).withToken(token).withRoute(departmentId).withContent(userId).build().execute().getConnectionState();
+    }
+
+    @Override
+    public ConnectionState removeUserFromDepartment(String userId, int departmentId) {
+        return RestConnectBuilder.create(PathEnum.RemoveUserFromDepartment).withToken(token).withRoute(departmentId).withContent(userId).build().execute().getConnectionState();
     }
 
     /*Message Methods */
@@ -314,7 +324,6 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public RequestResponse<List<? extends IMessageIn>> getMessages(int page) {
         if (currentChat == null) return null;
-      
         return getMessages(currentChat.getId(), page);
     }
 
@@ -350,22 +359,28 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     @Override
-    public void createRole(List<String> permissions, String roleName) {
-        RestConnectBuilder.create(PathEnum.CreateRole).withToken(token).withRoute(roleName).withContent(permissions).build().execute();
+    public ConnectionState createRole(List<String> permissions, String roleName) {
+        return RestConnectBuilder.create(PathEnum.CreateRole).withToken(token).withRoute(roleName).withContent(permissions).build().execute().getConnectionState();
     }
 
     @Override
-    public void deleteRole(String roleid) {
-        RestConnectBuilder.create(PathEnum.DeleteRole).withToken(token).withRoute(roleid).build().execute();
+    public ConnectionState deleteRole(String roleid) {
+        return RestConnectBuilder.create(PathEnum.DeleteRole).withToken(token).withRoute(roleid).build().execute().getConnectionState();
     }
 
     @Override
-    public void addPermissionsToRole(String roleid, List<String> permissions) {
-        RestConnectBuilder.create(PathEnum.AddPermissionsToRole).withToken(token).withRoute(roleid).withContent(permissions).build().execute();
+    public ConnectionState addPermissionsToRole(String roleid, List<String> permissions) {
+        return RestConnectBuilder.create(PathEnum.AddPermissionsToRole).withToken(token).withRoute(roleid).withContent(permissions).build().execute().getConnectionState();
+
+    }
+    @Override
+    public RequestResponse<List<IRole>> getAvailableRoles(String userId){
+        return RestConnectBuilder.create(PathEnum.GetAvailableRoles).withToken(token).withRoute(userId).build().execute();
     }
 
-    public void removePermissionsFromRole(String roleid, List<String> permissions) {
-        RestConnectBuilder.create(PathEnum.RemovePermissionsFromRole).withToken(token).withRoute(roleid).withContent(permissions).build().execute();
+
+    public ConnectionState removePermissionsFromRole(String roleid, List<String> permissions) {
+        return RestConnectBuilder.create(PathEnum.RemovePermissionsFromRole).withToken(token).withRoute(roleid).withContent(permissions).build().execute().getConnectionState();
     }
 
     /*Log Methods */

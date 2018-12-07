@@ -1,7 +1,11 @@
 package GUI.Controller;
 
 
+import Acquaintence.ConnectionState;
+import Acquaintence.IChat;
 import Acquaintence.IDepartment;
+import Business.Connection.RequestResponse;
+import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -26,10 +30,11 @@ public class CreateChatController {
 
 
     public void createChat(ActionEvent actionEvent){
-        GUI.GUI.getInstance().getBusiness().createChat(nameTextField.getText(), choiceBox.getValue().getId());
-
+        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().createChat(nameTextField.getText(), choiceBox.getValue().getId());
         Stage stage = (Stage) CreateChatBtnId.getScene().getWindow();
         stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+        String input = "Created chat " + nameTextField.getText();
 
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }

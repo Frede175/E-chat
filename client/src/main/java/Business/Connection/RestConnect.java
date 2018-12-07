@@ -103,7 +103,7 @@ public class RestConnect {
 
             case 401:
                 System.out.println("Unautherized");
-                return new RequestResponse<>(null,ConnectionState.UNAUTHERIZED);
+                return new RequestResponse<>(null,ConnectionState.UNAUTHORIZED);
 
             case 404:
                 System.out.println("Not found");
