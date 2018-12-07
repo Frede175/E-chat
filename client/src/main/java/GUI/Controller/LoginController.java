@@ -26,7 +26,7 @@ public class LoginController {
         switch (GUI.getInstance().getBusiness().login(usernameTF.getText(), passwordTF.getText())) {
             case SUCCESS:
                 try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/TestMain.fxml"));
                     passwordTF.setText("");
                     Scene scene = new Scene(root);
                     GUI.getInstance().setPrimaryScene(scene);

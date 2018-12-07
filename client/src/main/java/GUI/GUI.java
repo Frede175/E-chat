@@ -37,7 +37,7 @@ public class GUI extends Application implements IGUI {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
         Scene scene = new Scene(root);
-        stage.setResizable(false);
+        stage.setResizable(true);
         gui.stage = stage;
         stage.setScene(scene);
         stage.setTitle("E-Chat");
