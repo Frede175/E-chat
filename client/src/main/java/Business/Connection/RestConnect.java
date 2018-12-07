@@ -65,10 +65,10 @@ public class RestConnect {
             } else {
                 throw new UnsupportedOperationException();
             }
-        } /*else if (path.getContentType() != null) {
+        } else if (path.getContentType() != null) {
             request.setHeader(HttpHeaders.CONTENT_TYPE, path.getContentType().getMimeType());
             request.setHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name());
-        }*/
+        }
 
         if (token != null) {
             this.request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
