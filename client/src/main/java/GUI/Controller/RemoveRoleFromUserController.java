@@ -3,8 +3,6 @@ package GUI.Controller;
 import Acquaintence.IRole;
 import Acquaintence.IUser;
 import GUI.GUI;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,7 +10,6 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RemoveRoleFromUserController {

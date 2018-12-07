@@ -25,21 +25,17 @@ public class AddRoleToUserController {
     @FXML
     Button addRoleToUser;
 
-    private String selectedUser;
-    private String selectedRole;
-
     public void initialize() {
-        //TODO Make labels or something for clarity
         selectUser.getItems().setAll(GUI.getInstance().getBusiness().getUsers().getResponse());
 
         selectUser.valueProperty().addListener((observableValue, iUser, t1) -> {
-            selectedUser = t1.getId();
             selectRole.getItems().setAll(GUI.getInstance().getBusiness().getAvailableRoles(t1.getId()).getResponse());
         });
     }
 
+
     public void addSelected(javafx.event.ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().addRoleToUser(selectedUser, selectedRole);
+        GUI.getInstance().getBusiness().addRoleToUser(selectUser.getValue().getId(), selectRole.getValue().getId());
         Stage stage = (Stage) addRoleToUser.getScene().getWindow();
         stage.setScene(GUI.getInstance().getPrimaryScene());
     }
