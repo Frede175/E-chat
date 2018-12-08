@@ -10,7 +10,7 @@
     <children>
       <SplitPane dividerPositions="0.1304, 0.8528, 0.5" minWidth="500.0" orientation="VERTICAL" prefHeight="600.0" prefWidth="500.0">
         <items>
-             <fx:include fx:id="chatHeader" source="ChatHeader.fxml" />
+             <fx:include fx:id="chatHeader" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="ChatHeader.fxml" />
             <AnchorPane maxWidth="1.7976931348623157E308" minWidth="500.0" prefHeight="70.0" prefWidth="500.0">
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
