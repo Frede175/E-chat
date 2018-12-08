@@ -65,8 +65,8 @@ public class AddPermissionsToRoleController {
         permissionstosend.removeAll(rolesPermissions);
         if (selectedRole != null && !permissionLSV.getTargetItems().isEmpty()) {
             ConnectionState connectionState = GUI.getInstance().getBusiness().addPermissionsToRole(selectedRole.getId(), permissionstosend);
-            Stage stage = (Stage) selectRoleComboBox.getScene().getWindow();
-            stage.setScene(GUI.getInstance().getPrimaryScene());
+
+            GUI.getInstance().loadMainScene();
             String input = "Succesfully added permissions to the role " + selectedRole.getName();
             NotificationUpdater.getInstance().showNotification(input, connectionState);
         }

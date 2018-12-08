@@ -2,6 +2,7 @@ package GUI.Controller;
 
 import Acquaintence.ConnectionState;
 import Acquaintence.IDepartment;
+import GUI.GUI;
 import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -17,7 +18,7 @@ public class UpdateDepartmentController {
 
     public void initialize(){
 
-        choiceBox.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+        choiceBox.getItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
         if(!choiceBox.getItems().isEmpty()){
             choiceBox.getSelectionModel().select(0);
         }
@@ -26,11 +27,11 @@ public class UpdateDepartmentController {
 
 
     public void rename(ActionEvent actionEvent){
-        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().updateDepartment(choiceBox.getValue().getId(), txTField.getText());
-        Stage stage = (Stage) renameBtn.getScene().getWindow();
-        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().updateDepartment(choiceBox.getValue().getId(), txTField.getText());
         String input = "Succesfully renamed the department " + choiceBox.getValue().getName() + " to the name " + txTField.getText();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
+
+        GUI.getInstance().loadMainScene();
     }
 
 }

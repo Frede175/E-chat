@@ -37,8 +37,8 @@ public class RemoveUserFromDepartmentController {
 
     public void removeUserFromDepartment(ActionEvent actionEvent) {
         ConnectionState connectionState = GUI.getInstance().getBusiness().removeUserFromDepartment(selectedUser.getId(), selectedDepartment.getId());
-        Stage stage = (Stage) selectUser.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully removed the user " + selectedUser.getName() + " from the department " + selectedDepartment.getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

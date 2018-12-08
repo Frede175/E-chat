@@ -54,7 +54,7 @@ public class RemovePermissionFromRoleController {
             String input = "Succesfully removed the permissions from the role " + selectedRole.getName();
             NotificationUpdater.getInstance().showNotification(input, connectionState);
         }
-        Stage stage = (Stage) selectRole.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
     }
 }

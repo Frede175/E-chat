@@ -7,24 +7,24 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MainController">
+<GridPane fx:id="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controller.MainController" >
    <columnConstraints>
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" percentWidth="60" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" percentWidth="40"/>
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="70.0" minHeight="9.0" prefHeight="80.0" vgrow="ALWAYS" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="412.0" vgrow="ALWAYS" />
-      <RowConstraints maxHeight="81.0" minHeight="10.0" prefHeight="79.0" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" />
    </rowConstraints>
    <children>
-      <fx:include fx:id="chatHeader" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" source="ChatHeader.fxml" />
+      <fx:include fx:id="chatHeader" source="ChatHeader.fxml" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
       <fx:include fx:id="messageView" source="MessageView.fxml" GridPane.rowIndex="1" />
       <fx:include fx:id="sendMessage" source="SendMessage.fxml" GridPane.rowIndex="2" />
       <fx:include fx:id="loggedInUser" source="LoggedInUser.fxml" GridPane.columnIndex="1" />
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+      <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <children>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <tabs>
                   <Tab closable="false" text="Chats">
                      <content>

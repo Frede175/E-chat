@@ -2,6 +2,7 @@ package GUI.Controller;
 
 import Acquaintence.ConnectionState;
 import Acquaintence.IDepartment;
+import GUI.GUI;
 import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -17,7 +18,7 @@ public class DeleteDepartmentController {
 
     public void initialize(){
 
-        choiceBox.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+        choiceBox.getItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
         if(!choiceBox.getItems().isEmpty()){
             choiceBox.getSelectionModel().select(0);
         }
@@ -25,9 +26,9 @@ public class DeleteDepartmentController {
     }
 
     public void delete(ActionEvent actionEvent){
-        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
-        Stage stage = (Stage) deleteBtn.getScene().getWindow();
-        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().deleteDepartment(choiceBox.getValue().getId());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully deleted the department " + choiceBox.getValue().getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

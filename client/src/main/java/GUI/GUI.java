@@ -13,6 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.NotificationPane;
 
+import java.io.IOException;
+
 public class GUI extends Application implements IGUI {
     /**
      * An instance of the GUI class.
@@ -26,7 +28,6 @@ public class GUI extends Application implements IGUI {
      * An instance of the IBusinessFacade.
      */
     private IBusinessFacade business;
-    private Scene primaryScene;
 
     @Override
     public void injectBusinessFacade(IBusinessFacade businessFacade) {
@@ -40,6 +41,8 @@ public class GUI extends Application implements IGUI {
         stage.setResizable(true);
         gui.stage = stage;
         stage.setScene(scene);
+        stage.setMinWidth(1000);
+        stage.setMinHeight(600);
         stage.setTitle("E-Chat");
         stage.getIcons().add(new Image("img/E-chat.png"));
         stage.show();
@@ -84,11 +87,17 @@ public class GUI extends Application implements IGUI {
         return stage;
     }
 
-    public void setPrimaryScene(Scene primaryScene) {
-        this.primaryScene = primaryScene;
+    public void loadMainScene() {
+        loadScene("/fxml/TestMain.fxml");
     }
 
-    public Scene getPrimaryScene() {
-        return primaryScene;
+    public void loadScene(String path) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(path));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

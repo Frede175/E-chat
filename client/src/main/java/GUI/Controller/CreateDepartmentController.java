@@ -2,6 +2,7 @@ package GUI.Controller;
 
 
 import Acquaintence.ConnectionState;
+import GUI.GUI;
 import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -15,10 +16,10 @@ public class CreateDepartmentController {
     public Button CreateBtn;
 
     public void createDep(ActionEvent actionEvent){
-        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().createDepartment(DepartmentName.getText());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().createDepartment(DepartmentName.getText());
 
-        Stage stage = (Stage) CreateBtn.getScene().getWindow();
-        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully created the department " + DepartmentName.getText();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

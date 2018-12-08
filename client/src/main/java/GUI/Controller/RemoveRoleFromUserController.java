@@ -45,8 +45,8 @@ public class RemoveRoleFromUserController {
 
     public void removeSelected(ActionEvent actionEvent) {
         GUI.getInstance().getBusiness().removeRoleFromUser(selectUser.getValue().getId(), selectRole.getValue().getId());
-        Stage stage = (Stage) removeRoleFromUser.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
     }
 
 

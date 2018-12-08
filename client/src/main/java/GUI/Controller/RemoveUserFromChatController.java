@@ -41,8 +41,8 @@ public class RemoveUserFromChatController {
 
     public void removeUserFromChat(ActionEvent actionEvent) {
         ConnectionState connectionState = GUI.getInstance().getBusiness().removeUserFromChat(selectedChat.getId(), selectedUser.getId());
-        Stage stage = (Stage) selectUser.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully removed the user " + selectedUser.getName() + " from the chat " + selectedChat.getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

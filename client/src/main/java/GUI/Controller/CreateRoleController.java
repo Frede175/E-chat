@@ -1,6 +1,7 @@
 package GUI.Controller;
 
 import Acquaintence.ConnectionState;
+import GUI.GUI;
 import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,15 +25,15 @@ public class CreateRoleController {
 
     public void initialize() {
         //TODO Fix this
-        roleListLSV.getSourceItems().addAll(GUI.GUI.getInstance().getBusiness().getAllPermissions().getResponse());
+        roleListLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getAllPermissions().getResponse());
     }
 
     public void createRole(ActionEvent actionEvent) {
         List<String> permissionsForRole = new ArrayList<>();
         permissionsForRole.addAll(roleListLSV.getTargetItems());
-        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().createRole(permissionsForRole, roleName.getText());
-        Stage stage = (Stage) createRole.getScene().getWindow();
-        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().createRole(permissionsForRole, roleName.getText());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully created the role " + roleName.getText();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

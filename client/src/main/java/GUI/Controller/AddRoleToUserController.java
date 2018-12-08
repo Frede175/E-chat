@@ -31,8 +31,8 @@ public class AddRoleToUserController {
 
     public void addSelected(javafx.event.ActionEvent actionEvent) {
         ConnectionState connectionState = GUI.getInstance().getBusiness().addRoleToUser(selectUser.getValue().getId(), selectRole.getValue().getId());
-        Stage stage = (Stage) addRoleToUser.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully added role " + selectRole.getValue().getName() + " to the user " + selectUser.getValue().getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

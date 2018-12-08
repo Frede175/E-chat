@@ -5,16 +5,16 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox alignment="CENTER" prefHeight="80.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.SendMessageController">
+<HBox alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controller.SendMessageController">
    <children>
-      <TextField fx:id="messageTF" nodeOrientation="LEFT_TO_RIGHT" onAction="#sendMessage" prefHeight="80.0" prefWidth="396.0" promptText="Write message">
+      <TextField fx:id="messageTF" nodeOrientation="LEFT_TO_RIGHT" onAction="#sendMessage" prefHeight="60" HBox.hgrow="ALWAYS" promptText="Write message">
          <HBox.margin>
-            <Insets bottom="10.0" top="10.0" />
+            <Insets bottom="10.0" top="10.0" left="10"/>
          </HBox.margin>
       </TextField>
       <Button fx:id="sendBtn" mnemonicParsing="false" onAction="#sendMessage" text="Send">
          <HBox.margin>
-            <Insets left="10.0" />
+            <Insets left="10.0" right="10" />
          </HBox.margin>
       </Button>
    </children>

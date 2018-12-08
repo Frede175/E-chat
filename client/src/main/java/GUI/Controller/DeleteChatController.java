@@ -22,8 +22,8 @@ public class DeleteChatController {
 
     public void delete(){
         ConnectionState connectionState = GUI.getInstance().getBusiness().deleteChat(cbChat.getValue().getId());
-        Stage stage = (Stage) deleteBtn.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully deleted the chat " + cbChat.getValue().getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
