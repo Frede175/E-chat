@@ -9,9 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import org.controlsfx.control.NotificationPane;
 
 import java.io.IOException;
 
@@ -88,7 +86,7 @@ public class GUI extends Application implements IGUI {
     }
 
     public void loadMainScene() {
-        loadScene("/fxml/TestMain.fxml");
+        loadScene("/fxml/Main.fxml");
     }
 
     public void loadScene(String path) {
