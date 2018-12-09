@@ -35,8 +35,8 @@ public class AddUserToDepartmentController {
 
     public void addToDepartmentBtn(ActionEvent actionEvent){
         ConnectionState connectionState = GUI.getInstance().getBusiness().addUserToDepartment(choiceBoxDepartment.getValue().getId(), choiceBoxUser.getValue().getId());
-        Stage stage = (Stage) addBtn.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully added user " + choiceBoxUser.getValue().getName() + " to the department " + choiceBoxDepartment.getValue().getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

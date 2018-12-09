@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ListSelectionView?>
 
-<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.RemovePermissionFromRoleController">
+<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controller.RemovePermissionFromRoleController">
     <children>
         <Label text="Remove permission(s) from role">
             <font>

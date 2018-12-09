@@ -25,26 +25,12 @@ public class LoginController {
     public void login() {
         switch (GUI.getInstance().getBusiness().login(usernameTF.getText(), passwordTF.getText())) {
             case SUCCESS:
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/TestMain.fxml"));
-                    passwordTF.setText("");
-                    Scene scene = new Scene(root);
-                    GUI.getInstance().setPrimaryScene(scene);
-                    GUI.getInstance().getStage().setScene(scene);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                passwordTF.setText("");
+                GUI.getInstance().loadMainScene();
                 break;
             case NO_BASIC_PERMISSIONS:
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoggedInUser.fxml"));
-                    passwordTF.setText("");
-                    Scene scene = new Scene(root);
-                    GUI.getInstance().setPrimaryScene(scene);
-                    GUI.getInstance().getStage().setScene(scene);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                passwordTF.setText("");
+                GUI.getInstance().loadScene("/fxml/LoggedInUser.fxml");
                 break;
             case WRONG_LOGIN:
                 errorL.setText("Username or password is incorrect");

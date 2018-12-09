@@ -5,6 +5,7 @@ import Acquaintence.ConnectionState;
 import Acquaintence.IChat;
 import Acquaintence.IDepartment;
 import Business.Connection.RequestResponse;
+import GUI.GUI;
 import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -21,7 +22,7 @@ public class CreateChatController {
 
     public void initialize(){
 
-        choiceBox.getItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+        choiceBox.getItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
         if(!choiceBox.getItems().isEmpty()){
             choiceBox.getSelectionModel().select(0);
         }
@@ -30,9 +31,9 @@ public class CreateChatController {
 
 
     public void createChat(ActionEvent actionEvent){
-        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().createChat(nameTextField.getText(), choiceBox.getValue().getId());
-        Stage stage = (Stage) CreateChatBtnId.getScene().getWindow();
-        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().createChat(nameTextField.getText(), choiceBox.getValue().getId());
+
+        GUI.getInstance().loadMainScene();
         String input = "Created chat " + nameTextField.getText();
 
         NotificationUpdater.getInstance().showNotification(input, connectionState);

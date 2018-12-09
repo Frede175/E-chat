@@ -10,10 +10,13 @@ import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -22,7 +25,10 @@ import java.util.ArrayList;
 public class AdminPageController {
 
     @FXML
-    public TabPane root;
+    public TabPane tabs;
+
+    @FXML
+    public AnchorPane root;
     private boolean alreadyLog;
 
     public void initialize() {
@@ -32,6 +38,11 @@ public class AdminPageController {
                 types.add(pt.getType());
             }
         }
+
+        //Fix for i3vm
+        root.setPrefWidth(GUI.getInstance().getStage().getScene().getWidth());
+        root.setPrefHeight(GUI.getInstance().getStage().getScene().getHeight());
+
         for (PermissionType type : types) {
             Tab tab = new Tab(type.toString());
             tab.setClosable(false);
@@ -39,10 +50,24 @@ public class AdminPageController {
             vBox.setAlignment(Pos.TOP_CENTER);
             vBox = load(type, vBox);
             ScrollPane sp = new ScrollPane();
+            sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             sp.setContent(vBox);
+            sp.setFitToHeight(true);
+            sp.setFitToWidth(true);
+
             tab.setContent(sp);
-            root.getTabs().add(tab);
+            tabs.getTabs().add(tab);
         }
+    }
+
+    private void loadFragment(Pane root, String path) {
+        try {
+            Parent parent = FXMLLoader.load(getClass().getResource(path));
+            root.getChildren().addAll(createSeparator(), parent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public VBox load(PermissionType type, VBox root) {
@@ -50,159 +75,69 @@ public class AdminPageController {
         for (PermissionEnum perm : GUI.getInstance().getBusiness().getLoginUser().getUserPermissionsFromType(type)) {
             switch (perm) {
                 case CreateDepartment:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateDepartment.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/CreateDepartment.fxml");
                     break;
                 case AddUserToDepartment:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/AddUserToDepartment.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/AddUserToDepartment.fxml");
                     break;
                 case RemoveUserFromDepartment:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveUserFromDepartment.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/RemoveUserFromDepartment.fxml");
                     break;
                 case DeleteDepartment:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteDepartment.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/DeleteDepartment.fxml");
                     break;
                 case UpdateDepartment:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/UpdateDepartment.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/UpdateDepartment.fxml");
                     break;
                 case CreateChat:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateChat.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/CreateChat.fxml");
                     break;
                 case RemoveChat:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveChat.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/RemoveChat.fxml");
                     break;
                 case AddUserToChat:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/AddUserToChat.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/AddUserToChat.fxml");
                     break;
                 case RemoveUserFromChat:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveUserFromChat.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/RemoveUserFromChat.fxml");
                     break;
                 case CreateUser:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateUser.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/CreateUser.fxml");
                     break;
                 case DeleteUser:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteUser.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/DeleteUser.fxml");
                     break;
                 case AddRoleToUser:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/AddRoleToUser.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/AddRoleToUser.fxml");
                     break;
                 case RemoveRoleFromUser:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemoveRoleFromUser.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/RemoveRoleFromUser.fxml");
                     break;
                 case CreateRole:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/CreateRole.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/CreateRole.fxml");
                     break;
                 case AddPermissionToRole:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/AddPermissionsToRole.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/AddPermissionsToRole.fxml");
                     break;
                 case RemovePermissionFromRole:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/RemovePermissionFromRole.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/RemovePermissionFromRole.fxml");
                     break;
                 case DeleteRole:
-                    try {
-                        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/DeleteRole.fxml"));
-                        root.getChildren().addAll(createSeparator(), parent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    loadFragment(root, "/fxml/DeleteRole.fxml");
                     break;
                 case SeeAllLogs:
                 case SeeLogs:
-                    try {
                         if(!alreadyLog) {
-                            Parent parent = FXMLLoader.load(getClass().getResource("/fxml/Log.fxml"));
-                            root.getChildren().addAll(createSeparator(), parent);
+                            loadFragment(root, "/fxml/Log.fxml");
                             alreadyLog = true;
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     break;
             }
         }
         return root;
     }
 
-    public Separator createSeparator() {
+    private Separator createSeparator() {
         Separator sep = new Separator();
         sep.setOrientation(Orientation.HORIZONTAL);
         sep.setMinWidth(980);
@@ -211,6 +146,6 @@ public class AdminPageController {
     }
 
     public void back(ActionEvent actionEvent) {
-        GUI.getInstance().getStage().setScene(GUI.getInstance().getPrimaryScene());
+        GUI.getInstance().loadMainScene();
     }
 }

@@ -44,6 +44,7 @@ public class LogController {
 
     private boolean canGetMore = true;
     private boolean isCustom = true;
+    private boolean firstRun = true;
 
     public void initialize() {
         logLevelEnum.setCellValueFactory(new PropertyValueFactory<>("logLevel"));
@@ -86,7 +87,8 @@ public class LogController {
 
     public void customLogs(ActionEvent actionEvent) {
         Platform.runLater(() -> {
-            if(!isCustom) {
+            if(!isCustom || firstRun) {
+                firstRun = false;
                 setItems(GUI.getInstance().getBusiness().getCustomLogs(0).getResponse(), false);
                 isCustom = true;
                 table.scrollTo(0);
@@ -96,7 +98,8 @@ public class LogController {
 
     public void allLogs(ActionEvent actionEvent) {
         Platform.runLater(() -> {
-            if(isCustom) {
+            if(isCustom || firstRun) {
+                firstRun = false;
                 setItems(GUI.getInstance().getBusiness().getAllLogs(0).getResponse(), false);
                 isCustom = false;
                 table.scrollTo(0);

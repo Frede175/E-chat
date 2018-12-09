@@ -21,17 +21,7 @@ public class LoggedInUserController {
     }
 
     public void openAdmin() {
-        Parent root = null;
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            Parent p = loader.load(getClass().getResource("/fxml/AdminPage.fxml").openStream());
-            Scene scene = new Scene(p);
-            GUI.getInstance().getStage().setWidth(1000);
-            GUI.getInstance().getStage().setHeight(600);
-            GUI.getInstance().getStage().setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        GUI.getInstance().loadScene("/fxml/AdminPage.fxml");
     }
 
     public void logout() {

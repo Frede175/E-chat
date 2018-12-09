@@ -44,8 +44,8 @@ public class DeleteRoleController {
 
     public void deleteRole(ActionEvent actionEvent) {
         ConnectionState connectionState = GUI.getInstance().getBusiness().deleteRole(selectedRole.getId());
-        Stage stage = (Stage) deleteRole.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully deleted the role " + selectedRole.getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

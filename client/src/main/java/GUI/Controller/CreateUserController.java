@@ -4,6 +4,7 @@ import Acquaintence.ConnectionState;
 import Acquaintence.IDepartment;
 import Acquaintence.IRole;
 import Business.Connection.RestConnect;
+import GUI.GUI;
 import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
@@ -24,11 +25,11 @@ public class CreateUserController {
     public ComboBox<IRole> roleCB;
 
     public void initialize() {
-        roleCB.getItems().addAll(GUI.GUI.getInstance().getBusiness().getRoles().getResponse());
+        roleCB.getItems().addAll(GUI.getInstance().getBusiness().getRoles().getResponse());
         if(!roleCB.getItems().isEmpty()) {
             roleCB.getSelectionModel().select(0 );
         }
-        departmentsLSV.getSourceItems().addAll(GUI.GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+        departmentsLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
     }
 
     public void createUser(ActionEvent actionEvent) {
@@ -36,9 +37,9 @@ public class CreateUserController {
         for(IDepartment dep : departmentsLSV.getTargetItems()) {
             departmentIds.add(dep.getId());
         }
-        ConnectionState connectionState = GUI.GUI.getInstance().getBusiness().createUser(UsernameTextField.getText(), PasswordTextField.getText(), roleCB.getSelectionModel().getSelectedItem(), departmentIds);
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.setScene(GUI.GUI.getInstance().getPrimaryScene());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().createUser(UsernameTextField.getText(), PasswordTextField.getText(), roleCB.getSelectionModel().getSelectedItem(), departmentIds);
+
+        GUI.getInstance().loadMainScene();
         String input = "User " + UsernameTextField.getText() + " succesfully created";
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }

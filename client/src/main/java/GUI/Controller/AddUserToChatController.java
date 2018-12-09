@@ -31,8 +31,8 @@ public class AddUserToChatController {
 
     public void addUser() {
         ConnectionState connectionState = GUI.getInstance().getBusiness().addUserToChat(chatsCB.getSelectionModel().getSelectedItem().getId(), usersCB.getSelectionModel().getSelectedItem().getId());
-        Stage stage = (Stage) chatsCB.getScene().getWindow();
-        stage.setScene(GUI.getInstance().getPrimaryScene());
+
+        GUI.getInstance().loadMainScene();
         String input = "Succesfully added the user " + usersCB.getSelectionModel().getSelectedItem().getName() +
                         " to the chat " + chatsCB.getSelectionModel().getSelectedItem().getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
