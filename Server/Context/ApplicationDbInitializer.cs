@@ -21,28 +21,61 @@ namespace Server.Context
             var departmentService = services.GetRequiredService<IDepartmentService>();
             var chatService = services.GetRequiredService<IChatService>();
 
-            //Create role:
+            //Create roles:
 
-            var role = await roleManager.FindByNameAsync("admin");
-            if (role == null) {
-                role = new IdentityRole("admin");
-                var result = await roleManager.CreateAsync(role);
+            var adminRole = await roleManager.FindByNameAsync("admin");
+            var leaderRole = await roleManager.FindByNameAsync("leader");
+            var normalUserRole = await roleManager.FindByNameAsync("normal");
+
+
+            if (adminRole == null) {
+                adminRole = new IdentityRole("admin");
+                var result = await roleManager.CreateAsync(adminRole);
                 if (!result.Succeeded) return;
+                await AddAllPermissionsToRole(adminRole, roleManager);
+            }
+            
+            if (leaderRole == null) {
+                leaderRole = new IdentityRole("leader");
+                var result = await roleManager.CreateAsync(leaderRole);
+                if (!result.Succeeded) return;
+                await AddPermissionsToRole(roleManager, leaderRole,
+                    Permission.BasicPermissions,
+                    Permission.AddUserToChat,
+                    Permission.RemoveUserFromChat,
+                    Permission.CreateChat,
+                    Permission.RemoveChat,
+                    Permission.SeeLogs
+
+                );
             }
 
-
-            await AddAllPermissionsToRole(role, roleManager);
+            if (normalUserRole == null) {
+                normalUserRole = new IdentityRole("normal");
+                var result = await roleManager.CreateAsync(normalUserRole);
+                if (!result.Succeeded) return;
+                await AddPermissionsToRole(roleManager, normalUserRole, Permission.BasicPermissions);
+            }
+            
 
             //Get admin user
-            var user = await userManager.FindByNameAsync("admin");
+            var admin = await userManager.FindByNameAsync("admin");
+            var leader = await userManager.FindByNameAsync("Lars");
+            var normal = await userManager.FindByNameAsync("Kristian");
 
 
-            if (user == null) {
-                user = await CreateUser(userManager, "admin", "AdminAdmin123*");
-
+            if (admin == null) {
+                admin = await CreateUser(userManager, roleManager, "admin", "AdminAdmin123*", adminRole.Name);
             }
 
-            await userManager.AddToRoleAsync(user, role.Name);
+            if (leader == null) {
+                leader = await CreateUser(userManager,roleManager, "Lars", "LarsLars123*", leaderRole.Name);
+            }
+
+            if (normal == null) {
+                normal = await CreateUser(userManager, roleManager, "Kristian", "Kristian123*", normalUserRole.Name);
+            }
+            
 
             //Create department:
             var department = await departmentService.GetSpecificDepartmentAsync("Main");
@@ -52,7 +85,7 @@ namespace Server.Context
                     Name = "Main"
                 });
                 if (department == null) return;
-                await departmentService.AddUsersToDepartmentAsync(department.Id, user);
+                await departmentService.AddUsersToDepartmentAsync(department.Id, admin, leader, normal);
             }
 
 
@@ -63,52 +96,43 @@ namespace Server.Context
                     IsGroupChat = true,
                     DepartmentId = department.Id,
                     Name = "Main"
-                }, user.Id);
+                }, admin.Id);
                 if (chat == null) return;
+                await chatService.AddUsersToChatAsync(chat.Id, normal.Id, leader.Id);
             }
 
         }
 
-        private static async Task<ApplicationUser> CreateUser(UserManager<ApplicationUser> userManager, string userName, string password) {
+        private static async Task<ApplicationUser> CreateUser(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, string userName, string password, string role) {
             var user = new ApplicationUser {
                 UserName = userName
             };
             var result = await userManager.CreateAsync(user, password);
-            if (result.Succeeded) return user;
+            if (result.Succeeded) {
+                await userManager.AddToRoleAsync(user, role);
+                return user;
+            }
             return null;
         }
 
+        private static async Task AddPermissionsToRole(RoleManager<IdentityRole> roleManager, IdentityRole role, params Permission[] permissions) {
+            var claims = (await roleManager.GetClaimsAsync(role)).ToList();
 
-        private static async Task AddAllPermissions(ApplicationUser user, UserManager<ApplicationUser> userManager) {
-            var claims = (await userManager.GetClaimsAsync(user)).ToList();
-
-             var newClaims = new List<Claim>();
-
-            foreach (var p in Enum.GetValues(typeof(Permission))) {
-                if (!claims.Any(c => c.Type == UserClaimTypes.Permission && c.Value == p.ToString())) {
-                    newClaims.Add(new Claim(UserClaimTypes.Permission, p.ToString()));
+            foreach (var permission in permissions) {
+                if (!claims.Any(c => c.Type == UserClaimTypes.Permission && c.Value == permission.ToString())) {  
+                    await roleManager.AddClaimAsync(role, new Claim(UserClaimTypes.Permission, permission.ToString()));
                 }
             }
-
-            await userManager.AddClaimsAsync(user, newClaims);
-
         }
 
         private static async Task AddAllPermissionsToRole(IdentityRole role, RoleManager<IdentityRole> roleManager) {
             var claims = (await roleManager.GetClaimsAsync(role)).ToList();
 
-             var newClaims = new List<Claim>();
-
             foreach (var p in Enum.GetValues(typeof(Permission))) {
                 if (!claims.Any(c => c.Type == UserClaimTypes.Permission && c.Value == p.ToString())) {
-                    newClaims.Add(new Claim(UserClaimTypes.Permission, p.ToString()));
+                    await roleManager.AddClaimAsync(role, new Claim(UserClaimTypes.Permission, p.ToString()));
                 }
             }
-
-            foreach(var claim in newClaims) {
-                await roleManager.AddClaimAsync(role, claim);
-            }
-
         }
     }
 }
