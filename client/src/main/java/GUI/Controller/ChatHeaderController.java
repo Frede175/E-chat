@@ -44,7 +44,7 @@ public class ChatHeaderController {
 
     private void showBtns(boolean show) {
         cHButton.setVisible(show);
-        if (!GUI.GUI.getInstance().getBusiness().getCurrentChat().isGroupChat()) {
+        if (GUI.GUI.getInstance().getBusiness().getCurrentChat() != null && !GUI.GUI.getInstance().getBusiness().getCurrentChat().isGroupChat()) {
             leaveBtn.setVisible(false);
         } else {
             leaveBtn.setVisible(show);

@@ -7,5 +7,7 @@ namespace Server.Context {
         public virtual ICollection<UserDepartment> UserDepartments {get;set;}
 
         public virtual ICollection<UserChat> UserChats {get;set;}
+
+        public virtual ICollection<Message> Messages {get;set;}
     }
 }

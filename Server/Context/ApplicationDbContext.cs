@@ -51,6 +51,11 @@ namespace Server.Context
                 .HasOne(c => c.Department)
                 .WithMany(d => d.Chats)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.Entity<Message>()
+                .HasOne(m => m.ApplicationUser)
+                .WithMany(u => u.Messages)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
 

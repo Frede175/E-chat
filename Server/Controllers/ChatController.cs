@@ -102,7 +102,7 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            if (await _chatService.RemoveChatAsync(chat)) 
+            if (await _chatService.RemoveChatsAsync(chat)) 
             {
                 await _chatHub.Clients.Group(chatId.ToString()).DeleteChat(chatId);
                 return NoContent();

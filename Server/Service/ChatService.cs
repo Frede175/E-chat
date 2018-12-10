@@ -142,11 +142,11 @@ namespace Server.Service
         /// <returns>The chat async.</returns>
         /// <param name="chatId">Chat identifier.</param>
         /// <param name="user">User.</param>
-        public async Task<bool> RemoveChatAsync(Chat chat)
+        public async Task<bool> RemoveChatsAsync(params Chat[] chats)
         {
-            if (chat != null)
+            if (chats != null)
             {
-                _chats.Remove(chat);
+                _chats.RemoveRange(chats);
                 int result = await _context.SaveChangesAsync();
                 if (result > 0) 
                 {
@@ -209,7 +209,7 @@ namespace Server.Service
 
         public async Task<ICollection<Chat>> GetChatsAsync()
         {
-            return await _chats.ToListAsync();
+            return await _chats.Where(c => c.IsGroupChat).ToListAsync();
         }
 
         public async Task<List<Chat>> GetAvailableChatsAsync(string userId)
