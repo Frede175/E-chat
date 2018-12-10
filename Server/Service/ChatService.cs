@@ -52,6 +52,8 @@ namespace Server.Service
             int count = 0;
             if (chat != null)
             {
+                if (!chat.IsGroupChat) return false;
+
                 foreach (var user in users)
                 {
                     if (user.UserDepartments.Any(u => u.DepartmentId == chat.DepartmentId)) {
@@ -167,6 +169,8 @@ namespace Server.Service
 
             if (chat != null)
             {
+                if (!chat.IsGroupChat) return false;
+
                 foreach (string userId in userIds)
                 {
                     UserChat userChat;
