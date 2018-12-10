@@ -415,18 +415,18 @@ public class BusinessFacade implements IBusinessFacade {
     public ConnectionState login(String username, String password) {
         RequestResponse<Login> temp = RestConnectBuilder.create(PathEnum.Login).withContent(new LoginOut(username, password)).build().execute();
         if (temp.getConnectionState() == ConnectionState.SUCCESS) {
-            addListeners();
             token = temp.getResponse().getAccess_token();
-            hubConnect.connect(token);
             RequestResponse<LoginUser> data = RestConnectBuilder.create(PathEnum.GetUserInfo).withToken(token).build().execute();
             loginUser = data.getResponse();
             loginUser.initializePermissions();
-            getDepartments();
-            getUsers();
-            getChats();
             if (loginUser.getUserPermissions().isEmpty()) {
                 return ConnectionState.NO_BASIC_PERMISSIONS;
             }
+            addListeners();
+            hubConnect.connect(token);
+            getDepartments();
+            getUsers();
+            getChats();
         }
         return temp.getConnectionState();
     }

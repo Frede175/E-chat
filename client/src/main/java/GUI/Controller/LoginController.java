@@ -38,18 +38,17 @@ public class LoginController {
     public void login() {
         switch (GUI.getInstance().getBusiness().login(usernameTF.getText(), passwordTF.getText())) {
             case SUCCESS:
-                passwordTF.setText("");
                 GUI.getInstance().loadMainSceneFromLogin();
                 break;
             case NO_BASIC_PERMISSIONS:
-                passwordTF.setText("");
                 GUI.getInstance().loadScene("/fxml/LoggedInUser.fxml");
                 break;
-            case WRONG_LOGIN:
+            case BAD_REQUEST:
                 errorL.setText("Username or password is incorrect");
                 break;
             case NO_CONNECTION:
                 errorL.setText("No connection to server");
         }
+        passwordTF.setText("");
     }
 }
