@@ -91,7 +91,8 @@ public class BusinessFacade implements IBusinessFacade {
     }
 
     private void getNewChat(NewChatEvent newChatEvent) {
-        chats.add((Chat) newChatEvent.getChat());
+        Chat chat = (Chat) newChatEvent.getChat();
+        addChatToList(chat);
     }
 
     private void deleteChatEvent(DeleteChatEvent deleteChatEvent) {
@@ -104,6 +105,20 @@ public class BusinessFacade implements IBusinessFacade {
         }
     }
 
+    private void addChatToList(Chat chat) {
+        if (chat.isGroupChat()) {
+            chats.add(chat);
+        } else {
+            RequestResponse<List<? extends IUser>> response = RestConnectBuilder.create(PathEnum.GetUsersInChat).withToken(token).withRoute(chat.getId()).build().execute();
+            for (IUser user : response.getResponse()) {
+                if (!user.getName().equals(loginUser.getName())) {
+                    chat.setName(user.getName());
+                    chats.add(chat);
+                }
+            }
+        }
+    }
+
     /*Chat Methods */
     @Override
     public RequestResponse<List<? extends IChat>> getChats() {
@@ -111,17 +126,7 @@ public class BusinessFacade implements IBusinessFacade {
 
         if (chats.getResponse() != null && !chats.getResponse().isEmpty()) {
             for (Chat chat : chats.getResponse()) {
-                if (chat.isGroupChat()) {
-                    this.chats.add(chat);
-                } else {
-                    RequestResponse<List<? extends IUser>> response = RestConnectBuilder.create(PathEnum.GetUsersInChat).withToken(token).withRoute(chat.getId()).build().execute();
-                    for (IUser user : response.getResponse()) {
-                        if (!user.getName().equals(loginUser.getName())) {
-                            chat.setName(user.getName());
-                            this.chats.add(chat);
-                        }
-                    }
-                }
+                addChatToList(chat);
             }
             setCurrentChat(this.chats.get(0).getId());
         }
@@ -325,7 +330,6 @@ public class BusinessFacade implements IBusinessFacade {
     public void createDirectMessage(String name, String otherUserId) {
         Chat chat = new Chat(name);
         RequestResponse<Chat> response = RestConnectBuilder.create(PathEnum.CreateDirectMessage).withToken(token).withRoute(otherUserId).withContent(chat).build().execute();
-        chats.add(response.getResponse());
     }
 
     @Override

@@ -81,7 +81,7 @@ public class ChatListController {
 
     private void getNewChat(NewChatEvent newChatEvent) {
         Platform.runLater(() -> {
-            names.add(newChatEvent.getChat());
+            names.setAll(GUI.GUI.getInstance().getBusiness().getExistingChats());
         });
     }
 }
