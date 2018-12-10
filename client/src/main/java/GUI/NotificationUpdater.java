@@ -36,7 +36,7 @@ public class NotificationUpdater {
 
     public void showNotification(MessageEvent event) {
         Platform.runLater(() -> {
-            if(GUI.getInstance().getBusiness().getLoginUser() != null && GUI.getInstance().getBusiness().getLoginUser().getSub().equals(event.getMessageIn().getUser().getId())) {
+            if(GUI.getInstance().getBusiness().getLoginUser() != null && !GUI.getInstance().getBusiness().getLoginUser().getSub().equals(event.getMessageIn().getUser().getId())) {
                 ImageView logo = new ImageView(new Image("img/E-chat.png"));
                 logo.setFitHeight(40.0);
                 logo.setFitWidth(40.0);
