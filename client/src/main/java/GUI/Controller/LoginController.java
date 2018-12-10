@@ -26,7 +26,7 @@ public class LoginController {
         switch (GUI.getInstance().getBusiness().login(usernameTF.getText(), passwordTF.getText())) {
             case SUCCESS:
                 passwordTF.setText("");
-                GUI.getInstance().loadMainScene();
+                GUI.getInstance().loadMainSceneFromLogin();
                 break;
             case NO_BASIC_PERMISSIONS:
                 passwordTF.setText("");

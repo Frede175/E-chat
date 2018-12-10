@@ -20,6 +20,7 @@ public class CreateChatController {
     public ChoiceBox<IDepartment> choiceBox;
     public Button CreateChatBtnId;
 
+
     public void initialize(){
 
         choiceBox.getItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
@@ -31,11 +32,15 @@ public class CreateChatController {
 
 
     public void createChat(ActionEvent actionEvent){
+
         ConnectionState connectionState = GUI.getInstance().getBusiness().createChat(nameTextField.getText(), choiceBox.getValue().getId());
 
         GUI.getInstance().loadMainScene();
+
         String input = "Created chat " + nameTextField.getText();
 
         NotificationUpdater.getInstance().showNotification(input, connectionState);
+
+
     }
 }

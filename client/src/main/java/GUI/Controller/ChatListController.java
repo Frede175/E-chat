@@ -26,7 +26,7 @@ public class ChatListController {
     private ObservableList<IChat> names;
 
 
-    public <T extends EventObject> void initialize() {
+    public void initialize() {
         EventManager.getInstance().registerListener(ChangeChatListEvent.class, this::changeChatList);
         EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
         EventManager.getInstance().registerListener(AddChatEvent.class, this::getAddChat);
