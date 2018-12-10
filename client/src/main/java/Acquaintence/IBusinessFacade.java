@@ -13,6 +13,7 @@ public interface IBusinessFacade {
 
     RequestResponse<List<? extends IChat>> getChats();
     RequestResponse<List<? extends IUser>> getUsersInChat();
+    RequestResponse<List<? extends IChat>> getAllChats();
     IChat getCurrentChat();
     List<? extends IChat> getExistingChats();
     List<? extends IChat> getAvailableChats(String userId);

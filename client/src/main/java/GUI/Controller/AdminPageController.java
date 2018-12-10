@@ -93,7 +93,7 @@ public class AdminPageController {
 
     public List<? extends IChat> getAllChats() {
         if (allChats == null) {
-            allChats = GUI.getInstance().getBusiness().getChats().getResponse();
+            allChats = GUI.getInstance().getBusiness().getAllChats().getResponse();
         }
         return allChats;
     }

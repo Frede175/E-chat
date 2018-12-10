@@ -37,16 +37,4 @@ public class EventManager {
         if (eventManager == null) eventManager =  new EventManager();
         return eventManager;
     }
-
-    public <T extends EventObject> void unregisterListener(Class<T> type, IAction<T> callback) {
-        if (!eventListeners.containsKey(type)) throw new IllegalArgumentException();
-
-        ActionBase action = param -> callback.invoke(type.cast(param));
-        boolean result = eventListeners.get(type).remove(action);
-        System.out.println(result);
-
-        if (eventListeners.get(type).isEmpty()) {
-            eventListeners.remove(type);
-        }
-    }
 }

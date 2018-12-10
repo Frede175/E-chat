@@ -84,6 +84,7 @@ public class RestConnect {
     }
 
     private <TContent> RequestResponse<TContent> getResponse(HttpResponse response) {
+        System.out.print(path + ": ");
         switch (response.getStatusLine().getStatusCode()) {
             case 200:
                 System.out.println("Ok, Object returned");
@@ -113,6 +114,7 @@ public class RestConnect {
                 System.out.println("Internal Sever Error");
                 return new RequestResponse<>(null,ConnectionState.SERVERERROR);
             default:
+                System.out.println("Unknown");
                 return new RequestResponse<>(null, ConnectionState.ERROR);
 
         }
@@ -129,7 +131,6 @@ public class RestConnect {
                 result.append(line);
             }
             Type type = path.getResultType();
-            System.out.println(result.toString());
             TResult obj = gson.fromJson(result.toString(), type);
             return new RequestResponse<>(obj, ConnectionState.SUCCESS);
         } catch (IOException e) {

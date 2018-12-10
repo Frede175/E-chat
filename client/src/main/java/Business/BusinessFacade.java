@@ -154,9 +154,12 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public List<? extends IChat> getUsersChats(String userId) {
         RequestResponse<List<Chat>> response = RestConnectBuilder.create(PathEnum.GetChats).withToken(token).withRoute(userId).build().execute();
-
-        System.out.println(response.getResponse());
         return response.getResponse();
+    }
+
+    @Override
+    public RequestResponse<List<? extends IChat>> getAllChats() {
+        return RestConnectBuilder.create(PathEnum.GetAllChats).withToken(token).build().execute();
     }
 
     @Override
@@ -214,7 +217,7 @@ public class BusinessFacade implements IBusinessFacade {
     /*User Methods */
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
-        RequestResponse<List<User>> response = RestConnectBuilder.create(PathEnum.GetAllUsers).withToken(token).build().execute();
+        RequestResponse<List<User>> response = RestConnectBuilder.create(PathEnum.GetContacts).withToken(token).build().execute();
         if (response.getResponse() != null) {
             users = (response.getResponse());
         }
