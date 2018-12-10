@@ -32,5 +32,6 @@ public class LoggedInUserController {
 
     public void logout() {
         GUI.getInstance().getBusiness().logout();
+        GUI.getInstance().loadScene("/fxml/Login.fxml");
     }
 }

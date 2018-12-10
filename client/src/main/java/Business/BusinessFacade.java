@@ -27,12 +27,6 @@ public class BusinessFacade implements IBusinessFacade {
 
 
     public BusinessFacade() {
-        EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
-        EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
-        EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
-        EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
-        EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
-        EventManager.getInstance().registerListener(DeleteChatEvent.class, this::deleteChatEvent);
     }
 
 
@@ -415,18 +409,13 @@ public class BusinessFacade implements IBusinessFacade {
         token = null;
         EventManager.getInstance().clearListeners();
         disconnectHub();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
-            GUI.getInstance().getStage().setScene(new Scene(root));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public ConnectionState login(String username, String password) {
         RequestResponse<Login> temp = RestConnectBuilder.create(PathEnum.Login).withContent(new LoginOut(username, password)).build().execute();
         if (temp.getConnectionState() == ConnectionState.SUCCESS) {
+            addListeners();
             token = temp.getResponse().getAccess_token();
             hubConnect.connect(token);
             RequestResponse<LoginUser> data = RestConnectBuilder.create(PathEnum.GetUserInfo).withToken(token).build().execute();
@@ -440,6 +429,15 @@ public class BusinessFacade implements IBusinessFacade {
             }
         }
         return temp.getConnectionState();
+    }
+
+    private void addListeners() {
+        EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
+        EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
+        EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
+        EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
+        EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
+        EventManager.getInstance().registerListener(DeleteChatEvent.class, this::deleteChatEvent);
     }
 
     @Override
