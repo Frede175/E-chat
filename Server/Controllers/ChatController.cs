@@ -111,10 +111,20 @@ namespace Server.Controllers
             _logger.LogWarning(LoggingEvents.DeleteItemFail, "{username} failed removing chat ({id})", username, chatId);
             return BadRequest();
         }
+
+        // GET: https://localhost:5001/api/chat/ 
+        [HttpGet, Produces("application/json")]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.RemoveChat)]
+        public async Task<ActionResult<List<Chat>>> GetChats()
+        {
+            var username = _userManager.GetUserName(HttpContext.User);
+            _logger.LogInformation(LoggingEvents.ListItems, "{username} getting all chats.", username);
+            return (await _chatService.GetChatsAsync()).Select(d => new Chat(d)).ToList();
+        }
         
  
 
-        // GET: https://localhost:5001/api/chat/user/{userId} 
+        // GET: https://localhost:5001/api/chat/available/{userId} 
         [HttpGet("available/{userId}"), Produces("application/json")]
         [RequiresPermissionAttribute(permissions: Permission.AddUserToChat)]
         public async Task<ActionResult<List<Chat>>> GetAvailableChats(string userId) 
@@ -129,7 +139,7 @@ namespace Server.Controllers
         // GET: https://localhost:5001/api/chat/user/{userId} 
         [HttpGet("user/{userId}"), Produces("application/json")]
         [Authorize]
-        public async Task<ActionResult<List<Chat>>> GetChats(string userId)
+        public async Task<ActionResult<List<Chat>>> GetUserChats(string userId)
         {
             
             var username = _userManager.GetUserName(HttpContext.User);
