@@ -40,13 +40,15 @@ public class ChatHeaderController {
             chatNameL.setText("");
             showBtns(false);
         }
-
-
     }
 
     private void showBtns(boolean show) {
         cHButton.setVisible(show);
-        leaveBtn.setVisible(show);
+        if (!GUI.GUI.getInstance().getBusiness().getCurrentChat().isGroupChat()) {
+            leaveBtn.setVisible(false);
+        } else {
+            leaveBtn.setVisible(show);
+        }
     }
 
     public void leaveChat(){
