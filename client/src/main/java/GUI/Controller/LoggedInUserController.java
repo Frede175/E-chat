@@ -25,7 +25,7 @@ public class LoggedInUserController {
     public void initialize() {
         userNameL.setText(GUI.getInstance().getBusiness().getLoginUser().getName());
 
-        if (GUI.getInstance().getBusiness().getLoginUser().getPermissions().isEmpty()) {
+        if (GUI.getInstance().getBusiness().getLoginUser().getUserPermissions().isEmpty()) {
             //í3vm
             root.setPrefWidth(GUI.getInstance().getStage().getScene().getWidth());
             root.setPrefHeight(GUI.getInstance().getStage().getScene().getHeight());
