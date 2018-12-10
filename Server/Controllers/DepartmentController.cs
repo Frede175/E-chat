@@ -76,7 +76,7 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/Department
         [HttpGet, Produces("application/json")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateDepartment, Permission.UpdateDepartment, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment, Permission.DeleteDepartment)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateDepartment, Permission.UpdateDepartment, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment, Permission.DeleteDepartment, Permission.CreateChat)]
         public async Task<ActionResult<ICollection<Department>>> GetDepartments()
         {
             var username = _userManager.GetUserName(HttpContext.User);
