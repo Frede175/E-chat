@@ -274,7 +274,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<IDepartment>> getAvailableDepartments(String userId) {
-        return RestConnectBuilder.create(PathEnum.GetAvailableDepartments).withToken(token).build().execute();
+        return RestConnectBuilder.create(PathEnum.GetAvailableDepartments).withToken(token).withRoute(userId).build().execute();
     }
 
     @Override
