@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
@@ -20,6 +21,18 @@ public class LoginController {
 
     @FXML
     public Label errorL;
+
+    @FXML
+    public VBox root;
+
+    public void initialize() {
+        //Fix for i3vm
+        if (GUI.getInstance().getStage() != null) {
+            root.setPrefWidth(GUI.getInstance().getStage().getScene().getWidth());
+            root.setPrefHeight(GUI.getInstance().getStage().getScene().getHeight());
+        }
+
+    }
 
     @FXML
     public void login() {
