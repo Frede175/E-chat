@@ -215,6 +215,12 @@ public class BusinessFacade implements IBusinessFacade {
 
     /*User Methods */
     @Override
+    public RequestResponse<List<? extends IUser>> getAllUsers() {
+        return RestConnectBuilder.create(PathEnum.GetAllUsers).withToken(token).build().execute();
+    }
+
+    /*User Methods */
+    @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
         RequestResponse<List<User>> response = RestConnectBuilder.create(PathEnum.GetContacts).withToken(token).build().execute();
         if (response.getResponse() != null) {

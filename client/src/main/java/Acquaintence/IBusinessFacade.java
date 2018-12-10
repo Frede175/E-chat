@@ -26,6 +26,7 @@ public interface IBusinessFacade {
     void leaveChat(int chatId);
 
     RequestResponse<List<? extends  IUser>> getUsers();
+    RequestResponse<List<? extends  IUser>> getAllUsers();
     List<? extends IUser> getExistingUsers();
     ConnectionState createUser(String username, String password, IRole role, ArrayList<Integer> departmentsIds);
     ConnectionState deleteUser(String userId);

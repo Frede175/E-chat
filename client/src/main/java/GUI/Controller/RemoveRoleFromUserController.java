@@ -1,14 +1,14 @@
 package GUI.Controller;
 
+import Acquaintence.ConnectionState;
 import Acquaintence.IRole;
 import Acquaintence.IUser;
 import GUI.GUI;
+import GUI.NotificationUpdater;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +38,11 @@ public class RemoveRoleFromUserController extends Controller<AdminPageController
     }
 
     public void removeSelected(ActionEvent actionEvent) {
-        GUI.getInstance().getBusiness().removeRoleFromUser(selectUser.getValue().getId(), selectRole.getValue().getId());
+        ConnectionState connectionState = GUI.getInstance().getBusiness().removeRoleFromUser(selectUser.getValue().getId(), selectRole.getValue().getId());
 
         GUI.getInstance().loadMainScene();
+
+        String input = "Successfully removed role " + selectRole.getValue().getName() + " from the user " + selectUser.getValue().getName();
+        NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
 }

@@ -20,7 +20,6 @@ public class AddUserToDepartmentController extends Controller<AdminPageControlle
 
 
     public void initialize(){
-        choiceBoxUser.getItems().setAll(GUI.getInstance().getBusiness().getUsers().getResponse());
         choiceBoxUser.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
             public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
