@@ -13,7 +13,7 @@ import org.controlsfx.control.ListSelectionView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateRoleController {
+public class CreateRoleController extends Controller<AdminPageController> {
     @FXML
     public ListSelectionView<String> roleListLSV;
 
@@ -23,9 +23,9 @@ public class CreateRoleController {
     @FXML
     public TextField roleName;
 
-    public void initialize() {
-        //TODO Fix this
-        roleListLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getAllPermissions().getResponse());
+    @Override
+    public void loaded() {
+        roleListLSV.getSourceItems().addAll(parent.getAllPermissions());
     }
 
     public void createRole(ActionEvent actionEvent) {
@@ -37,5 +37,6 @@ public class CreateRoleController {
         String input = "Succesfully created the role " + roleName.getText();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
+
 
 }

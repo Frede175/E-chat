@@ -27,12 +27,6 @@ public class BusinessFacade implements IBusinessFacade {
 
 
     public BusinessFacade() {
-        EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
-        EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
-        EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
-        EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
-        EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
-        EventManager.getInstance().registerListener(DeleteChatEvent.class, this::deleteChatEvent);
     }
 
 
@@ -41,7 +35,6 @@ public class BusinessFacade implements IBusinessFacade {
         for (Chat chat : chats) {
             if (chat.getId() == event.getMessageIn().getChatId()) {
                 if (chat.getMessages().isEmpty()) {
-                    // TODO make new thread for downloading existing messages
                     getMessages(chat.getId());
                 }
                 chat.addMessage((MessageIn) event.getMessageIn());
@@ -121,7 +114,6 @@ public class BusinessFacade implements IBusinessFacade {
                 if (chat.isGroupChat()) {
                     this.chats.add(chat);
                 } else {
-                    // Temporary polish fix TODO A fix on server side
                     RequestResponse<List<? extends IUser>> response = RestConnectBuilder.create(PathEnum.GetUsersInChat).withToken(token).withRoute(chat.getId()).build().execute();
                     for (IUser user : response.getResponse()) {
                         if (!user.getName().equals(loginUser.getName())) {
@@ -146,7 +138,6 @@ public class BusinessFacade implements IBusinessFacade {
         return currentChat;
     }
 
-    // TODO Fix this aswell
     @Override
     public List<? extends IChat> getAvailableChats(String userId) {
         RequestResponse<List<Chat>> response = RestConnectBuilder.create(PathEnum.GetAvailableChats).withToken(token).withRoute(userId).build().execute();
@@ -157,9 +148,12 @@ public class BusinessFacade implements IBusinessFacade {
     @Override
     public List<? extends IChat> getUsersChats(String userId) {
         RequestResponse<List<Chat>> response = RestConnectBuilder.create(PathEnum.GetChats).withToken(token).withRoute(userId).build().execute();
-
-        System.out.println(response.getResponse());
         return response.getResponse();
+    }
+
+    @Override
+    public RequestResponse<List<? extends IChat>> getAllChats() {
+        return RestConnectBuilder.create(PathEnum.GetAllChats).withToken(token).build().execute();
     }
 
     @Override
@@ -217,7 +211,7 @@ public class BusinessFacade implements IBusinessFacade {
     /*User Methods */
     @Override
     public RequestResponse<List<? extends IUser>> getUsers() {
-        RequestResponse<List<User>> response = RestConnectBuilder.create(PathEnum.GetAllUsers).withToken(token).build().execute();
+        RequestResponse<List<User>> response = RestConnectBuilder.create(PathEnum.GetContacts).withToken(token).build().execute();
         if (response.getResponse() != null) {
             users = (response.getResponse());
         }
@@ -274,7 +268,7 @@ public class BusinessFacade implements IBusinessFacade {
 
     @Override
     public RequestResponse<List<IDepartment>> getAvailableDepartments(String userId) {
-        return RestConnectBuilder.create(PathEnum.GetAvailableDepartments).withToken(token).build().execute();
+        return RestConnectBuilder.create(PathEnum.GetAvailableDepartments).withToken(token).withRoute(userId).build().execute();
     }
 
     @Override
@@ -415,12 +409,6 @@ public class BusinessFacade implements IBusinessFacade {
         token = null;
         EventManager.getInstance().clearListeners();
         disconnectHub();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
-            GUI.getInstance().getStage().setScene(new Scene(root));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -428,18 +416,28 @@ public class BusinessFacade implements IBusinessFacade {
         RequestResponse<Login> temp = RestConnectBuilder.create(PathEnum.Login).withContent(new LoginOut(username, password)).build().execute();
         if (temp.getConnectionState() == ConnectionState.SUCCESS) {
             token = temp.getResponse().getAccess_token();
-            hubConnect.connect(token);
             RequestResponse<LoginUser> data = RestConnectBuilder.create(PathEnum.GetUserInfo).withToken(token).build().execute();
             loginUser = data.getResponse();
             loginUser.initializePermissions();
-            getDepartments();
-            getUsers();
-            getChats();
             if (loginUser.getUserPermissions().isEmpty()) {
                 return ConnectionState.NO_BASIC_PERMISSIONS;
             }
+            addListeners();
+            hubConnect.connect(token);
+            getDepartments();
+            getUsers();
+            getChats();
         }
         return temp.getConnectionState();
+    }
+
+    private void addListeners() {
+        EventManager.getInstance().registerListener(MessageEvent.class, this::getMessage);
+        EventManager.getInstance().registerListener(NewChatEvent.class, this::getNewChat);
+        EventManager.getInstance().registerListener(AddChatEvent.class, this::addChat);
+        EventManager.getInstance().registerListener(RemoveUserFromChatEvent.class, this::removeUserFromChat);
+        EventManager.getInstance().registerListener(LeaveChatEvent.class, this::leaveChatEvent);
+        EventManager.getInstance().registerListener(DeleteChatEvent.class, this::deleteChatEvent);
     }
 
     @Override

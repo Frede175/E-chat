@@ -11,7 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import GUI.NotificationUpdater;
 
-public class DeleteUserController {
+public class DeleteUserController extends Controller<AdminPageController> {
 
     @FXML
     public ComboBox<IUser> selectUser;
@@ -19,9 +19,6 @@ public class DeleteUserController {
     private IUser selectedUser;
 
     public void initialize() {
-        for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
-            selectUser.getItems().add(user);
-        }
         selectUser.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
             public void changed(ObservableValue<? extends IUser> observableValue, IUser s, IUser t1) {
@@ -31,6 +28,11 @@ public class DeleteUserController {
 
     }
 
+    @Override
+    public void loaded() {
+        selectUser.getItems().addAll(parent.getAllUsers());
+    }
+
     public void deleteUser(ActionEvent actionEvent) {
         ConnectionState connectionState = GUI.getInstance().getBusiness().deleteUser(selectedUser.getId());
 
@@ -38,4 +40,6 @@ public class DeleteUserController {
         String input = "Succesfully deleted the user " + selectedUser.getName();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
+
+
 }

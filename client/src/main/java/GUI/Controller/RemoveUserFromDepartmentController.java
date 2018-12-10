@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
-public class RemoveUserFromDepartmentController {
+public class RemoveUserFromDepartmentController extends Controller<AdminPageController> {
     @FXML
     public ComboBox<IUser> selectUser;
     @FXML
@@ -22,9 +22,6 @@ public class RemoveUserFromDepartmentController {
     private IDepartment selectedDepartment;
 
     public void initialize() {
-        for (IDepartment department : GUI.getInstance().getBusiness().getAllDepartments().getResponse()) {
-            selectDepartment.getItems().add(department);
-        }
         selectDepartment.valueProperty().addListener((observableValue, iDepartment, t1) -> {
             selectedDepartment = t1;
             selectUser.getItems().setAll(GUI.getInstance().getBusiness().getAllUsersInDepartment(selectedDepartment.getId()).getResponse());
@@ -33,6 +30,11 @@ public class RemoveUserFromDepartmentController {
 
         selectUser.valueProperty().addListener((observableValue, iUser, t1) -> selectedUser = t1);
 
+    }
+
+    @Override
+    public void loaded() {
+        selectDepartment.getItems().addAll(parent.getAllDepartments());
     }
 
     public void removeUserFromDepartment(ActionEvent actionEvent) {

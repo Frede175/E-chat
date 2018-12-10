@@ -10,19 +10,17 @@ import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 
 
-public class DeleteDepartmentController {
+public class DeleteDepartmentController extends Controller<AdminPageController> {
 
     public ChoiceBox<IDepartment> choiceBox;
     public Button deleteBtn;
 
-
-    public void initialize(){
-
-        choiceBox.getItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+    @Override
+    public void loaded() {
+        choiceBox.getItems().addAll(parent.getAllDepartments());
         if(!choiceBox.getItems().isEmpty()){
             choiceBox.getSelectionModel().select(0);
         }
-
     }
 
     public void delete(ActionEvent actionEvent){

@@ -1,5 +1,7 @@
 package Acquaintence;
 
+import Acquaintence.Event.ChangeChatListEvent;
+
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.HashMap;
@@ -35,5 +37,4 @@ public class EventManager {
         if (eventManager == null) eventManager =  new EventManager();
         return eventManager;
     }
-
 }

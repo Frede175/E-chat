@@ -84,8 +84,6 @@ public class RestConnectBuilder {
             createRequest();
         }
 
-        System.out.println("Creating rest connect for:" + path);
-
         try {
             return new RestConnect(path, token, host, content, route, parameters, client, request);
         } catch (URISyntaxException e) {

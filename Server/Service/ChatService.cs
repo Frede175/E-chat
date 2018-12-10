@@ -203,6 +203,11 @@ namespace Server.Service
             return await _chats.Cast<Chat>().Where(c => c.UserChats.Any(u => u.UserId == userId)).ToListAsync();
         }
 
+        public async Task<ICollection<Chat>> GetChatsAsync()
+        {
+            return await _chats.ToListAsync();
+        }
+
         public async Task<List<Chat>> GetAvailableChatsAsync(string userId)
         {
             var departmentIds = await _userDepartment.Where(u => u.UserId == userId).Select(d => d.DepartmentId).ToListAsync();

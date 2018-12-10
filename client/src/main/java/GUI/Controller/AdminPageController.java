@@ -1,5 +1,9 @@
 package GUI.Controller;
 
+import Acquaintence.IChat;
+import Acquaintence.IDepartment;
+import Acquaintence.IRole;
+import Acquaintence.IUser;
 import Business.Connection.PermissionEnum;
 import Business.Connection.PermissionType;
 import GUI.GUI;
@@ -10,7 +14,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
@@ -21,6 +24,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminPageController {
 
@@ -30,6 +34,12 @@ public class AdminPageController {
     @FXML
     public AnchorPane root;
     private boolean alreadyLog;
+
+    private List<? extends IDepartment> allDepartments;
+    private List<? extends IUser> allUsers;
+    private List<String> allPermissions;
+    private List<? extends IRole> allRoles;
+    private List<? extends IChat> allChats;
 
     public void initialize() {
         ArrayList<PermissionType> types = new ArrayList<>();
@@ -60,18 +70,56 @@ public class AdminPageController {
         }
     }
 
+    public List<? extends IDepartment> getAllDepartments() {
+        if (allDepartments == null) {
+            allDepartments = GUI.getInstance().getBusiness().getAllDepartments().getResponse();
+        }
+        return allDepartments;
+    }
+
+    public List<? extends IUser> getAllUsers() {
+        if (allUsers == null) {
+            allUsers = GUI.getInstance().getBusiness().getUsers().getResponse();
+        }
+        return allUsers;
+    }
+
+    public List<? extends IRole> getAllRoles() {
+        if (allRoles == null) {
+            allRoles = GUI.getInstance().getBusiness().getRoles().getResponse();
+        }
+        return allRoles;
+    }
+
+    public List<? extends IChat> getAllChats() {
+        if (allChats == null) {
+            allChats = GUI.getInstance().getBusiness().getAllChats().getResponse();
+        }
+        return allChats;
+    }
+
+    public List<String> getAllPermissions() {
+        if (allPermissions == null) {
+            allPermissions = GUI.getInstance().getBusiness().getAllPermissions().getResponse();
+        }
+        return allPermissions;
+    }
+
     private void loadFragment(Pane root, String path) {
         try {
-            Parent parent = FXMLLoader.load(getClass().getResource(path));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Parent parent = loader.load();
             root.getChildren().addAll(createSeparator(), parent);
+            Controller<AdminPageController> controller = loader.getController();
+            controller.setParent(this);
+            controller.loaded();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public VBox load(PermissionType type, VBox root) {
-        //TODO Could be made a function for better clarity
+    private VBox load(PermissionType type, VBox root) {
         for (PermissionEnum perm : GUI.getInstance().getBusiness().getLoginUser().getUserPermissionsFromType(type)) {
             switch (perm) {
                 case CreateDepartment:
@@ -148,4 +196,6 @@ public class AdminPageController {
     public void back(ActionEvent actionEvent) {
         GUI.getInstance().loadMainScene();
     }
+
+
 }

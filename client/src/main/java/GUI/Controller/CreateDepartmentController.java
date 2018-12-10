@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 
-public class CreateDepartmentController {
+public class CreateDepartmentController extends Controller<AdminPageController> {
 
     public TextField DepartmentName;
     public Button CreateBtn;
@@ -23,7 +23,5 @@ public class CreateDepartmentController {
         String input = "Succesfully created the department " + DepartmentName.getText();
         NotificationUpdater.getInstance().showNotification(input, connectionState);
     }
-
-
 }
 

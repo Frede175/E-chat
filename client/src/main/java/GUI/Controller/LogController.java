@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class LogController {
+public class LogController extends Controller<AdminPageController> {
 
     @FXML
     private TableView<Log> table;

@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemoveRoleFromUserController {
+public class RemoveRoleFromUserController extends Controller<AdminPageController> {
 
     @FXML
     ComboBox<IUser> selectUser;
@@ -24,23 +24,17 @@ public class RemoveRoleFromUserController {
     Button removeRoleFromUser;
 
 
-    private List<IRole> roleList;
-
-
     public void initialize(){
-        roleList = new ArrayList<>();
-
-        roleList.addAll(GUI.getInstance().getBusiness().getRoles().getResponse());
-
-        selectUser.getItems().addAll(GUI.getInstance().getBusiness().getUsers().getResponse());
-
         selectUser.valueProperty().addListener((observableValue, iUser, t1) -> {
-            List<IRole> newRoles = new ArrayList<>(roleList);
+            List<IRole> newRoles = new ArrayList<>(parent.getAllRoles());
             newRoles.removeAll(GUI.getInstance().getBusiness().getAvailableRoles(t1.getId()).getResponse());
             selectRole.getItems().setAll(newRoles);
         });
+    }
 
-
+    @Override
+    public void loaded() {
+        selectUser.getItems().addAll(parent.getAllUsers());
     }
 
     public void removeSelected(ActionEvent actionEvent) {
@@ -48,6 +42,4 @@ public class RemoveRoleFromUserController {
 
         GUI.getInstance().loadMainScene();
     }
-
-
 }

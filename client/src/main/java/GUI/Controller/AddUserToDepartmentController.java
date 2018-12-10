@@ -12,7 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import GUI.NotificationUpdater;
 
-public class AddUserToDepartmentController {
+public class AddUserToDepartmentController extends Controller<AdminPageController> {
 
     public ChoiceBox<IDepartment> choiceBoxDepartment;
     public ChoiceBox<IUser> choiceBoxUser;
@@ -20,17 +20,18 @@ public class AddUserToDepartmentController {
 
 
     public void initialize(){
-
         choiceBoxUser.getItems().setAll(GUI.getInstance().getBusiness().getUsers().getResponse());
-        if(!choiceBoxUser.getItems().isEmpty()){
-            choiceBoxUser.getSelectionModel().select(0);
-        }
         choiceBoxUser.valueProperty().addListener(new ChangeListener<IUser>() {
             @Override
             public void changed(ObservableValue<? extends IUser> observableValue, IUser iUser, IUser t1) {
                 choiceBoxDepartment.getItems().setAll(GUI.getInstance().getBusiness().getAvailableDepartments(t1.getId()).getResponse());
             }
         });
+    }
+
+    @Override
+    public void loaded() {
+        choiceBoxUser.getItems().addAll(parent.getAllUsers());
     }
 
     public void addToDepartmentBtn(ActionEvent actionEvent){

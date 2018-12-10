@@ -1,5 +1,6 @@
 package GUI;
 
+import Acquaintence.EventManager;
 import Acquaintence.IBusinessFacade;
 import Acquaintence.IGUI;
 import javafx.application.Application;
@@ -20,6 +21,8 @@ public class GUI extends Application implements IGUI {
     private static GUI gui;
 
     private Stage stage;
+
+    private Scene mainScene;
 
 
     /**
@@ -85,8 +88,20 @@ public class GUI extends Application implements IGUI {
         return stage;
     }
 
+
+
     public void loadMainScene() {
-        loadScene("/fxml/Main.fxml");
+        if (mainScene == null) {
+            loadScene("/fxml/Main.fxml");
+            mainScene = stage.getScene();
+        } else {
+            stage.setScene(mainScene);
+        }
+    }
+
+    public void loadMainSceneFromLogin() {
+        mainScene = null;
+        loadMainScene();
     }
 
     public void loadScene(String path) {

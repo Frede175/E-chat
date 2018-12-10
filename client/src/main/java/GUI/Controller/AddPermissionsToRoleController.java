@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class AddPermissionsToRoleController {
+public class AddPermissionsToRoleController extends Controller<AdminPageController>{
 
     @FXML
     public ComboBox<IRole> selectRoleComboBox;
@@ -30,15 +30,9 @@ public class AddPermissionsToRoleController {
     private List<String> rolesPermissions;
 
     public void initialize() {
-
-        for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRoleComboBox.getItems().add(role);
-        }
-
         selectRoleComboBox.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
-                // TODO set getname til getID();
                 selectedRole = t1;
                 RequestResponse<List<String>> response1 = GUI.getInstance().getBusiness().getAllPermissions();
                 rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole.getId());
@@ -59,6 +53,11 @@ public class AddPermissionsToRoleController {
         });
     }
 
+    @Override
+    public void loaded() {
+        selectRoleComboBox.getItems().addAll(parent.getAllRoles());
+    }
+
     public void addSelected(ActionEvent actionEvent) {
         ArrayList<String> permissionstosend = new ArrayList<>();
         permissionstosend.addAll(permissionLSV.getTargetItems());
@@ -71,4 +70,6 @@ public class AddPermissionsToRoleController {
             NotificationUpdater.getInstance().showNotification(input, connectionState);
         }
     }
+
+
 }

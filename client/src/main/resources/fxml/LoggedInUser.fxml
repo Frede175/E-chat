@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER"  xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controller.LoggedInUserController" fillHeight="true" >
+<HBox fx:id="root" alignment="CENTER"  xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controller.LoggedInUserController" fillHeight="true" >
    <children>
       <Label fx:id="userNameL" alignment="CENTER" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" prefHeight="30.0" text="Placeholder">
          <font>
