@@ -15,7 +15,7 @@ import org.controlsfx.control.ListSelectionView;
 
 import java.util.ArrayList;
 
-public class CreateUserController {
+public class CreateUserController extends Controller<AdminPageController> {
 
 
     public TextField PasswordTextField;
@@ -24,12 +24,13 @@ public class CreateUserController {
     public VBox root;
     public ComboBox<IRole> roleCB;
 
-    public void initialize() {
-        roleCB.getItems().addAll(GUI.getInstance().getBusiness().getRoles().getResponse());
+    @Override
+    public void loaded() {
+        roleCB.getItems().addAll(parent.getAllRoles());
         if(!roleCB.getItems().isEmpty()) {
             roleCB.getSelectionModel().select(0 );
         }
-        departmentsLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+        departmentsLSV.getSourceItems().addAll(parent.getAllDepartments());
     }
 
     public void createUser(ActionEvent actionEvent) {

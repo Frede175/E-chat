@@ -10,19 +10,18 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class UpdateDepartmentController {
+public class UpdateDepartmentController extends Controller<AdminPageController> {
 
     public ChoiceBox<IDepartment> choiceBox;
     public TextField txTField;
     public Button renameBtn;
 
-    public void initialize(){
-
-        choiceBox.getItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+    @Override
+    public void loaded() {
+        choiceBox.getItems().addAll(parent.getAllDepartments());
         if(!choiceBox.getItems().isEmpty()){
             choiceBox.getSelectionModel().select(0);
         }
-
     }
 
 
@@ -33,5 +32,4 @@ public class UpdateDepartmentController {
 
         GUI.getInstance().loadMainScene();
     }
-
 }

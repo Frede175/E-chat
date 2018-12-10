@@ -13,7 +13,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class CreateChatController {
+public class CreateChatController extends Controller<AdminPageController> {
 
 
     public TextField nameTextField;
@@ -22,12 +22,14 @@ public class CreateChatController {
 
 
     public void initialize(){
+    }
 
-        choiceBox.getItems().addAll(GUI.getInstance().getBusiness().getAllDepartments().getResponse());
+    @Override
+    public void loaded() {
+        choiceBox.getItems().addAll(parent.getAllDepartments());
         if(!choiceBox.getItems().isEmpty()){
             choiceBox.getSelectionModel().select(0);
         }
-
     }
 
 
@@ -43,4 +45,6 @@ public class CreateChatController {
 
 
     }
+
+
 }

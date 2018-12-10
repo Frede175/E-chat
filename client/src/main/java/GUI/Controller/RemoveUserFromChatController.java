@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class RemoveUserFromChatController {
+public class RemoveUserFromChatController extends Controller<AdminPageController> {
     @FXML
     public ComboBox<IUser> selectUser;
     @FXML
@@ -22,9 +22,6 @@ public class RemoveUserFromChatController {
     private IChat selectedChat;
 
     public void initialize() {
-        for (IUser user : GUI.getInstance().getBusiness().getUsers().getResponse()) {
-            selectUser.getItems().add(user);
-        }
         selectUser.valueProperty().addListener((observable, oldValue, newValue) -> {
             selectedUser = newValue;
             List<? extends IChat> chats = GUI.getInstance().getBusiness().getUsersChats(selectedUser.getId());
@@ -37,6 +34,11 @@ public class RemoveUserFromChatController {
 
         selectChat.valueProperty().addListener((observableValue, iChat, t1) -> selectedChat = t1);
 
+    }
+
+    @Override
+    public void loaded() {
+        selectUser.getItems().addAll(parent.getAllUsers());
     }
 
     public void removeUserFromChat(ActionEvent actionEvent) {

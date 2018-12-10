@@ -8,13 +8,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import GUI.NotificationUpdater;
 
-public class DeleteChatController {
+public class DeleteChatController extends Controller<AdminPageController> {
 
     public Button deleteBtn;
     public ChoiceBox<IChat> cbChat;
 
-    public void initialize(){
-        cbChat.getItems().addAll(GUI.getInstance().getBusiness().getExistingChats());
+    @Override
+    public void loaded() {
+        cbChat.getItems().addAll(parent.getAllChats());
         if(!cbChat.getItems().isEmpty()){
             cbChat.getSelectionModel().select(0);
         }

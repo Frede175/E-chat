@@ -41,7 +41,6 @@ public class BusinessFacade implements IBusinessFacade {
         for (Chat chat : chats) {
             if (chat.getId() == event.getMessageIn().getChatId()) {
                 if (chat.getMessages().isEmpty()) {
-                    // TODO make new thread for downloading existing messages
                     getMessages(chat.getId());
                 }
                 chat.addMessage((MessageIn) event.getMessageIn());

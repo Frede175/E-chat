@@ -16,7 +16,7 @@ import javax.security.auth.login.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemovePermissionFromRoleController {
+public class RemovePermissionFromRoleController extends Controller<AdminPageController> {
     
     @FXML
     public ComboBox<IRole> selectRole;
@@ -27,21 +27,19 @@ public class RemovePermissionFromRoleController {
     private IRole selectedRole;
 
     public void initialize() {
-        for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().add(role);
-        }
-
         selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
-                // TODO set getname() to getID();
                 selectedRole = t1;
                 permissionLSV.getSourceItems().addAll(GUI.getInstance().getBusiness().getRolesPermissions(selectedRole.getId()));
             }
 
         });
+    }
 
-
+    @Override
+    public void loaded() {
+        selectRole.getItems().addAll(parent.getAllRoles());
     }
 
     public void removeSelected(ActionEvent actionEvent) {

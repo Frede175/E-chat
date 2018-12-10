@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
-public class AddRoleToUserController {
+public class AddRoleToUserController extends Controller<AdminPageController>{
 
     @FXML
     ComboBox<IUser> selectUser;
@@ -22,11 +22,14 @@ public class AddRoleToUserController {
     Button addRoleToUser;
 
     public void initialize() {
-        selectUser.getItems().setAll(GUI.getInstance().getBusiness().getUsers().getResponse());
-
         selectUser.valueProperty().addListener((observableValue, iUser, t1) -> {
             selectRole.getItems().setAll(GUI.getInstance().getBusiness().getAvailableRoles(t1.getId()).getResponse());
         });
+    }
+
+    @Override
+    public void loaded() {
+        selectUser.getItems().setAll(parent.getAllUsers());
     }
 
     public void addSelected(javafx.event.ActionEvent actionEvent) {

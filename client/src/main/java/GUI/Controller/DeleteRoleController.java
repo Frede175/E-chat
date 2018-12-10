@@ -12,7 +12,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import GUI.NotificationUpdater;
 
-public class DeleteRoleController {
+public class DeleteRoleController extends Controller<AdminPageController> {
 
     @FXML
     ComboBox<IRole> selectRole;
@@ -23,14 +23,6 @@ public class DeleteRoleController {
     private IRole selectedRole;
 
     public void initialize() {
-
-        for (IRole role : GUI.getInstance().getBusiness().getRoles().getResponse()) {
-            selectRole.getItems().add(role);
-        }
-        if(!selectRole.getItems().isEmpty()) {
-            selectRole.getSelectionModel().select(0);
-            selectedRole = selectRole.getItems().get(0);
-        }
         selectRole.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
@@ -40,6 +32,15 @@ public class DeleteRoleController {
 
         });
 
+    }
+
+    @Override
+    public void loaded() {
+        selectRole.getItems().addAll(parent.getAllRoles());
+        if(!selectRole.getItems().isEmpty()) {
+            selectRole.getSelectionModel().select(0);
+            selectedRole = selectRole.getItems().get(0);
+        }
     }
 
     public void deleteRole(ActionEvent actionEvent) {
