@@ -119,8 +119,7 @@ public class AdminPageController {
 
     }
 
-    public VBox load(PermissionType type, VBox root) {
-        //TODO Could be made a function for better clarity
+    private VBox load(PermissionType type, VBox root) {
         for (PermissionEnum perm : GUI.getInstance().getBusiness().getLoginUser().getUserPermissionsFromType(type)) {
             switch (perm) {
                 case CreateDepartment:

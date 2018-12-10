@@ -33,7 +33,6 @@ public class AddPermissionsToRoleController extends Controller<AdminPageControll
         selectRoleComboBox.valueProperty().addListener(new ChangeListener<IRole>() {
             @Override
             public void changed(ObservableValue<? extends IRole> observableValue, IRole iRole, IRole t1) {
-                // TODO set getname til getID();
                 selectedRole = t1;
                 RequestResponse<List<String>> response1 = GUI.getInstance().getBusiness().getAllPermissions();
                 rolesPermissions = GUI.getInstance().getBusiness().getRolesPermissions(selectedRole.getId());

@@ -120,7 +120,6 @@ public class BusinessFacade implements IBusinessFacade {
                 if (chat.isGroupChat()) {
                     this.chats.add(chat);
                 } else {
-                    // Temporary polish fix TODO A fix on server side
                     RequestResponse<List<? extends IUser>> response = RestConnectBuilder.create(PathEnum.GetUsersInChat).withToken(token).withRoute(chat.getId()).build().execute();
                     for (IUser user : response.getResponse()) {
                         if (!user.getName().equals(loginUser.getName())) {
@@ -145,7 +144,6 @@ public class BusinessFacade implements IBusinessFacade {
         return currentChat;
     }
 
-    // TODO Fix this aswell
     @Override
     public List<? extends IChat> getAvailableChats(String userId) {
         RequestResponse<List<Chat>> response = RestConnectBuilder.create(PathEnum.GetAvailableChats).withToken(token).withRoute(userId).build().execute();
