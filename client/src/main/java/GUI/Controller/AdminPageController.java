@@ -79,7 +79,7 @@ public class AdminPageController {
 
     public List<? extends IUser> getAllUsers() {
         if (allUsers == null) {
-            allUsers = GUI.getInstance().getBusiness().getUsers().getResponse();
+            allUsers = GUI.getInstance().getBusiness().getAllUsers().getResponse();
         }
         return allUsers;
     }

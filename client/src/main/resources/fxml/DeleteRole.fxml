@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 
 <VBox fx:id="root" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controller.DeleteRoleController">
-   <Label text="Delete User Role">
+   <Label text="Delete Role">
       <VBox.margin>
          <Insets top="20.0" />
       </VBox.margin>

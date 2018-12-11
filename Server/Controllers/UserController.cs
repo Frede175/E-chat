@@ -49,7 +49,16 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/{userId}
         [HttpGet("{userId}", Name = "GetUser"), Produces("application/json")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddRoleToUser, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, 
+            Permission.CreateUser, 
+            Permission.DeleteUser, 
+            Permission.AddRoleToUser, 
+            Permission.RemoveRoleFromUser,
+            Permission.AddUserToDepartment, 
+            Permission.RemoveUserFromDepartment,
+            Permission.AddUserToChat,
+            Permission.RemoveUserFromChat
+        )]
         public async Task<ActionResult<User>> GetUser(string userId)
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -70,7 +79,16 @@ namespace Server.Controllers
 
         // GET: https://localhost:5001/api/User/ 
         [HttpGet, Produces("application/json")]
-        [RequiresPermissionAttribute(PermissionAttributeType.OR, Permission.CreateUser, Permission.DeleteUser, Permission.AddRoleToUser, Permission.AddUserToDepartment, Permission.RemoveUserFromDepartment)]
+        [RequiresPermissionAttribute(PermissionAttributeType.OR, 
+            Permission.CreateUser, 
+            Permission.DeleteUser, 
+            Permission.AddRoleToUser, 
+            Permission.RemoveRoleFromUser,
+            Permission.AddUserToDepartment, 
+            Permission.RemoveUserFromDepartment,
+            Permission.AddUserToChat,
+            Permission.RemoveUserFromChat
+        )]
         public async Task<ActionResult<ICollection<User>>> GetUsers()
         {
             var username = _userManager.GetUserName(HttpContext.User);
@@ -160,6 +178,15 @@ namespace Server.Controllers
                 _logger.LogWarning(LoggingEvents.DeleteItemNotFound, "{username} deleting user ({id}), NOT FOUND.", username, userId);
                 return NotFound();
             }
+
+            //Removing private chats:
+            var privateChats = await _chatService.GetPrivateChatsAsync(userId);
+            var removed = await _chatService.RemoveChatsAsync(privateChats.ToArray());
+
+            if (!removed)  {
+                return BadRequest();
+            }
+
 
             var result = await _userManager.DeleteAsync(user);
 

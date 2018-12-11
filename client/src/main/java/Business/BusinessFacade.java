@@ -82,11 +82,7 @@ public class BusinessFacade implements IBusinessFacade {
         if (!found) {
             RequestResponse<Chat> chat = RestConnectBuilder.create(PathEnum.GetChat).withToken(token).withRoute(addChatEvent.getChatId()).build().execute();
             chats.add(chat.getResponse());
-            if (users.contains(addChatEvent.getUser())) {
-                RequestResponse<User> user = RestConnectBuilder.create(PathEnum.GetUser).withToken(token).withRoute(addChatEvent.getUser().getId()).build().execute();
-                users.add(user.getResponse());
-                EventManager.getInstance().fireEvent(new AddUserEvent(this, user.getResponse()));
-            }
+            getMessages(chat.getResponse().getId(), 0);
         }
     }
 
@@ -211,6 +207,12 @@ public class BusinessFacade implements IBusinessFacade {
             EventManager.getInstance().fireEvent(new ChangeChatEvent(this, currentChat));
         }
 
+    }
+
+    /*User Methods */
+    @Override
+    public RequestResponse<List<? extends IUser>> getAllUsers() {
+        return RestConnectBuilder.create(PathEnum.GetAllUsers).withToken(token).build().execute();
     }
 
     /*User Methods */
